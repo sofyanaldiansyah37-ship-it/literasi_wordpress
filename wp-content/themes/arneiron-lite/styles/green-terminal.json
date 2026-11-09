@@ -1,0 +1,194 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Green Terminal",
+	"settings": {
+		"color": {
+			"palette": [
+				{
+					"slug": "base",
+					"name": "Base",
+					"color": "#010a03"
+				},
+				{
+					"slug": "base-2",
+					"name": "Base 2",
+					"color": "#000600"
+				},
+				{
+					"slug": "surface",
+					"name": "Surface",
+					"color": "#04160a"
+				},
+				{
+					"slug": "surface-2",
+					"name": "Surface 2",
+					"color": "#061e0c"
+				},
+				{
+					"slug": "surface-3",
+					"name": "Surface 3",
+					"color": "#010800"
+				},
+				{
+					"slug": "border",
+					"name": "Border",
+					"color": "#0a3a16"
+				},
+				{
+					"slug": "border-strong",
+					"name": "Border Strong",
+					"color": "#10552a"
+				},
+				{
+					"slug": "muted",
+					"name": "Muted",
+					"color": "#2e8a45"
+				},
+				{
+					"slug": "subtle",
+					"name": "Subtle",
+					"color": "#46c766"
+				},
+				{
+					"slug": "contrast",
+					"name": "Contrast",
+					"color": "#b0ffc4"
+				},
+				{
+					"slug": "contrast-2",
+					"name": "Contrast 2",
+					"color": "#e6ffec"
+				},
+				{
+					"slug": "accent",
+					"name": "Accent",
+					"color": "#00ff41"
+				},
+				{
+					"slug": "accent-contrast",
+					"name": "On Accent",
+					"color": "#010a03"
+				},
+				{
+					"slug": "on-surface",
+					"name": "On Surface",
+					"color": "#8affa0"
+				},
+				{
+					"slug": "ink-2",
+					"name": "Ink 2",
+					"color": "#7be395"
+				},
+				{
+					"slug": "accent-strong",
+					"name": "Accent Strong",
+					"color": "#58ff82"
+				},
+				{
+					"slug": "link-text",
+					"name": "Link",
+					"color": "#00ff41"
+				},
+				{
+					"slug": "link-hover",
+					"name": "Link Hover",
+					"color": "#58ff82"
+				}
+			],
+			"gradients": [
+				{
+					"slug": "fade-up",
+					"name": "Fade Up",
+					"gradient": "linear-gradient(0deg, #04160a 0%, #010a03 100%)"
+				},
+				{
+					"slug": "fade-down",
+					"name": "Fade Down",
+					"gradient": "linear-gradient(180deg, #010a03 0%, #04160a 100%)"
+				},
+				{
+					"slug": "surface-sheen",
+					"name": "Surface Sheen",
+					"gradient": "linear-gradient(135deg, #061e0c 0%, #020c05 100%)"
+				},
+				{
+					"slug": "hairline",
+					"name": "Hairline",
+					"gradient": "linear-gradient(90deg, transparent, #10552a, transparent)"
+				}
+			],
+			"duotone": [
+				{
+					"slug": "gray-duo",
+					"name": "Gray Duotone",
+					"colors": [
+						"#010a03",
+						"#00ff41"
+					]
+				}
+			]
+		},
+		"custom": {
+			"button": {
+				"hoverBg": "var(--wp--preset--color--accent-strong)",
+				"hoverInk": "var(--wp--preset--color--base)"
+			},
+			"color": {
+				"focus-ring": "#4dff80"
+			},
+			"radius": {
+				"none": "0",
+				"sm": "0px",
+				"md": "0px",
+				"lg": "0px",
+				"pill": "0px"
+			},
+			"ui": {
+				"colorScheme": "dark"
+			}
+		},
+		"shadow": {
+			"presets": [
+				{
+					"slug": "sm",
+					"name": "Small",
+					"shadow": "0 0 8px rgba(0,255,65,0.20)"
+				},
+				{
+					"slug": "md",
+					"name": "Medium",
+					"shadow": "0 0 12px rgba(0,255,65,0.32), 4px 4px 0 0 #000000"
+				},
+				{
+					"slug": "lg",
+					"name": "Large",
+					"shadow": "0 0 18px rgba(0,255,65,0.45), 6px 6px 0 0 #000000"
+				},
+				{
+					"slug": "inset",
+					"name": "Inset",
+					"shadow": "inset 0 0 0 1px #10552a"
+				},
+				{
+					"slug": "bg",
+					"name": "Background",
+					"color": "#010a03"
+				},
+				{
+					"slug": "ink",
+					"name": "Ink",
+					"color": "#b0ffc4"
+				},
+				{
+					"slug": "ink-3",
+					"name": "Ink 3",
+					"color": "#3f8a52"
+				}
+			]
+		}
+	},
+	"styles": {
+		"css": "body{background-color:var(--wp--preset--color--base);background-image:radial-gradient(700px 500px at 100% 0%, rgba(0,255,65,.07), transparent 60%);background-attachment:fixed}a:hover{text-shadow:0 0 8px rgba(0,255,65,.5)}::selection{background:var(--wp--preset--color--accent);color:var(--wp--preset--color--base)}"
+	}
+}

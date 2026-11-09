@@ -1,0 +1,30 @@
+/* =============================================================================
+   ArneIron — editor styles (assets/css/editor.css)
+   =============================================================================
+   Editor-parity stylesheet: re-applies the same tokens + base rules so block
+   content edited in Gutenberg resembles the rendered frontend
+   (block-editor-compat skill). Loaded via add_editor_style() in inc/setup.php,
+   alongside assets/css/ds.css and assets/css/blocks.css.
+   ========================================================================== */
+
+/* ds.css is registered separately via add_editor_style() in inc/setup.php,
+   so the editor canvas shares the token cascade. Do NOT @import it here: in the
+   editor iframe the relative "./ds.css" resolves against /wp-admin/ and 404s
+   (returns text/html -> "Refused to apply style ... strict MIME checking"). */
+
+/* Editor-only: constrain the writing canvas to the content width so what-you-
+   see matches the front-end column, and give blocks air. */
+.wp-block-post-content {
+	max-width: 768px;
+	margin-inline: auto;
+	padding-block: var(--space-6);
+}
+
+/* The wide/full alignment containers should reflect the theme layout sizes. */
+.wp-block[data-align="wide"]  { max-width: 1280px; margin-inline: auto; }
+.wp-block[data-align="full"]  { max-width: 100%; }
+
+/* Highlight the main landmark preview in the editor so authors can rely on the
+   same visual hierarchy as the rendered page. */
+.editor-styles-wrapper h1 { line-height: 1.1; }
+.editor-styles-wrapper h2 { line-height: 1.15; }

@@ -1,0 +1,1441 @@
+/*
+ * ArneIron — blocks.css (ported from arneiron-base Lane C, P0b).
+ * -----------------------------------------------------------------------------
+ * 28 block-style variations (is-style-*) registered by inc/block-styles.php.
+ * Token-referenced only — every value is a CSS custom property from theme.json.
+ * Spacing slugs remapped from arneiron-base's 10-80 scale to arneiron's 0-10
+ * scale during the P0 consolidation (issue ArneIron-net/hub#1230).
+ *
+ * Enqueued on the front (functions.php) AND in the editor iframe via
+ * add_editor_style, so editor == front.
+ *
+ * Hex-grep gate:
+ *   ! grep -nE '#[0-9a-fA-F]{3,8}' blocks.css | grep -v '/*'
+ * -----------------------------------------------------------------------------
+ */
+
+/* `on-surface` is RETIRED from component CSS — use the --c-ink alias.
+
+   It is a real slug in theme.json (#14181f, identical to `contrast` there), and
+   that is exactly the trap: a style VARIATION that repaints the theme dark
+   overrides `contrast` and leaves `on-surface` at the light literal, because
+   nothing forces a variation to enumerate every slug. The result is ink the
+   colour of the light theme printed on a dark panel — measured on
+   dev.arneiron.net, the my-account navigation at rgb(20,24,31) on rgb(16,6,8),
+   a contrast ratio of 1.12:1.
+
+   The alias layer exists to stop precisely this (§1): a component that resolves
+   through `--c-ink` follows whatever the active variation says `contrast` is,
+   and cannot be left behind by a variation that did not think about it. */
+/* =========================================================================
+ * 0. Shared primitives
+ * ========================================================================= */
+
+:root {
+	--arne-ease: cubic-bezier(0.2, 0, 0, 1);
+	--arne-dur: 160ms;
+}
+
+/* A reusable "surface card" recipe used by many block styles. */
+:where(.arne-surface) {
+	background-color: var(--wp--preset--color--surface);
+	border: 1px solid var(--wp--preset--color--border);
+	border-radius: var(--wp--custom--radius--lg);
+}
+
+/* =========================================================================
+ * 1. Text blocks
+ * ========================================================================= */
+
+/* Paragraph: NO per-block measure.
+ *
+ * This capped `.entry-content > .wp-block-paragraph` at
+ * --wp--custom--type--measure (66ch, ~726px). Nothing else was capped, so a
+ * paragraph sat at 726px while its own headings, lists and tables ran to the
+ * 1300px layout width — two widths in one column with nothing tying them
+ * together. Removed 2026-09-10 on the owner's call: the layout width is
+ * 1300px and a paragraph is a block like any other, so it takes that width.
+ *
+ * settings.layout is deliberately left at contentSize == wideSize == 1300px.
+ * --wp--custom--type--measure is kept as a TOKEN for opt-in use (a template or
+ * a pattern can still apply it); nothing in the theme applies it automatically.
+ * If body copy ever needs a reading measure again, put it on the COLUMN —
+ * theme.json settings.layout.contentSize, or a constrained layout on the
+ * post-content block — never back onto a single block type.
+ */
+.wp-block-paragraph.has-drop-cap:first-letter {
+	font-family: var(--wp--preset--font-family--display);
+	font-weight: 700;
+	line-height: 0.8;
+	color: var(--wp--preset--color--contrast);
+}
+
+/* Lists */
+.wp-block-list {
+	padding-inline-start: var(--wp--preset--spacing--6);
+}
+.wp-block-list li {
+	margin-block: var(--wp--preset--spacing--1);
+}
+/* list style variations */
+.wp-block-list.is-style-none {
+	list-style: none;
+	padding-inline-start: 0;
+}
+.wp-block-list.is-style-inline {
+	list-style: none;
+	padding-inline-start: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--wp--preset--spacing--2) var(--wp--preset--spacing--5);
+}
+.wp-block-list.is-style-check,
+.wp-block-list.is-style-arrow,
+.wp-block-list.is-style-dash {
+	list-style: none;
+	padding-inline-start: 0;
+}
+.wp-block-list.is-style-check > li,
+.wp-block-list.is-style-arrow > li,
+.wp-block-list.is-style-dash > li {
+	position: relative;
+	padding-inline-start: var(--wp--preset--spacing--5);
+}
+.wp-block-list.is-style-check > li::before {
+	content: "\2713"; /* check mark */
+	position: absolute;
+	inset-inline-start: 0;
+	color: var(--wp--preset--color--contrast);
+	font-weight: 700;
+}
+.wp-block-list.is-style-arrow > li::before {
+	content: "\2192"; /* rightwards arrow */
+	position: absolute;
+	inset-inline-start: 0;
+	color: var(--wp--preset--color--accent);
+}
+.wp-block-list.is-style-dash > li::before {
+	content: "\2014"; /* em dash */
+	position: absolute;
+	inset-inline-start: 0;
+	color: var(--wp--preset--color--subtle);
+}
+
+/* Quote (base look also declared in theme.json; here: variations) */
+.wp-block-quote {
+	font-size: var(--wp--preset--font-size--md);
+	color: var(--c-ink);
+}
+.wp-block-quote cite {
+	display: block;
+	margin-block-start: var(--wp--preset--spacing--2);
+}
+.wp-block-quote.is-style-plain {
+	border: 0;
+	padding-inline-start: 0;
+	font-style: italic;
+}
+.wp-block-quote.is-style-bordered {
+	border-inline-start: 3px solid var(--wp--preset--color--border-strong);
+	padding-inline-start: var(--wp--preset--spacing--5);
+}
+.wp-block-quote.is-style-card {
+	border: 1px solid var(--wp--preset--color--border);
+	border-radius: var(--wp--custom--radius--lg);
+	background-color: var(--wp--preset--color--surface);
+	padding: var(--wp--preset--spacing--6);
+	box-shadow: var(--wp--preset--shadow--sm);
+}
+
+/* Pullquote */
+.wp-block-pullquote {
+	padding-block: var(--wp--preset--spacing--6);
+	text-align: center;
+}
+.wp-block-pullquote.is-style-plain {
+	border: 0;
+}
+.wp-block-pullquote.is-style-bracketed blockquote::before {
+	content: "\201C"; /* left double quote */
+	display: block;
+	font-family: var(--wp--preset--font-family--mono);
+	font-size: var(--wp--preset--font-size--3xl);
+	line-height: 1;
+	color: var(--wp--preset--color--border-strong);
+}
+.wp-block-pullquote.is-style-large blockquote {
+	font-size: var(--wp--preset--font-size--2xl);
+	line-height: var(--wp--custom--type--line-height--tight);
+}
+
+/* Code / preformatted / verse — mono on a sunken surface, scrollable */
+.wp-block-code,
+.wp-block-preformatted,
+.wp-block-verse {
+	font-family: var(--wp--preset--font-family--mono);
+	background-color: var(--wp--preset--color--surface-3);
+	color: var(--wp--preset--color--contrast);
+	border: 1px solid var(--wp--preset--color--border);
+	border-radius: var(--wp--custom--radius--sm);
+	padding: var(--wp--preset--spacing--5);
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	font-size: var(--wp--preset--font-size--sm);
+	line-height: var(--wp--custom--type--line-height--normal);
+}
+.wp-block-verse {
+	white-space: pre-wrap;
+}
+:not(pre) > code {
+	font-family: var(--wp--preset--font-family--mono);
+	background-color: var(--wp--preset--color--surface-3);
+	padding: 0.1em 0.35em;
+	border-radius: var(--wp--custom--radius--sm);
+	font-size: 0.9em;
+}
+
+/* Details (native disclosure) */
+.wp-block-details {
+	border: 1px solid var(--wp--preset--color--border);
+	border-radius: var(--wp--custom--radius--md);
+	background-color: var(--wp--preset--color--surface);
+	padding: var(--wp--preset--spacing--3) var(--wp--preset--spacing--5);
+}
+.wp-block-details summary {
+	cursor: pointer;
+	font-weight: 600;
+	color: var(--wp--preset--color--contrast);
+	list-style-position: inside;
+}
+.wp-block-details[open] summary {
+	margin-block-end: var(--wp--preset--spacing--3);
+	border-block-end: 1px solid var(--wp--preset--color--border);
+	padding-block-end: var(--wp--preset--spacing--2);
+}
+
+/* Table — overflow wrapper + variations */
+.wp-block-table {
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
+.wp-block-table table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: var(--wp--preset--font-size--sm);
+}
+.wp-block-table th,
+.wp-block-table td {
+	padding: var(--wp--preset--spacing--3) var(--wp--preset--spacing--5);
+	text-align: start;
+	border-block-end: 1px solid var(--wp--preset--color--border);
+}
+.wp-block-table thead th {
+	background-color: var(--wp--preset--color--surface-2);
+	color: var(--wp--preset--color--contrast);
+	font-weight: 600;
+	border-block-end: 2px solid var(--wp--preset--color--border-strong);
+}
+.wp-block-table tfoot td {
+	background-color: var(--wp--preset--color--surface-2);
+	font-weight: 600;
+}
+.wp-block-table figcaption {
+	color: var(--wp--preset--color--subtle);
+	font-size: var(--wp--preset--font-size--xs);
+}
+.wp-block-table.is-style-stripes tbody tr:nth-child(odd) {
+	background-color: var(--wp--preset--color--surface-2);
+}
+.wp-block-table.is-style-stripes th,
+.wp-block-table.is-style-stripes td {
+	border-block-end: 0;
+}
+.wp-block-table.is-style-bordered table,
+.wp-block-table.is-style-bordered th,
+.wp-block-table.is-style-bordered td {
+	border: 1px solid var(--wp--preset--color--border);
+}
+.wp-block-table.is-style-compact th,
+.wp-block-table.is-style-compact td {
+	padding: var(--wp--preset--spacing--2) var(--wp--preset--spacing--3);
+}
+.wp-block-table.is-style-plain th,
+.wp-block-table.is-style-plain td {
+	border: 0;
+}
+.wp-block-table.is-style-plain thead th {
+	background-color: transparent;
+}
+
+/* Footnotes + Table of Contents */
+.wp-block-footnotes {
+	font-size: var(--wp--preset--font-size--sm);
+	color: var(--wp--preset--color--subtle);
+	border-block-start: 1px solid var(--wp--preset--color--border);
+	padding-block-start: var(--wp--preset--spacing--3);
+}
+.wp-block-table-of-contents {
+	border: 1px solid var(--wp--preset--color--border);
+	border-radius: var(--wp--custom--radius--md);
+	background-color: var(--wp--preset--color--surface-2);
+	padding: var(--wp--preset--spacing--5);
+	font-size: var(--wp--preset--font-size--sm);
+}
+.wp-block-table-of-contents a {
+	text-decoration: none;
+}
+
+/* =========================================================================
+ * 2. Media blocks
+ * ========================================================================= */
+
+.wp-block-image img {
+	border-radius: var(--wp--custom--radius--md);
+	height: auto;
+}
+.wp-block-image figcaption,
+.wp-block-audio figcaption,
+.wp-block-video figcaption,
+.wp-block-gallery figcaption,
+.wp-block-embed figcaption {
+	color: var(--wp--preset--color--subtle);
+	font-size: var(--wp--preset--font-size--sm);
+	text-align: center;
+	margin-block-start: var(--wp--preset--spacing--2);
+}
+/* image style variations */
+.wp-block-image.is-style-frame img {
+	border: 1px solid var(--wp--preset--color--border);
+	padding: var(--wp--preset--spacing--2);
+	background-color: var(--wp--preset--color--surface);
+	border-radius: var(--wp--custom--radius--sm);
+}
+.wp-block-image.is-style-rounded img {
+	border-radius: var(--wp--custom--radius--lg);
+}
+.wp-block-image.is-style-circle img {
+	border-radius: var(--wp--custom--radius--pill);
+	aspect-ratio: 1;
+	object-fit: cover;
+}
+.wp-block-image.is-style-polaroid {
+	background-color: var(--wp--preset--color--surface);
+	border: 1px solid var(--wp--preset--color--border);
+	padding: var(--wp--preset--spacing--3) var(--wp--preset--spacing--3) var(--wp--preset--spacing--6);
+	box-shadow: var(--wp--preset--shadow--md);
+	border-radius: var(--wp--custom--radius--sm);
+	width: fit-content;
+}
+.wp-block-image.is-style-polaroid img {
+	border-radius: 0;
+}
+.wp-block-image.is-style-duotone-gray img {
+	filter: grayscale(1) contrast(1.05);
+}
+
+/* Gallery */
+.wp-block-gallery {
+	gap: var(--wp--preset--spacing--3);
+}
+.wp-block-gallery.is-style-masonry {
+	display: block;
+	columns: 3 16rem;
+	column-gap: var(--wp--preset--spacing--3);
+}
+.wp-block-gallery.is-style-masonry .wp-block-image {
+	break-inside: avoid;
+	margin-block-end: var(--wp--preset--spacing--3);
+}
+
+/* Audio / video / file */
+.wp-block-audio audio {
+	width: 100%;
+}
+.wp-block-video video {
+	width: 100%;
+	border-radius: var(--wp--custom--radius--md);
+}
+.wp-block-file {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--wp--preset--spacing--3);
+	background-color: var(--wp--preset--color--surface-2);
+	border: 1px solid var(--wp--preset--color--border);
+	border-radius: var(--wp--custom--radius--md);
+	padding: var(--wp--preset--spacing--3) var(--wp--preset--spacing--5);
+	font-size: var(--wp--preset--font-size--sm);
+}
+.wp-block-file .wp-block-file__button {
+	background-color: var(--wp--preset--color--accent);
+	color: var(--wp--preset--color--accent-contrast);
+	border-radius: var(--wp--custom--radius--md);
+	padding: 0.5em 1em;
+}
+
+/* Cover */
+.wp-block-cover {
+	border-radius: var(--wp--custom--radius--lg);
+	overflow: hidden;
+	min-height: 320px;
+	padding: var(--wp--preset--spacing--7);
+}
+.wp-block-cover .wp-block-cover__background {
+	background-color: var(--wp--preset--color--contrast-2);
+}
+.wp-block-cover.is-style-text-card .wp-block-cover__inner-container {
+	background-color: var(--wp--preset--color--surface);
+	color: var(--c-ink);
+	border-radius: var(--wp--custom--radius--md);
+	padding: var(--wp--preset--spacing--6);
+	max-width: 30rem;
+	box-shadow: var(--wp--preset--shadow--lg);
+}
+
+/* Media & text */
+.wp-block-media-text {
+	gap: var(--wp--preset--spacing--6);
+}
+.wp-block-media-text .wp-block-media-text__content {
+	padding-inline: var(--wp--preset--spacing--5);
+}
+
+/* Embeds keep aspect ratio (responsive-embeds support handles most) */
+.wp-block-embed__wrapper {
+	border-radius: var(--wp--custom--radius--md);
+	overflow: hidden;
+}
+
+/* =========================================================================
+ * 3. Design blocks
+ * ========================================================================= */
+
+/* Group style variations (card / panel / bordered / well / plain) */
+.wp-block-group.is-style-card {
+	background-color: var(--wp--preset--color--surface);
+	border: 1px solid var(--wp--preset--color--border);
+	border-radius: var(--wp--custom--radius--lg);
+	box-shadow: var(--wp--preset--shadow--sm);
+	padding: var(--wp--preset--spacing--6);
+}
+.wp-block-group.is-style-panel {
+	background-color: var(--wp--preset--color--surface-2);
+	border-radius: var(--wp--custom--radius--md);
+	padding: var(--wp--preset--spacing--6);
+}
+.wp-block-group.is-style-bordered {
+	border: 1px solid var(--wp--preset--color--border);
+	border-radius: var(--wp--custom--radius--md);
+	padding: var(--wp--preset--spacing--6);
+}
+.wp-block-group.is-style-well {
+	background-color: var(--wp--preset--color--surface-3);
+	border-radius: var(--wp--custom--radius--md);
+	box-shadow: var(--wp--preset--shadow--inset);
+	padding: var(--wp--preset--spacing--6);
+}
+.wp-block-group.is-style-plain {
+	background-color: transparent;
+	border: 0;
+	box-shadow: none;
+}
+
+/* Columns: stack on mobile (WP class), + card/divided variations */
+@media (max-width: 781px) {
+	.wp-block-columns.is-not-stacked-on-mobile {
+		flex-wrap: wrap;
+	}
+}
+.wp-block-columns.is-style-cards > .wp-block-column {
+	background-color: var(--wp--preset--color--surface);
+	border: 1px solid var(--wp--preset--color--border);
+	border-radius: var(--wp--custom--radius--lg);
+	box-shadow: var(--wp--preset--shadow--sm);
+	padding: var(--wp--preset--spacing--6);
+}
+.wp-block-columns.is-style-divided > .wp-block-column + .wp-block-column {
+	border-inline-start: 1px solid var(--wp--preset--color--border);
+	padding-inline-start: var(--wp--preset--spacing--6);
+}
+@media (max-width: 781px) {
+	.wp-block-columns.is-style-divided > .wp-block-column + .wp-block-column {
+		border-inline-start: 0;
+		border-block-start: 1px solid var(--wp--preset--color--border);
+		padding-inline-start: 0;
+		padding-block-start: var(--wp--preset--spacing--6);
+	}
+}
+
+/* Buttons */
+.wp-block-button__link {
+	transition: background-color var(--arne-dur) var(--arne-ease),
+		color var(--arne-dur) var(--arne-ease),
+		box-shadow var(--arne-dur) var(--arne-ease);
+}
+.wp-block-button.is-style-outline .wp-block-button__link {
+	background-color: transparent;
+	color: var(--wp--preset--color--contrast);
+	border: 1px solid var(--wp--preset--color--border-strong);
+}
+.wp-block-button.is-style-outline .wp-block-button__link:hover,
+.wp-block-button.is-style-outline .wp-block-button__link:focus {
+	background-color: var(--wp--preset--color--contrast);
+	color: var(--wp--preset--color--accent-contrast);
+	border-color: var(--wp--preset--color--contrast);
+}
+.wp-block-button.is-style-ghost .wp-block-button__link {
+	background-color: transparent;
+	color: var(--wp--preset--color--contrast);
+	border: 1px solid transparent;
+}
+.wp-block-button.is-style-ghost .wp-block-button__link:hover,
+.wp-block-button.is-style-ghost .wp-block-button__link:focus {
+	background-color: var(--wp--preset--color--surface-3);
+}
+.wp-block-button.is-style-link .wp-block-button__link {
+	background-color: transparent;
+	color: var(--wp--custom--color--link);
+	padding-inline: 0;
+	border-radius: 0;
+	text-decoration: underline;
+}
+.wp-block-button.is-style-pill .wp-block-button__link {
+	border-radius: var(--wp--custom--radius--pill);
+}
+.wp-block-button.is-style-block {
+	width: 100%;
+}
+.wp-block-button.is-style-block .wp-block-button__link {
+	width: 100%;
+	text-align: center;
+}
+.wp-block-button.is-style-icon .wp-block-button__link {
+	padding: 0.6em;
+	aspect-ratio: 1;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: var(--wp--custom--radius--pill);
+}
+
+/* Separator variations */
+.wp-block-separator {
+	border: 0;
+	border-block-start: 1px solid var(--wp--preset--color--border);
+	opacity: 1;
+}
+.wp-block-separator.is-style-hairline {
+	border: 0;
+	height: 1px;
+	background-image: var(--wp--preset--gradient--hairline);
+}
+.wp-block-separator.is-style-wide {
+	border-block-start-width: 2px;
+	max-width: none;
+	width: 100%;
+}
+.wp-block-separator.is-style-short-center {
+	border-block-start: 2px solid var(--wp--preset--color--border-strong);
+	width: var(--wp--preset--spacing--8);
+	margin-inline: auto;
+}
+.wp-block-separator.is-style-dots {
+	border: 0;
+	text-align: center;
+	line-height: 1;
+}
+.wp-block-separator.is-style-dots::before {
+	content: "\00B7 \00B7 \00B7"; /* middle dots */
+	color: var(--wp--preset--color--border-strong);
+	font-size: var(--wp--preset--font-size--xl);
+	letter-spacing: 0.5em;
+	padding-inline-start: 0.5em;
+}
+
+/* Heading label variations */
+.wp-block-heading.is-style-overline,
+.wp-block-heading.is-style-eyebrow,
+.wp-block-heading.is-style-kicker {
+	font-family: var(--wp--preset--font-family--mono);
+	font-size: var(--wp--preset--font-size--xs);
+	font-weight: 600;
+	letter-spacing: var(--wp--custom--type--tracking--wide);
+	text-transform: uppercase;
+	color: var(--wp--preset--color--subtle);
+}
+.wp-block-heading.is-style-overline {
+	border-block-start: 2px solid var(--wp--preset--color--border-strong);
+	padding-block-start: var(--wp--preset--spacing--2);
+	display: inline-block;
+}
+.wp-block-heading.is-style-eyebrow {
+	color: var(--wp--preset--color--accent);
+}
+
+/* =========================================================================
+ * 4. Widget blocks
+ * ========================================================================= */
+
+.wp-block-archives,
+.wp-block-categories,
+.wp-block-page-list,
+.wp-block-latest-posts,
+.wp-block-rss {
+	font-size: var(--wp--preset--font-size--sm);
+}
+.wp-block-archives li,
+.wp-block-categories li,
+.wp-block-latest-posts li,
+.wp-block-rss li {
+	margin-block: var(--wp--preset--spacing--1);
+}
+.wp-block-latest-posts.is-grid,
+.wp-block-latest-posts__list.is-grid {
+	gap: var(--wp--preset--spacing--5);
+}
+.wp-block-latest-posts .wp-block-latest-posts__post-date,
+.wp-block-latest-comments article {
+	color: var(--wp--preset--color--subtle);
+	font-size: var(--wp--preset--font-size--xs);
+}
+.wp-block-latest-posts.is-style-cards li {
+	background-color: var(--wp--preset--color--surface);
+	border: 1px solid var(--wp--preset--color--border);
+	border-radius: var(--wp--custom--radius--md);
+	padding: var(--wp--preset--spacing--5);
+}
+.wp-block-latest-posts.is-style-minimal .wp-block-latest-posts__post-excerpt,
+.wp-block-latest-posts.is-style-minimal .wp-block-latest-posts__featured-image {
+	display: none;
+}
+
+/* Calendar */
+.wp-block-calendar table {
+	width: 100%;
+	font-size: var(--wp--preset--font-size--sm);
+}
+.wp-block-calendar th {
+	background-color: var(--wp--preset--color--surface-2);
+	padding: var(--wp--preset--spacing--2);
+}
+.wp-block-calendar td {
+	padding: var(--wp--preset--spacing--2);
+	border: 1px solid var(--wp--preset--color--border);
+	text-align: center;
+}
+.wp-block-calendar tfoot a {
+	color: var(--wp--custom--color--link);
+}
+
+/* Search — token-styled input + button, both positions */
+.wp-block-search__input {
+	background-color: var(--wp--preset--color--surface);
+	border: 1px solid var(--wp--preset--color--border);
+	border-radius: var(--wp--custom--radius--md);
+	padding: 0.6em 0.9em;
+	color: var(--c-ink);
+	font-size: var(--wp--preset--font-size--base);
+}
+.wp-block-search__button {
+	background-color: var(--wp--preset--color--accent);
+	color: var(--wp--preset--color--accent-contrast);
+	border: 0;
+	border-radius: var(--wp--custom--radius--md);
+	padding: 0.6em 1em;
+}
+.wp-block-search.wp-block-search__button-inside .wp-block-search__inside-wrapper {
+	border: 1px solid var(--wp--preset--color--border);
+	border-radius: var(--wp--custom--radius--md);
+	background-color: var(--wp--preset--color--surface);
+	padding: 3px;
+}
+.wp-block-search.wp-block-search__button-inside .wp-block-search__input {
+	border: 0;
+	background: transparent;
+}
+
+/* Tag cloud */
+.wp-block-tag-cloud a {
+	display: inline-block;
+	background-color: var(--wp--preset--color--surface-2);
+	border: 1px solid var(--wp--preset--color--border);
+	border-radius: var(--wp--custom--radius--pill);
+	padding: 0.2em 0.7em;
+	margin: 0.15em;
+	color: var(--wp--preset--color--subtle);
+	text-decoration: none;
+	font-size: var(--wp--preset--font-size--xs) !important;
+}
+.wp-block-tag-cloud a:hover {
+	border-color: var(--wp--preset--color--border-strong);
+	color: var(--wp--preset--color--contrast);
+}
+
+/* Social links — icon color from tokens + variations */
+.wp-block-social-links {
+	gap: var(--wp--preset--spacing--2);
+}
+.wp-block-social-links:not(.is-style-logos-only) .wp-social-link {
+	background-color: var(--wp--preset--color--surface-2);
+	color: var(--wp--preset--color--contrast);
+}
+.wp-block-social-links.is-style-outline .wp-social-link {
+	background-color: transparent;
+	border: 1px solid var(--wp--preset--color--border-strong);
+	color: var(--wp--preset--color--contrast);
+}
+.wp-block-social-links.is-style-filled .wp-social-link {
+	background-color: var(--wp--preset--color--accent);
+	color: var(--wp--preset--color--accent-contrast);
+}
+.wp-block-social-links.is-style-plain .wp-social-link {
+	background-color: transparent;
+	color: var(--wp--preset--color--subtle);
+}
+.wp-block-social-links.is-style-pill {
+	background-color: var(--wp--preset--color--surface-2);
+	border-radius: var(--wp--custom--radius--pill);
+	padding: var(--wp--preset--spacing--2) var(--wp--preset--spacing--3);
+	width: fit-content;
+}
+
+/* RSS */
+.wp-block-rss__item-title a {
+	font-weight: 600;
+	text-decoration: none;
+}
+.wp-block-rss__item-publish-date,
+.wp-block-rss__item-author {
+	color: var(--wp--preset--color--subtle);
+	font-size: var(--wp--preset--font-size--xs);
+}
+
+/* Custom HTML / shortcode fall back to inherited type; keep them readable */
+.wp-block-html,
+.wp-block-shortcode {
+	font-size: var(--wp--preset--font-size--base);
+}
+
+/* =========================================================================
+ * 5. Theme / query blocks
+ * ========================================================================= */
+
+.wp-block-site-title a {
+	text-decoration: none;
+	color: var(--wp--preset--color--contrast);
+}
+.wp-block-site-tagline {
+	color: var(--wp--preset--color--subtle);
+	font-size: var(--wp--preset--font-size--sm);
+}
+
+/* Query pagination */
+.wp-block-query-pagination {
+	gap: var(--wp--preset--spacing--3);
+	font-size: var(--wp--preset--font-size--sm);
+}
+.wp-block-query-pagination .wp-block-query-pagination-numbers .page-numbers {
+	padding: 0.2em 0.6em;
+	border-radius: var(--wp--custom--radius--sm);
+	text-decoration: none;
+}
+.wp-block-query-pagination .page-numbers.current {
+	background-color: var(--wp--preset--color--contrast);
+	color: var(--wp--preset--color--accent-contrast);
+}
+.wp-block-query-pagination-previous,
+.wp-block-query-pagination-next,
+.wp-block-comments-pagination-previous,
+.wp-block-comments-pagination-next {
+	text-decoration: none;
+	color: var(--wp--custom--color--link);
+}
+
+/* Query style variations */
+.wp-block-post-template.is-style-list-divided > li + li {
+	border-block-start: 1px solid var(--wp--preset--color--border);
+	padding-block-start: var(--wp--preset--spacing--6);
+	margin-block-start: var(--wp--preset--spacing--6);
+}
+.wp-block-post-template.is-style-cards > li {
+	background-color: var(--wp--preset--color--surface);
+	border: 1px solid var(--wp--preset--color--border);
+	border-radius: var(--wp--custom--radius--lg);
+	box-shadow: var(--wp--preset--shadow--sm);
+	padding: var(--wp--preset--spacing--5);
+}
+.wp-block-post-template.is-style-minimal .wp-block-post-excerpt,
+.wp-block-post-template.is-style-minimal .wp-block-post-featured-image {
+	display: none;
+}
+
+/* Post pieces */
+.wp-block-post-title a {
+	text-decoration: none;
+	color: inherit;
+}
+.wp-block-post-excerpt__excerpt {
+	color: var(--wp--preset--color--subtle);
+}
+.wp-block-post-excerpt__more-text a,
+.wp-block-read-more {
+	font-size: var(--wp--preset--font-size--sm);
+	font-weight: 600;
+	text-decoration: none;
+}
+.wp-block-post-date,
+.wp-block-post-author,
+.wp-block-post-author-name {
+	color: var(--wp--preset--color--subtle);
+	font-size: var(--wp--preset--font-size--sm);
+}
+.wp-block-post-terms a {
+	text-decoration: none;
+	color: var(--wp--preset--color--accent);
+}
+.wp-block-avatar img {
+	border-radius: var(--wp--custom--radius--pill);
+}
+/* Owner (2026-10-14): comment avatars sit 4px higher. The rule is on both the
+   wrapper and the image, so the image moves 8px in total, as set in devtools.
+   Comments only (owner, same day): every comment list, the Scroll Story one
+   included, is core's comment template (ol.wp-block-comment-template), so this
+   leaves the post byline and author-archive avatars where they were. */
+.wp-block-comment-template .wp-block-avatar,
+.wp-block-comment-template .wp-block-avatar img {
+	box-sizing: border-box;
+	position: relative;
+	top: -4px;
+}
+.wp-block-term-description {
+	color: var(--wp--preset--color--subtle);
+}
+.wp-block-loginout a {
+	text-decoration: none;
+}
+
+/* Featured image variations */
+.wp-block-post-featured-image.is-style-rounded img {
+	border-radius: var(--wp--custom--radius--lg);
+}
+.wp-block-post-featured-image.is-style-frame img {
+	border: 1px solid var(--wp--preset--color--border);
+	padding: var(--wp--preset--spacing--2);
+	background-color: var(--wp--preset--color--surface);
+}
+.wp-block-post-featured-image.is-style-wide-bleed {
+	border-radius: 0;
+}
+.wp-block-post-featured-image.is-style-wide-bleed img {
+	border-radius: 0;
+}
+
+/* Post navigation link */
+.wp-block-post-navigation-link {
+	font-size: var(--wp--preset--font-size--sm);
+}
+.wp-block-post-navigation-link a {
+	text-decoration: none;
+	color: var(--wp--custom--color--link);
+}
+
+/* Comments */
+.wp-block-comments {
+	margin-block-start: var(--wp--preset--spacing--8);
+}
+.wp-block-comment-author-name a {
+	text-decoration: none;
+	color: var(--wp--preset--color--contrast);
+}
+.wp-block-comment-content {
+	color: var(--c-ink);
+}
+.wp-block-comment-date a,
+.wp-block-comment-edit-link,
+.wp-block-comment-reply-link a {
+	color: var(--wp--preset--color--subtle);
+	text-decoration: none;
+	font-size: var(--wp--preset--font-size--xs);
+}
+.wp-block-post-comments-form input[type="text"],
+.wp-block-post-comments-form input[type="email"],
+.wp-block-post-comments-form input[type="url"],
+.wp-block-post-comments-form textarea {
+	width: 100%;
+	background-color: var(--wp--preset--color--surface);
+	border: 1px solid var(--wp--preset--color--border);
+	border-radius: var(--wp--custom--radius--md);
+	padding: 0.6em 0.9em;
+	color: var(--c-ink);
+}
+.wp-block-post-comments-form .submit {
+	background-color: var(--wp--preset--color--accent);
+	color: var(--wp--preset--color--accent-contrast);
+	border: 0;
+	border-radius: var(--wp--custom--radius--md);
+	padding: 0.6em 1.2em;
+	cursor: pointer;
+}
+
+/* Navigation block style variations (chrome owned by Lane B; C only registers
+ * the desktop link treatments so they coexist). */
+.wp-block-navigation.is-style-underline .wp-block-navigation-item__content {
+	text-decoration: none;
+	border-block-end: 2px solid transparent;
+}
+.wp-block-navigation.is-style-underline .wp-block-navigation-item__content:hover {
+	border-block-end-color: var(--wp--preset--color--contrast);
+}
+.wp-block-navigation.is-style-pill .wp-block-navigation-item__content {
+	padding: 0.25em 0.8em;
+	border-radius: var(--wp--custom--radius--pill);
+}
+.wp-block-navigation.is-style-pill .current-menu-item .wp-block-navigation-item__content {
+	background-color: var(--wp--preset--color--surface-3);
+}
+.wp-block-navigation.is-style-plain .wp-block-navigation-item__content {
+	text-decoration: none;
+}
+
+/* =========================================================================
+ * 6. Notice / callout group styles (achromatic tonal grays)
+ * ========================================================================= */
+
+.wp-block-group.is-style-notice-info,
+.wp-block-group.is-style-notice-note,
+.wp-block-group.is-style-notice-warning,
+.wp-block-group.is-style-notice-tip {
+	border-radius: var(--wp--custom--radius--md);
+	padding: var(--wp--preset--spacing--5);
+	border-inline-start: 4px solid var(--wp--preset--color--border-strong);
+	background-color: var(--wp--preset--color--surface-2);
+}
+.wp-block-group.is-style-notice-info {
+	border-inline-start-color: var(--wp--preset--color--subtle);
+}
+.wp-block-group.is-style-notice-note {
+	border-inline-start-color: var(--wp--preset--color--muted);
+	background-color: var(--wp--preset--color--surface-3);
+}
+.wp-block-group.is-style-notice-warning {
+	border-inline-start-color: var(--wp--preset--color--contrast);
+	background-color: var(--wp--preset--color--surface-2);
+}
+.wp-block-group.is-style-notice-tip {
+	border-inline-start-color: var(--wp--preset--color--accent);
+}
+
+/* =========================================================================
+ * 7. Responsive safety — no horizontal scroll, sensible stacking
+ * ========================================================================= */
+
+/*
+ * hub#1687 — the no-horizontal-scroll safety net must not defeat WordPress's
+ * own layout. `.wp-block-columns { max-width: 100% }` is specificity (0,1,0) and
+ * beat core's `:where(.is-layout-constrained) > *` (0,0,0), so every columns
+ * block inside a constrained group lost its content-size cap and its auto
+ * margins and bled to the group's full inner width — measured on a live
+ * tenant's front page, where a columns row jumped from x=183 to x=36 while its
+ * own section heading stayed put. In the `arneiron-ds` layer this rule still applies
+ * wherever WordPress says nothing, and always yields where WordPress does.
+ */
+@layer arneiron-ds {
+	.wp-block-media-text,
+	.wp-block-columns {
+		max-width: 100%;
+	}
+}
+@media (max-width: 599px) {
+	.wp-block-media-text {
+		grid-template-columns: 1fr !important;
+	}
+	.wp-block-media-text .wp-block-media-text__content {
+		padding-inline: 0;
+		padding-block: var(--wp--preset--spacing--5);
+	}
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+	.wp-block-button__link {
+		transition: none;
+	}
+}
+
+/* --------------------------------------------------------------------------
+ * ArneIron block retirement (hub#3614 item 3)
+ *
+ * arneiron/title, arneiron/button and arneiron/section duplicated core
+ * Heading, Buttons and Row/Group. Their settings move here so the capability
+ * survives the blocks being deleted.
+ *
+ * ONLY the settings core has no equivalent for are reproduced. Alignment, font
+ * size, colour, spacing, layout width, background and border radius are core
+ * controls already and are deliberately NOT duplicated — duplicating them is
+ * how the two block sets diverged in the first place.
+ *
+ * Ported from blocks/build/{title,button,section}/style-index.css, which are
+ * enqueued per-block and therefore disappear with those blocks.
+ * -------------------------------------------------------------------------- */
+
+/* core/heading — the ArneIron section-title treatment. */
+.wp-block-heading.is-style-arneiron-title,
+.wp-block-heading.is-style-arneiron-title-decor {
+	color: var(--arneiron-title-color);
+	font-family: var(--arneiron-title-font);
+	font-size: var(--arneiron-title-size);
+	font-style: var(--arneiron-title-style);
+	font-weight: var(--arneiron-title-weight);
+	line-height: 1.3;
+	position: relative;
+}
+
+/* show_decor: the old block emitted a .sep-element span. A core heading has no
+   inner markup, so the same mark is drawn with ::after — no extra element and
+   nothing for an author to delete by accident. */
+.wp-block-heading.is-style-arneiron-title-decor::after {
+	background: var(--arneiron-button-color, currentColor);
+	content: "";
+	display: block;
+	height: 2px;
+	margin-top: .5em;
+	width: 40px;
+}
+.wp-block-heading.is-style-arneiron-title-decor.has-text-align-center::after { margin-inline: auto; }
+.wp-block-heading.is-style-arneiron-title-decor.has-text-align-right::after  { margin-inline-start: auto; }
+
+/* no_wrap */
+.wp-block-heading.is-style-arneiron-nowrap { white-space: nowrap; }
+
+/* core/button — shadow settings. The custom properties are the same ones the
+   old block set inline, so an author can still drive them from theme.json or a
+   custom style without this stylesheet knowing the values. */
+.wp-block-button.is-style-arneiron-shadow .wp-block-button__link {
+	box-shadow: var(--arneiron-button-shadow, 0 6px 18px rgba(0, 0, 0, .18));
+}
+.wp-block-button.is-style-arneiron-shadow-lift .wp-block-button__link {
+	background-color: var(--arneiron-button-shadow-bg, transparent);
+	box-shadow: var(--arneiron-button-shadow, 0 6px 18px rgba(0, 0, 0, .18));
+	transition: box-shadow var(--arneiron-button-shadow-transition, .35s),
+	            transform var(--arneiron-button-shadow-transition, .35s);
+}
+.wp-block-button.is-style-arneiron-shadow-lift .wp-block-button__link:hover {
+	transform: translateY(-2px);
+}
+
+/* core/group — the four ArneIron Section settings core has no control for.
+   These are driven by REAL Inspector controls (assets/js/editor-group-settings.js),
+   not by style presets, so they compose with the core Background / Shadow /
+   Dimensions panels instead of competing with them. */
+.wp-block-group.arneiron-shape-rounded { border-radius: var(--arneiron-radius-l, 12px); }
+.wp-block-group.arneiron-shape-pill    { border-radius: 999px; }
+.wp-block-group.arneiron-row-overflow  { overflow: visible; }
+.wp-block-group.arneiron-section-equal-height { align-items: stretch; display: flex; }
+.wp-block-group.arneiron-section-equal-height > * { display: flex; flex-direction: column; }
+
+/* =========================================================================
+   arneiron/testimonial "Quote Card" and arneiron/price-table "Token Packages"
+   =========================================================================
+   Their CSS lives in ArneIron Blocks (blocks/testimonial/style-quote-card.css,
+   blocks/price-table/style-packages.css, assets/css/buttons.css) since
+   ArneIron Blocks 1.3.4 / Pro 0.10.7 / Lite 1.1.6, so both styles work under
+   any theme. Old Arnie polish for them stays in old-arnie.css.
+   ========================================================================= */
+
+/* --------------------------------------------------------------------------
+ * core/heading — the retired arneiron/title settings, as CONTROLS
+ * (assets/js/editor-heading-settings.js), not style presets.
+ *
+ * The `is-style-arneiron-title*` rules above stay where they are for any
+ * content already using them, but they are not the delivery path: a preset is a
+ * one-of-N radio and cannot carry a pre-title string or a padding value. Note
+ * also that those preset rules reference --arneiron-title-color / -font / -size
+ * / -style / -weight, and NONE of those custom properties is defined anywhere in
+ * this theme — with no fallback, every one of those five declarations is
+ * invalid-at-computed-value and does nothing. The rules below use only
+ * currentColor and the theme's real presets, so they render.
+ *
+ * pre_title and after_title_text were real elements (<div> and <p>) around the
+ * old block's <h2>. core/heading IS the <h2> and has no inner markup to inject,
+ * so they are carried as data-* attributes and drawn with generated content.
+ * That matches visually but NOT for assistive tech: generated content is not
+ * reliably announced and cannot be selected. Decorative use only.
+ * -------------------------------------------------------------------------- */
+
+.wp-block-heading.arneiron-title-pre::before {
+	content: attr(data-arneiron-pre-title);
+	display: block;
+	font-size: .6em;
+	font-weight: 600;
+	letter-spacing: .08em;
+	margin-bottom: .35em;
+	text-transform: uppercase;
+}
+
+.wp-block-heading.arneiron-title-after::after {
+	content: attr(data-arneiron-after-title);
+	display: block;
+	font-size: .55em;
+	font-weight: 400;
+	line-height: 1.5;
+	margin-top: .5em;
+}
+
+/* show_decor. There are only two pseudo-elements per element and
+   after_title_text already claims ::after, so the separator is drawn two ways:
+   as the ::after itself when there is no after-text, and as a background stripe
+   ON the after-text block when there is — which also keeps the original stacking
+   order (heading, separator, caption). */
+.wp-block-heading.arneiron-title-decor:not(.arneiron-title-after)::after {
+	background: currentColor;
+	content: "";
+	display: block;
+	height: 2px;
+	margin-top: .5em;
+	width: 40px;
+}
+.wp-block-heading.arneiron-title-decor.arneiron-title-after::after {
+	background-image: linear-gradient(currentColor, currentColor);
+	background-position: left top;
+	background-repeat: no-repeat;
+	background-size: 40px 2px;
+	padding-top: .9em;
+}
+.wp-block-heading.arneiron-title-decor.has-text-align-center:not(.arneiron-title-after)::after { margin-inline: auto; }
+.wp-block-heading.arneiron-title-decor.has-text-align-right:not(.arneiron-title-after)::after  { margin-inline-start: auto; }
+.wp-block-heading.arneiron-title-decor.arneiron-title-after.has-text-align-center::after { background-position: center top; }
+.wp-block-heading.arneiron-title-decor.arneiron-title-after.has-text-align-right::after  { background-position: right top; }
+
+/* no_wrap */
+.wp-block-heading.arneiron-no-wrap { white-space: nowrap; }
+
+/* text_tone. `:not(.has-text-color)` is load-bearing: that is the class core
+   adds whenever an author picks a Text Color, so an explicit colour always wins
+   and the two controls never fight over the same declaration. */
+.wp-block-heading.arneiron-tone-light:not(.has-text-color) { color: var(--wp--preset--color--bg, #fff); }
+.wp-block-heading.arneiron-tone-dark:not(.has-text-color)  { color: var(--wp--preset--color--ink, #14181f); }
+.wp-block-heading.arneiron-tone-muted:not(.has-text-color) { color: var(--wp--preset--color--ink-3, #6b7280); }
+
+/* --------------------------------------------------------------------------
+ * core/button — the retired arneiron/button settings, as CONTROLS
+ * (assets/js/editor-button-settings.js).
+ *
+ * The custom properties are set inline on the wrapper .wp-block-button by the
+ * save filter and inherit down to the <a>. They are the SAME names the retired
+ * render.php emitted, so anything already written against them keeps working.
+ * -------------------------------------------------------------------------- */
+
+.wp-block-button.arneiron-btn-transparent > .wp-block-button__link {
+	/* !important because core serialises a chosen background colour INLINE on
+	   the <a>, and an inline declaration beats any stylesheet rule. Without it
+	   this toggle would silently do nothing on exactly the buttons an author is
+	   most likely to use it on. */
+	background-color: transparent !important;
+	background-image: none !important;
+}
+
+.wp-block-button.arneiron-btn-icon > .wp-block-button__link {
+	align-items: center;
+	display: inline-flex;
+	gap: .5em;
+}
+.wp-block-button.arneiron-btn-icon > .wp-block-button__link::after {
+	content: var(--arneiron-btn-icon, "");
+	line-height: 1;
+}
+.wp-block-button.arneiron-btn-icon-left > .wp-block-button__link::after { order: -1; }
+/* Declared even though `order: 0` is already the default: the save filter emits
+   this class, and an emitted class with no rule anywhere reads as dead code to
+   the next person to grep for it. */
+.wp-block-button.arneiron-btn-icon-right > .wp-block-button__link::after { order: 0; }
+
+.wp-block-button.arneiron-btn-shadow > .wp-block-button__link {
+	box-shadow: var(--arneiron-button-shadow, 0 6px 18px rgba(0, 0, 0, .18));
+}
+
+.wp-block-button.arneiron-btn-effect-lift > .wp-block-button__link,
+.wp-block-button.arneiron-btn-effect-glow > .wp-block-button__link {
+	transition: box-shadow var(--arneiron-button-shadow-transition, .35s),
+	            transform var(--arneiron-button-shadow-transition, .35s);
+}
+.wp-block-button.arneiron-btn-effect-lift > .wp-block-button__link:hover {
+	transform: translateY(-2px);
+}
+.wp-block-button.arneiron-btn-effect-glow > .wp-block-button__link:hover {
+	box-shadow: var(--arneiron-button-shadow, 0 6px 18px rgba(0, 0, 0, .18)),
+	            0 0 0 4px var(--arneiron-button-shadow-bg, rgba(0, 0, 0, .08));
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.wp-block-button.arneiron-btn-effect-lift > .wp-block-button__link,
+	.wp-block-button.arneiron-btn-effect-glow > .wp-block-button__link {
+		transition: none;
+	}
+	.wp-block-button.arneiron-btn-effect-lift > .wp-block-button__link:hover {
+		transform: none;
+	}
+}
+
+/* =========================================================================
+   core/group — SHADOW PRESETS
+   =========================================================================
+   Two ready-made drop shadows the retired `arneiron/section` block could draw,
+   ported so the default Row can use them. Driven by a real Inspector control
+   (assets/js/editor-group-settings.js), in the Styles tab beside core's
+   Border & Shadow.
+
+   THESE ARE SHADOWS, NOT DECOR. They were first shipped under the "decor" name,
+   which was wrong: a decor is the shaped SVG band rendered by inc/group-decor.php
+   and configured in the Decor panel. Keeping the two apart matters because they
+   compose - a row can carry a shaped band AND a lifted-corner shadow.
+
+   DRAWN WITH ::before/::after, NOT the original spans. The old block emitted
+   `.arneiron-shadow-corner` twice and `.arneiron-shadow-curve` once as real
+   children. core/group saves statically and the only hook available on save,
+   `blocks.getSaveContent.extraProps`, can add a className or a style and
+   nothing else — it cannot insert child elements. Pseudo-elements give the same
+   two corners and the same curve without touching the row's inner markup, which
+   also means switching the decor off leaves no orphan nodes behind.
+
+   Geometry, colour and stacking are the originals, kept so a row decorated here
+   matches a legacy section pixel for pixel:
+     corner   bottom 15px, height 20%, width 50%, rotate ∓4deg, z-index -1
+     curve    inset 10px, top 50%, border-radius 20% / 10px, z-index -2
+
+   TWO THINGS WILL MAKE IT INVISIBLE, both by design rather than by fault:
+     - the row needs a background. The decor sits BEHIND the row (negative
+       z-index) and reads as a shadow escaping from under it; with a transparent
+       row there is nothing for it to escape from.
+     - `overflow: hidden` clips it. The Overflow Visible control above is the
+       switch for that, and the two are meant to be used together.
+   ========================================================================= */
+
+.wp-block-group[class*="arneiron-shadow-preset-"] {
+	position: relative;
+}
+
+.wp-block-group[class*="arneiron-shadow-preset-"]::before,
+.wp-block-group[class*="arneiron-shadow-preset-"]::after {
+	content: "";
+	position: absolute;
+	pointer-events: none;
+}
+
+/* --- lifted corners: two rotated shadows peeking out at the bottom --- */
+.wp-block-group.arneiron-shadow-preset-lifted-corners::before,
+.wp-block-group.arneiron-shadow-preset-lifted-corners::after {
+	bottom: 15px;
+	height: 20%;
+	width: 50%;
+	box-shadow: 0 15px 10px var(--arneiron-section-shadow-color, rgba(0, 0, 0, .3));
+	z-index: -1;
+}
+
+.wp-block-group.arneiron-shadow-preset-lifted-corners::before {
+	left: 10px;
+	transform: rotate(-4deg);
+}
+
+.wp-block-group.arneiron-shadow-preset-lifted-corners::after {
+	right: 10px;
+	transform: rotate(4deg);
+}
+
+/* --- bottom curve: one soft curved shadow under the row --- */
+.wp-block-group.arneiron-shadow-preset-bottom-curve::before {
+	left: 10px;
+	right: 10px;
+	top: 50%;
+	bottom: 0;
+	border-radius: 20% / 10px;
+	box-shadow: 0 0 15px var(--arneiron-section-shadow-color, rgba(0, 0, 0, .3));
+	z-index: -2;
+}
+
+/* The curve variant uses only ::before; ::after would otherwise inherit the
+   shared rule above and paint an empty box over the row. */
+.wp-block-group.arneiron-shadow-preset-bottom-curve::after {
+	display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.wp-block-group[class*="arneiron-shadow-preset-"]::before,
+	.wp-block-group[class*="arneiron-shadow-preset-"]::after {
+		transition: none;
+	}
+}
+
+/* =========================================================================
+   core/group — DECOR BANDS (the shaped SVG divider)
+   =========================================================================
+   Markup comes from inc/group-decor.php at render time; these rules only
+   position it. The band deliberately sits OUTSIDE the row — inline `top` /
+   `bottom` are negative by its own height — so the shape reads as the row's
+   edge rather than as something inside it.
+
+   `overflow: hidden` on the row will clip the band away completely. That is the
+   single most likely reason a configured decor looks like it did nothing, and
+   the Overflow Visible control in ArneIron Settings is the switch for it.
+   ========================================================================= */
+
+.wp-block-group.arneiron-has-decor {
+	position: relative;
+}
+
+.arneiron-decor-wrap {
+	position: absolute;
+	left: 0;
+	right: 0;
+	width: 100%;
+	line-height: 0;
+	pointer-events: none;
+	z-index: 1;
+}
+
+.arneiron-decor-wrap > svg {
+	display: block;
+	width: 100%;
+}
+
+/* ---- Pattern layout utilities (Pro 0.10.3 / Lite 1.1.2) ------------------
+   Properties core/group and core/quote cannot store as block attributes
+   (width, min-width, horizontal scroll). They used to sit in the patterns as
+   inline style="" the block's save() never writes, which made 11 patterns show
+   "This block contains unexpected content" in the editor. The patterns now
+   carry these classes instead. */
+.arneiron-scroll-x { overflow-x: auto; }
+.arneiron-w-58 { width: 58%; }
+.arneiron-w-90 { width: 90%; }
+.arneiron-w-95 { width: 95%; }
+.arneiron-minw-48 { min-width: 48px; }
+.arneiron-minw-64 { min-width: 64px; }
+.arneiron-minw-16rem { min-width: 16rem; }
+.arneiron-minw-18rem { min-width: 18rem; }
+
+/* Blog sidebar (owner, 2026-10-14: "add sidebar to blog as on demo").
+   templates home/archive/category/tag/search put the posts in
+   .blog-layout__main (68%) and parts/blog-sidebar.html (pattern
+   arneiron/blog-sidebar) in .blog-layout__aside (32%). Moved here from
+   demo.arneiron.net's global-styles CSS block "demo-blog-sidebar"
+   (2026-10-12), selectors unchanged. */
+@media (max-width: 1023.98px) {
+	:root .wp-block-columns.blog-layout { flex-wrap: wrap !important; }
+	:root .wp-block-columns.blog-layout > .wp-block-column { flex-basis: 100% !important; }
+}
+:root .blog-sidebar .wp-block-categories { list-style: none; margin: 0; padding: 0; }
+:root .blog-sidebar .wp-block-categories li { display: flex; justify-content: space-between; gap: var(--wp--preset--spacing--3); margin: 0; padding-block: var(--wp--preset--spacing--3); border-bottom: 1px solid var(--wp--preset--color--border); font-family: var(--wp--preset--font-family--mono); color: var(--wp--preset--color--subtle); }
+:root .blog-sidebar .wp-block-categories li:last-child { border-bottom: 0; }
+:root .blog-sidebar .wp-block-categories a { font-family: var(--wp--preset--font-family--sans); }
+:root .blog-sidebar .wp-block-tag-cloud { margin: 0; }
+:root .blog-sidebar .wp-block-tag-cloud a { color: var(--wp--preset--color--ink-2); font-size: var(--wp--preset--font-size--sm) !important; }
+:root .blog-sidebar .wp-block-tag-cloud a:hover, :root .blog-sidebar .wp-block-tag-cloud a:focus-visible { color: var(--wp--preset--color--ink); border-color: var(--wp--preset--color--accent); }
+
+/* =========================================================================
+   NEWS DIGEST ITEM — each item's own images beside its text (hub#5409)
+   =========================================================================
+
+   Owner call 2026-10-12: «можно сделать типа как L2, но чтобы картинки сбоку
+   были» … «каждая новость содержит картинки отдельные».
+
+   The reference is the Kant "L2" layer on vania-novikau.me. L2's image track is
+   `.d-lg-none` and `vnm-chrome.css:1762` hides it at `min-width: 1000px`, so
+   DESKTOP L2 RENDERS NO IMAGES — this is new work, not a repositioning. What L2
+   contributes is the 1000px breakpoint and the mobile stack (images under their
+   paragraph), both of which are honoured below.
+
+   Implementation notes, so this is not "simplified" back into a defect:
+
+   * `display: grid` and not core's flex. Core `.wp-block-columns` is a flex row
+     that stacks only at <=781px, and it writes inline `flex-basis` onto a column
+     the moment a width is set. Grid overrides the whole flex model in one
+     declaration and needs no !important, and it is what makes a stack between
+     782px and 999px possible at all — core would otherwise still show two
+     columns in that 218px band.
+   * The media column is SECOND in the DOM, which is why the mobile stack lands
+     images after the text with no markup reorder and no `order:` property. That
+     also keeps the reading order correct for a screen reader at every width.
+   * `columns-1` on the gallery is deliberate: in a ~320px side rail a 2-up
+     gallery produces thumbnails too small to carry information. The images
+     stack vertically in the rail instead.
+   ========================================================================= */
+
+/* ---- below 1000px: one column, images beneath their text (L2's behaviour) -- */
+.wp-block-columns.is-style-news-item {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: var(--wp--preset--spacing--40, 1.5rem);
+	align-items: start;
+}
+
+/* Core sets flex-basis/width on columns; neutralise it under grid. */
+.wp-block-columns.is-style-news-item > .wp-block-column {
+	flex-basis: auto !important;
+	min-width: 0; /* let long words wrap instead of widening the track */
+}
+
+/* ---- 1000px and up: the side column L2 never had ------------------------- */
+@media (min-width: 1000px) {
+	.wp-block-columns.is-style-news-item {
+		/* minmax(0,…) on the text track so a long URL cannot blow the grid out. */
+		grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+		gap: var(--wp--preset--spacing--50, 2rem);
+	}
+
+	/* Media LEFT on desktop while staying SECOND in the DOM. Grid placement,
+	   not `order:` on flex — so the mobile stack is still text-then-image and
+	   the screen-reader order is still correct at every width, with no
+	   duplicated markup and no reordering hack.
+
+	   Image-left is arne_kant's call, and the reasoning is worth keeping:
+	   a fixed left edge aligns every item's image into one scannable column,
+	   which is the whole ergonomic point of a digest list. Alternating sides
+	   looks designed and scans badly. */
+	.wp-block-columns.is-style-news-item > .news-item__media {
+		grid-column: 1;
+		grid-row: 1;
+	}
+
+	.wp-block-columns.is-style-news-item > .news-item__body {
+		grid-column: 2;
+		grid-row: 1;
+	}
+}
+
+/* NOT STICKY, deliberately. The first draft of this made the media column
+   `position: sticky`. arne_kant rejected it for a digest and is right: a digest
+   item is a SHORT unit, so a sticky image detaches from the item it belongs to
+   and ends up hovering beside the NEXT item's text — worse than no image at all.
+   Sticky earns its keep only when one image governs a long scroll span. If this
+   layout is ever reused for a long-form article, that is the moment to revisit
+   it, not before. */
+
+/* ---- the media column itself --------------------------------------------- */
+.wp-block-gallery.is-style-news-item-media {
+	gap: var(--wp--preset--spacing--30, 1rem);
+}
+
+.wp-block-gallery.is-style-news-item-media.has-nested-images figure.wp-block-image {
+	width: 100%;
+}
+
+.wp-block-gallery.is-style-news-item-media.has-nested-images figure.wp-block-image img {
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
+/* ---- item rhythm and the meta line -------------------------------------- */
+.news-item + .news-item {
+	margin-top: var(--wp--preset--spacing--60, 3rem);
+}
+
+.news-item__meta {
+	font-size: var(--wp--preset--font-size--small, 0.875rem);
+	opacity: 0.72;
+	margin-top: 0.25em;
+}
+
+.news-item__body > :first-child {
+	margin-top: 0;
+}
+

@@ -1,0 +1,27 @@
+/*
+Theme Name: ArneIron Lite
+Theme URI: https://arneiron.net/lite/
+Description: ArneIron Lite is an accessible block theme with a dark "Old Arnie" look (near-black canvas, signal-red accent), seven more style variations including a light one, and full-site-editing templates, template parts and block patterns made from core blocks. Header, mobile menu and footer work with no plugin installed; with WooCommerce or Polylang active, their cart, account and language blocks appear in the header. Optional: the free ArneIron Blocks plugin adds design blocks such as hero, pricing, FAQ and carousel.
+Author: ArneIron
+Author URI: https://arneiron.net/
+Version: 1.1.40
+Requires at least: 6.5
+Tested up to: 7.1
+Requires PHP: 8.1
+Text Domain: arneiron-lite
+Tags: blog, e-commerce, portfolio, one-column, block-patterns, block-styles, custom-colors, custom-logo, custom-menu, editor-style, featured-images, full-site-editing, full-width-template, rtl-language-support, style-variations, template-editing, threaded-comments, translation-ready, wide-blocks
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Copyright: (C) 2026 ArneIron. ArneIron Lite is distributed under the terms of the GNU GPL v2 or later (see LICENSE). Bundled fonts keep their own licence (SIL Open Font License 1.1, see readme.txt and assets/fonts/LICENSE.md).
+*/
+
+
+/* ---------------------------------------------------------------------------
+   This file is the WordPress theme HEADER ONLY.
+   The ArneIron design layer lives in assets/css/ds.css (the single source
+   of truth, enqueued from functions.php). theme.json carries the same tokens as
+   native design presets so the editor color/type/spacing UI is on-brand.
+
+   Do NOT paste component CSS here — keep ds.css the SoT, exactly as the
+   UX/UI Theme Builder framework (skills/ux-ui/theme-spec.md) mandates.
+   --------------------------------------------------------------------------- */

@@ -1,0 +1,3261 @@
+/* =============================================================================
+   ArneIron — design system stylesheet (assets/css/ds.css)
+   =============================================================================
+   The single source of truth for rendered component CSS. Mobile-first. Locks
+   onto the `theme.json` presets via the `var(--wp--preset--*)` cascade so a
+   restyle re-points a preset, never refactors markup.
+
+   Budget (perf skill): ≤ 14 KB gzipped. Mobile-first. No web fonts.
+   ========================================================================== */
+
+/* ---- 1. Token convenience aliases ------------------------------------------ */
+
+/*  STYLE-VARIATION CONTRACT — read before changing a line in this block.
+ *
+ *  theme.json declares TWO colour families:
+ *
+ *    A "ink/bg"       bg ink ink-2 ink-3 accent-strong on-accent link
+ *                     link-hover success warning danger
+ *    B "base/contrast" base base-2 surface-3 border-strong muted subtle
+ *                     contrast contrast-2 accent-contrast on-surface
+ *    shared           surface surface-2 border accent
+ *
+ *  Every style variation in styles/ overrides family B (that is the WordPress
+ *  convention the variation format is built around). Family A slugs stay at
+ *  their theme.json defaults under EVERY variation, because a variation palette
+ *  is applied at the *user* origin and WordPress still emits the theme-origin
+ *  presets alongside it — so `var(--wp--preset--color--ink, <fallback>)` can
+ *  never fall back: the slug is always defined, just never re-pointed.
+ *
+ *  Aliasing block CSS to family A therefore produced a HALF restyle: the three
+ *  shared slugs followed the variation (frames/borders went dark under Amber)
+ *  while every text colour stayed light-theme near-black. Measured on the
+ *  gallery block: caption-on-surface contrast fell 4.51 -> 3.86 (WCAG AA fail)
+ *  the moment Amber Terminal was selected.
+ *
+ *  Fix: alias to family B wherever the theme.json DEFAULTS are byte-identical,
+ *  so the default look is pixel-unchanged and every variation now reaches the
+ *  blocks:
+ *
+ *      bg -> base            (#ffffff == #ffffff)
+ *      ink -> contrast       (#14181f == #14181f)
+ *      ink-3 -> subtle       (#6b7280 == #6b7280)
+ *      on-accent -> accent-contrast (#ffffff == #ffffff)
+ *
+ *  Slugs with no exact family-B counterpart (ink-2, accent-strong, link,
+ *  link-hover) keep their family-A name and are instead DECLARED BY EVERY
+ *  VARIATION — see styles/*.json. tools/lint-block-tokens.php enforces that:
+ *  any token a block stylesheet uses must be overridden by every variation.
+ *
+ *  success/warning/danger are deliberately NOT variation-scoped: they are
+ *  semantic status colours and are meant to read the same in every skin.
+ */
+/* ArneIron Lite names its palette link colour `link-text` (ops/release/split-themes.py),
+   not `link`: a palette slug "link" makes WordPress print
+   `.has-link-color { color: … !important }`, and core puts that same class on
+   every block whose LINK colour is set, so such a block's whole text turned
+   link-coloured. Pro keeps `link` for now (tenants' token registry). This alias
+   lets the shared CSS keep naming `--wp--preset--color--link` in both editions:
+   zero specificity, so a palette that really defines `link` wins. */
+:where(:root) {
+	--wp--preset--color--link: var(--wp--preset--color--link-text);
+}
+
+:root {
+	--c-bg:            var(--wp--preset--color--base);
+	--c-surface:       var(--wp--preset--color--surface);
+	--c-surface-2:     var(--wp--preset--color--surface-2);
+	--c-border:        var(--wp--preset--color--border);
+	--c-ink:           var(--wp--preset--color--contrast);
+	--c-ink-2:         var(--wp--preset--color--ink-2);
+	--c-ink-3:         var(--wp--preset--color--subtle);
+	--c-accent:        var(--wp--preset--color--accent);
+	--c-accent-strong: var(--wp--preset--color--accent-strong);
+	--c-on-accent:     var(--wp--preset--color--accent-contrast);
+	--c-link:          var(--wp--preset--color--link);
+	--c-link-hover:    var(--wp--preset--color--link-hover);
+	--c-success:       var(--wp--preset--color--success);
+	--c-warning:       var(--wp--preset--color--warning);
+	--c-danger:        var(--wp--preset--color--danger);
+
+	--r-sm:     var(--wp--custom--radius--sm);
+	--r-md:     var(--wp--custom--radius--md);
+	--r-lg:     var(--wp--custom--radius--lg);
+
+	--shadow-sm: var(--wp--custom--shadow--sm);
+	--shadow-md: var(--wp--custom--shadow--md);
+	--shadow-lg: var(--wp--custom--shadow--lg);
+
+	--space: var(--wp--preset--spacing);
+	--space-0: var(--wp--preset--spacing--0);
+	--space-1: var(--wp--preset--spacing--1);
+	--space-2: var(--wp--preset--spacing--2);
+	--space-3: var(--wp--preset--spacing--3);
+	--space-4: var(--wp--preset--spacing--4);
+	--space-5: var(--wp--preset--spacing--5);
+	--space-6: var(--wp--preset--spacing--6);
+	--space-7: var(--wp--preset--spacing--7);
+	--space-8: var(--wp--preset--spacing--8);
+	--space-9: var(--wp--preset--spacing--9);
+	--space-10: var(--wp--preset--spacing--10);
+
+	/* WordPress normalizes numeric font slugs to 2-xl/3-xl in CSS output.
+	   Keep the contract names usable for theme.json styles and local CSS. */
+	--wp--preset--font-size--2xl: var(--wp--preset--font-size--2-xl);
+	--wp--preset--font-size--3xl: var(--wp--preset--font-size--3-xl);
+
+	--page-pad: var(--wp--custom--page--pad);
+	--section-rhythm: var(--wp--custom--section--rhythm);
+
+	/* ---- Composition seam for bundled ArneIron plugins (wp task 2) --------
+	   The connector chat widget (arncon-chat.css) and the portal panels
+	   (portal.css) alias a second, CRT-era token family (--c-signal,
+	   --c-panel, --c-blood, …) "with safe fallbacks" — hardcoded ArneIron
+	   signal-red / blood-black values. Base ds.css never defined those slugs,
+	   so the widgets half-inherited the live palette (--c-ink resolved to the
+	   theme ink) and half fell back to the red-CRT brand: a grey/white site
+	   with a glossy red chat FAB and dark-red dialog surfaces — the exact
+	   style mixing wp task 2 removes. Defining the whole family here, mapped
+	   onto the theme's own presets, makes every consumer compose with the
+	   ACTIVE token system (base or any style variation) instead of falling
+	   back to a second palette. */
+	--c-base:          var(--wp--preset--color--bg);
+	--c-panel:         var(--wp--preset--color--surface);
+	--c-panel-2:       var(--wp--preset--color--surface-2);
+	--c-panel-3:       var(--wp--preset--color--surface-3);
+	--c-well:          var(--wp--preset--color--surface-2);
+	--c-signal:        var(--wp--preset--color--accent);
+	--c-red-deep:      var(--wp--preset--color--accent);
+	--c-blood:         var(--wp--preset--color--accent-strong);
+	--c-maroon:        var(--wp--preset--color--accent-strong);
+	--c-ink-dim:       var(--wp--preset--color--ink-2);
+	--c-grid:          var(--wp--preset--color--border);
+	--c-hair:          var(--wp--preset--color--border);
+	--glow-red:        color-mix(in srgb, var(--wp--preset--color--accent) 45%, transparent);
+	--glow-red-soft:   color-mix(in srgb, var(--wp--preset--color--accent) 18%, transparent);
+	--sh-block:        var(--wp--custom--shadow--md);
+}
+
+/* ---- 1b. Native control colour scheme -------------------------------------
+ *
+ *  Checkboxes, radios, the select drop-down, date/time pickers, the autofill
+ *  wash and scrollbars are painted by the USER AGENT. No rule in this file
+ *  reaches them: `background`/`color` on an `appearance: auto` control leave
+ *  the widget itself untouched, so on a dark variation they stayed light — a
+ *  white "Remember me" box on a near-black login card.
+ *
+ *  `color-scheme` is the only property that reaches them, and a Style
+ *  Variation cannot express it (theme.json has no such key). So it rides a
+ *  custom token instead: every DARK variation declares
+ *  settings.custom.ui.colorScheme = "dark", which WordPress emits as
+ *  --wp--custom--ui--color-scheme alongside the palette. Light variations
+ *  declare nothing and fall back to `light`, so the default skin is unchanged.
+ *
+ *  Keep this in sync: a new dark variation that omits the token gets light
+ *  native controls on a dark canvas, and nothing else in the theme will say so.
+ *  ------------------------------------------------------------------------ */
+:root {
+	color-scheme: var(--wp--custom--ui--color-scheme, light);
+}
+
+/* ---- 2. Reset essentials --------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+	margin: 0;
+	background: var(--c-bg);
+	color: var(--c-ink);
+	font-family: var(--wp--preset--font-family--ui);
+	font-size: var(--wp--preset--font-size--base);
+	line-height: 1.6;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+
+/* ---- 2b. Style-variation seams: canvas + account nav -----------------------
+ *  A Style Variation CANNOT ship raw CSS on this site: `styles.css` at USER
+ *  origin is accepted and stored in wp_global_styles, then silently DROPPED by
+ *  wp_get_global_stylesheet() — measured 2026-09-08, it never reaches a page.
+ *  theme.json also has no way to express a multi-layer background-image. So a
+ *  variation that wants the ArneIron CRT canvas rides CUSTOM TOKENS, exactly
+ *  like --wp--custom--ui--color-scheme above, and this file consumes them.
+ *
+ *  Reference for the values: the prod parent-theme preset
+ *  pix-theme-g/assets/css/presets/arneiron.css §2 (canvas/typography) and
+ *  presets/arneiron/_forms-woo.css §U6.8 (account nav) — theme CSS on prod,
+ *  which is why dev never inherited any of it.
+ *
+ *  EVERY token below has an inert fallback: a variation that declares none of
+ *  them renders exactly as it did before this block existed.
+ *  ------------------------------------------------------------------------ */
+body {
+	font-family:           var(--wp--custom--canvas--body-font, var(--wp--preset--font-family--ui));
+	background-image:      var(--wp--custom--canvas--image, none);
+	background-size:       var(--wp--custom--canvas--size, auto);
+	background-attachment: var(--wp--custom--canvas--attachment, scroll);
+}
+a:hover { text-shadow: var(--wp--custom--canvas--link-glow, none); }
+::selection {
+	background: var(--wp--custom--canvas--selection-bg, var(--c-accent));
+	color:      var(--wp--custom--canvas--selection-ink, var(--c-bg));
+}
+
+/* Account sidebar. Selector specificity deliberately matches arneiron-admin
+ * portal.css (.woocommerce-account .woocommerce-MyAccount-navigation li a) so
+ * a declaring variation wins; portal's own hairline is left alone. */
+.woocommerce-account .woocommerce-MyAccount-navigation ul {
+	border:     var(--wp--custom--nav--border, 0);
+	background: var(--wp--custom--nav--bg, transparent);
+}
+.woocommerce-account .woocommerce-MyAccount-navigation li a {
+	font-family:    var(--wp--custom--nav--font, inherit);
+	font-weight:    var(--wp--custom--nav--weight, inherit);
+	letter-spacing: var(--wp--custom--nav--tracking, inherit);
+	text-transform: var(--wp--custom--nav--transform, none);
+	border-left:    var(--wp--custom--nav--rail, 0) solid transparent;
+	text-decoration: none;
+}
+/* No underline on the menu items (owner, 2026-10-15). WooCommerce's
+   woocommerce-blocktheme.css underlines the ACTIVE row with this exact
+   selector (0,3,2); this sheet loads after it, so the tie goes to us. */
+.woocommerce-account .woocommerce-MyAccount-navigation li.is-active a,
+.woocommerce-account .woocommerce-MyAccount-navigation li a:hover {
+	text-decoration: none;
+}
+.woocommerce-account .woocommerce-MyAccount-navigation li.is-active a {
+	border-left-color: var(--wp--custom--nav--rail-color, transparent);
+	background:        var(--wp--custom--nav--active-bg, transparent);
+}
+
+img, picture, svg, video, canvas { max-width: 100%; height: auto; display: block; }
+/* Links carry COLOUR only — no underline. The browser's UA stylesheet
+   underlines every <a>; nothing in this theme ever removed it, so content links
+   came out red AND underlined. Owner's call 2026-09-10: the link colour is the
+   affordance. Focus is unaffected — the :focus-visible ring below still paints,
+   so keyboard users keep a visible indicator. */
+a { color: var(--c-link); text-decoration: none; }
+/* Buttons are excluded: a link-styled button (.wp-element-button, e.g. the
+   header CTA) takes its text colour from theme.json `elements.button`. Every
+   palette sets link-hover == accent-strong == the button's hover background,
+   so this rule used to paint the hovered button's text in its own background
+   colour and the label vanished. :where() keeps this rule's specificity. */
+a:where(:not(.wp-element-button)):hover { color: var(--c-link-hover); text-decoration: none; }
+
+/* Single visible focus ring everywhere (keyboard-focus skill, WCAG 2.4.7). */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+	outline: 2px solid var(--c-accent-strong);
+	outline-offset: 2px;
+	border-radius: 2px;
+}
+/* On a section painted with the `contrast` colour (the inverse band: pink in
+   Old Arnie, near-black in the light skins) the accent ring fell to 2.25:1;
+   `base` is that band's opposite in every palette. */
+:where(.has-contrast-background-color, .has-contrast-2-background-color) :focus-visible {
+	outline-color: var(--wp--preset--color--base);
+}
+
+/* Respect reduced motion globally (accessibility skill). */
+@media (prefers-reduced-motion: reduce) {
+	*, *::before, *::after {
+		animation-duration: 0.001ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.001ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+/* ---- 3. Skip link ---------------------------------------------------------- */
+.skip-link:not(:focus):not(:active) {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+.skip-link:focus,
+.skip-link:active {
+	position: fixed;
+	top: var(--space-3);
+	left: var(--space-3);
+	z-index: 1000;
+	background: var(--c-accent-strong);
+	color: var(--c-on-accent);
+	padding: var(--space-3) var(--space-5);
+	border-radius: var(--r-md);
+}
+
+/* ---- 4. Layout primitives -------------------------------------------------- */
+/* `.site-main` is NOT in this group, deliberately.
+   -----------------------------------------------------------------------------
+   It used to be, and that double-inset every page. `main` carries WordPress's
+   `has-global-padding` (32px inline at 1440) AND `is-layout-constrained`, so it
+   already positions its own children: full-width box, root padding, children
+   capped at contentSize and centred. Constraining the box to wideSize on top of
+   that applied the width twice — measured on dev, the header row sat at x=70
+   spanning 1300px while the page content sat at x=102 spanning 1236px, a 32px
+   inset on each side that nothing asked for.
+
+   With the constraint removed, `main` runs full width, the root padding does the
+   insetting, and the constrained layout centres content at exactly x=70/1300 —
+   flush with the header and footer rows. Verified before changing the file by
+   injecting the override live and measuring.
+
+   Side effect, and a wanted one: `alignfull` inside the content can now actually
+   reach the viewport edge. While `main` was capped at wideSize it could not. */
+.site-header,
+.site-footer {
+	/* The literals are LAST-RESORT fallbacks only: theme.json always declares
+	   both globals, so `var()` never falls through on a live page. They were
+	   left at the pre-0.6.6 values (1280/768) and therefore documented a layout
+	   the theme no longer has; realigned to theme.json settings.layout
+	   (wideSize 1300px, contentSize 1300px) so the file cannot mislead a reader
+	   about the current geometry. */
+	width: min(100% - 2 * var(--page-pad), var(--wp--style--global--wide-size, 1300px));
+	margin-inline: auto;
+}
+.site-main { padding-block: var(--space-6); }
+
+.wp-block-post-content {
+	max-width: var(--wp--style--global--content-size, 1300px);
+	margin-inline: auto;
+}
+.wp-block-post-content > * {
+	margin-block-start: var(--space-6);
+	margin-block-end: 0;
+}
+.wp-block-post-content > :first-child { margin-block-start: 0; }
+.wp-block-post-content :where(h1, h2, h3, h4, h5, h6) {
+	color: var(--c-ink);
+	margin-block-end: 0;
+}
+
+/*
+ * hub#1687 — the design-system heading type scale is DEFERENTIAL.
+ *
+ * A rule inside a cascade layer always loses to an unlayered rule, whatever the
+ * specificity. WordPress emits theme.json / Style-Variation typography
+ * unlayered (`global-styles-inline-css`), so putting the DS type scale in the
+ * `arneiron-ds` layer means: a tenant whose variation pins h1-h6 to its own
+ * display face keeps that face, and a site whose variation says
+ * nothing about headings still gets this scale. Before this,
+ * `.wp-block-post-content :where(h1..h6)` at specificity (0,1,0) beat the bare
+ * `h1, h2, ...` selectors WordPress emits and silently repainted the tenant's
+ * headings in the UI font.
+ *
+ * Colour and margins stay unlayered above: they are structural, and no global-
+ * styles output competes for them.
+ */
+@layer arneiron-ds {
+	.wp-block-post-content :where(h1, h2, h3, h4, h5, h6) {
+		font-family: var(--wp--preset--font-family--ui);
+		font-weight: 700;
+	}
+	.wp-block-post-content h1 {
+		font-size: var(--wp--preset--font-size--3-xl);
+		line-height: 1.1;
+	}
+	.wp-block-post-content h2 {
+		font-size: var(--wp--preset--font-size--2-xl);
+		line-height: 1.15;
+	}
+	.wp-block-post-content h3 {
+		font-size: var(--wp--preset--font-size--xl);
+		line-height: 1.15;
+	}
+	.wp-block-post-content h4 {
+		font-size: var(--wp--preset--font-size--lg);
+		font-weight: 650;
+		line-height: 1.2;
+	}
+	.wp-block-post-content h5 {
+		font-size: var(--wp--preset--font-size--base);
+		font-weight: 650;
+		line-height: 1.3;
+	}
+	.wp-block-post-content h6 {
+		font-size: var(--wp--preset--font-size--sm);
+		font-weight: 650;
+		line-height: 1.3;
+	}
+}
+.wp-block-post-content > h1,
+.wp-block-post-content > h2,
+.wp-block-post-content > h3,
+.wp-block-post-content > h4 {
+	margin-block-start: var(--space-8);
+}
+.wp-block-post-content > h1 + *,
+.wp-block-post-content > h2 + *,
+.wp-block-post-content > h3 + *,
+.wp-block-post-content > h4 + *,
+.wp-block-post-content > h5 + *,
+.wp-block-post-content > h6 + * {
+	margin-block-start: var(--space-4);
+}
+.wp-block-post-content > .wp-block-separator {
+	margin-block: var(--space-8);
+}
+.wp-block-post-content > ul,
+.wp-block-post-content > ol {
+	padding-inline-start: var(--space-7);
+}
+/*
+ * Prose list rhythm, for PROSE lists only (#5431): core List blocks (WP adds
+ * `wp-block-list` at render) and classic unclassed ul/ol. A bare
+ * `.wp-block-post-content li + li` also hit every block that renders a list
+ * (client-showcase chips, how-it-works steps, price-table, stat-strip,
+ * navigation, page-list, query loop, latest posts, archives, categories, ...)
+ * and pushed item 2+ down 4px; in a stretched flex row that made chip 1 taller
+ * than the rest. :where() keeps the specificity at (0,1,2), as before.
+ */
+.wp-block-post-content :where(ul:not([class]), ol:not([class]), .wp-block-list) > li + li { margin-block-start: var(--space-2); }
+.wp-block-post-content :where(ul:not([class]), ol:not([class]), .wp-block-list) > li > ul,
+.wp-block-post-content :where(ul:not([class]), ol:not([class]), .wp-block-list) > li > ol { margin-block-start: var(--space-2); }
+/*
+ * Client-showcase chips (#5431): items never carry a margin (belt and braces
+ * for the rule above), and the label sits in the vertical centre. With the
+ * inherited 1.6 line-height the mono font's text box sat 3px from the top and
+ * 4.19px from the bottom; `line-height: normal` makes the line box the text
+ * box and the padding gives back exactly the removed leading, so the chip
+ * keeps its height (1.6em line + 1px padding) with equal insets.
+ */
+.wp-block-arneiron-client-showcase ul.client-card__chips > li {
+	margin: 0;
+	line-height: normal;
+	padding-block: calc(1px + (1.6em - 1lh) / 2);
+}
+/*
+ * Client-showcase "VISIT SITE" label (owner, #5433). The plugin's rule
+ * (ArneIron Blocks blocks/client-showcase, 0,2,0) leaves the label with the
+ * shot's inherited line-height 0, so the box was 4px tall and the text spilled
+ * out of it. Only the owner's changed properties are overridden here (0,3,0);
+ * background, colour, font, position, opacity and transition stay the plugin's.
+ * The same four belong in the plugin's own rule in its next release.
+ */
+.wp-block-arneiron-client-showcase .client-card__shot .client-card__visit {
+	padding: 2px 10px 0px;
+	min-height: 20px;
+	display: flex;
+	align-items: center;
+}
+/*
+ * Title arrow (owner, #5435): hidden while the card is hovered (or holds
+ * keyboard focus), because the "VISIT SITE" label shows on the image then.
+ * ArneIron Blocks only recoloured and nudged it. opacity + visibility keep the
+ * arrow's box, so the title does not move; visibility flips after the .15s fade
+ * on the way out and at once on the way back.
+ */
+.wp-block-arneiron-client-showcase .client-card__row .client-card__arrow {
+	transition: color .15s ease, transform .15s ease, opacity .15s ease, visibility 0s linear 0s;
+}
+.wp-block-arneiron-client-showcase .client-card:is(:hover, :focus-within) .client-card__arrow {
+	opacity: 0;
+	visibility: hidden;
+	transition: color .15s ease, transform .15s ease, opacity .15s ease, visibility 0s linear .15s;
+}
+@media (prefers-reduced-motion: reduce) {
+	.wp-block-arneiron-client-showcase .client-card__row .client-card__arrow,
+	.wp-block-arneiron-client-showcase .client-card:is(:hover, :focus-within) .client-card__arrow {
+		transition: none;
+	}
+}
+
+/* Landing template: no top chrome pad — the hero owns the top fold. The body
+   gets full access to alignwide/alignfull sections; the content constrain is
+   re-applied inside (per-section) by the blocks/patterns. */
+.site-main--landing { padding-block: 0; }
+.site-main--landing > .wp-block-post-content { padding-block: var(--section-rhythm, clamp(32px, 4vw, 96px)); }
+
+/* Robust grid that reflows without a media query (grid-spacing skill). */
+.features__grid {
+	display: grid;
+	gap: var(--space-6);
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+	align-items: stretch;
+}
+
+/* ---- 5. Component: card ---------------------------------------------------- */
+.card {
+	background: var(--c-surface);
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-md);
+	padding: var(--space-6);
+	box-shadow: var(--shadow-sm);
+}
+
+/* ---- 6. Component: buttons (variants via selector layer) -------------------*/
+.wp-block-button__link {
+	border-radius: var(--r-md);
+	min-height: 44px;          /* WCAG 2.5.5 touch target */
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	transition: background-color .15s ease;
+}
+.wp-block-button__link:hover { text-decoration: none; }
+
+.is-style-outline .wp-block-button__link {
+	background: transparent;
+	border: 1px solid currentColor;
+	color: var(--c-accent);
+}
+.is-style-outline .wp-block-button__link:hover { color: var(--c-accent-strong); }
+
+/* ---- 7. Empty state ------------------------------------------------------- */
+.empty {
+	border: 1px dashed var(--c-border);
+	border-radius: var(--r-md);
+	text-align: center;
+	color: var(--c-ink-2);
+	background: var(--c-surface);
+}
+.empty .wp-block-heading { color: var(--c-ink); }
+
+/* ---- 8. Query loop / cards block-level polish ----------------------------- */
+/*
+ * Card rhythm (#5424). One spacing source per gap, all theme.json tokens:
+ *   image -> title 5 (16px) · title -> date 3 (8px) · date -> excerpt 5 (16px)
+ *   last paragraph -> "(more…)" 4 (12px) · "(more…)" -> card bottom = the
+ *   card's own padding (5), nothing else.
+ * The flex `gap` is gone because it stacked with the flow-layout / post-content
+ * `--space-6` margins (32px title -> date). Every direct child starts at 0 and
+ * the gap is carried by the LATER sibling's margin-block-start, so a card
+ * without a featured image starts flush. Both card bodies are covered: the
+ * theme's `post-excerpt` and a `post-content` teaser (`<!--more-->`, as the
+ * demo.arneiron.net DB templates use). The more-link is a block (fit-content,
+ * so the hit area stays the label) so its margin applies and no inline
+ * line-box slack is left under it. Scoped to `.query-compact` only.
+ */
+.query-compact .query-compact__item { display: flex; flex-direction: column; gap: 0; }
+.query-compact .query-compact__item > * { margin-block: 0; }
+.query-compact .query-compact__item > * + .wp-block-post-title { margin-block-start: var(--wp--preset--spacing--5); }
+.query-compact .query-compact__item > * + .query-compact__date { margin-block-start: var(--wp--preset--spacing--3); }
+.query-compact .query-compact__item > * + :is(.wp-block-post-excerpt, .wp-block-post-content) { margin-block-start: var(--wp--preset--spacing--5); }
+.query-compact .query-compact__item :is(.wp-block-post-excerpt, .wp-block-post-content) > :last-child,
+.query-compact .query-compact__item :is(.wp-block-post-excerpt__excerpt, .wp-block-post-excerpt__more-text) { margin-block-end: 0; }
+.query-compact .query-compact__item .wp-block-post-excerpt__more-text { margin-block-start: 0; }
+.query-compact .query-compact__item :is(.more-link, .wp-block-post-excerpt__more-link) {
+	display: block;
+	width: fit-content;
+	margin-block: var(--wp--preset--spacing--4) 0;
+	/* Core's constrained layout gives every direct child of post-content
+	   `margin-left/right: auto !important`, which centres a fit-content block.
+	   The link stays where the text starts. */
+	margin-inline: 0 !important;
+}
+.query-compact__date { color: var(--c-ink-3); }
+/*
+ * ArneIron Blocks "Posts" category chip (#5427). The bare `a:hover` rule in this
+ * file (0,1,1) out-ranked the plugin's `.arneiron-posts__chip` (0,1,0) and
+ * painted a hovered chip's label in the link-hover colour, the same orange as
+ * the chip's hover background (1:1). Hover / keyboard focus take both colours
+ * from the button hover pair instead (settings.custom.button.hoverBg/hoverInk,
+ * per style variation: white on a dark hover colour, a dark label on light
+ * accents), >= 4.5:1 in every variation.
+ */
+.arneiron-posts .arneiron-posts__chip:hover,
+.arneiron-posts .arneiron-posts__chip:focus-visible {
+	background: var(--wp--custom--button--hover-bg, var(--c-accent-strong));
+	/* White in every variation (owner, #5429): no hover-ink dark-label exception
+	   for this chip. Light-accent variations (Amber, Gray Dark, Green Terminal)
+	   fall under 4.5:1 here; measured and reported in #5429. */
+	color: #fff;
+}
+/* Author pill on the Posts card (owner values, #5429). */
+.arneiron-posts .arneiron-posts__author {
+	background-color: rgba(255, 255, 255, .5);
+	padding: 2px 10px;
+	border-radius: 50px;
+}
+.query-compact .wp-block-post-featured-image { margin: 0; }
+.query-compact .wp-block-post-title { margin: 0; }
+
+/* ---- 9. Forms (front-end rendered ones, e.g. search + comments) ----------- */
+input[type="text"], input[type="search"], input[type="email"], input[type="url"],
+input[type="password"], input[type="tel"], textarea, select {
+	width: 100%;
+	min-height: 44px;            /* touch target */
+	padding: var(--space-3) var(--space-4);
+	font: inherit;
+	color: var(--c-ink);
+	background: var(--c-bg);
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-sm);
+	transition: border-color .15s ease, box-shadow .15s ease;
+}
+input:focus-visible, textarea:focus-visible, select:focus-visible {
+	border-color: var(--c-accent);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-accent) 25%, transparent);
+}
+
+/* ---- 10. Pagination ------------------------------------------------------- */
+.wp-block-query-pagination { gap: var(--space-3); }
+.wp-block-query-pagination a, .wp-block-query-pagination span {
+	min-width: 44px; min-height: 44px; display: inline-grid; place-items: center;
+	border-radius: var(--r-sm);
+}
+.wp-block-query-pagination .current { background: var(--c-accent); color: var(--c-on-accent); }
+
+/* ---- 11. Hero ------------------------------------------------------------- */
+.hero__inner { display: flex; flex-direction: column; gap: var(--space-4); align-items: center; }
+
+/* ---- 12. Tables ----------------------------------------------------------- */
+.table-wrap { overflow-x: auto; }
+.wp-block-table table { border-collapse: collapse; width: 100%; }
+.wp-block-table th {
+	background: var(--c-surface);
+	text-align: start;
+	padding: var(--space-3) var(--space-4);
+	font-weight: 650;
+}
+.wp-block-table td {
+	padding: var(--space-3) var(--space-4);
+	border-top: 1px solid var(--c-border);
+}
+.wp-block-table figcaption {
+	font-size: var(--wp--preset--font-size--xs);
+	color: var(--c-ink-3);
+	margin-top: var(--space-3);
+}
+
+/* ---- 13. Sidebar ---------------------------------------------------------- */
+.site-sidebar { padding-block: var(--space-6); }
+
+/* ---- 14. Prose atoms + quote polish (DisArnie audit high/med) ----------- */
+/* Bring the prose atoms onto the grey ramp so they stop reading as browser
+   defaults. Resolves DisArnie audit #2 (mark), #3 (code/kbd), #4 (quote/pullquote). */
+
+mark {
+	background: var(--c-surface-2);
+	color: var(--c-ink);
+	padding: 0 .15em;
+	border-radius: var(--r-sm);
+}
+
+code, kbd {
+	font-family: var(--wp--preset--font-family--ui);
+	background: var(--c-surface);
+	padding: .1em .35em;
+	border-radius: var(--r-sm);
+	border: 1px solid var(--c-border);
+	font-size: .9em;
+}
+kbd { font-weight: 600; }
+
+/* <code> inside <pre> keeps the code-block appearance (no inline chrome). */
+pre code, pre kbd {
+	background: none; border: 0; padding: 0; font-size: inherit;
+}
+/* R2-3: pull <pre.wp-block-code> + preformatted + verse onto the grey ramp as one
+   deliberate 'code surface' (no hue). Satisfies concept.md §4 + decision #5. */
+pre.wp-block-code,
+pre.wp-block-preformatted,
+pre.wp-block-verse {
+	background: var(--c-surface);
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-md);
+	padding: var(--space-4) var(--space-5);
+	overflow-x: auto;
+	font-family: var(--wp--preset--font-family--ui);
+	font-size: var(--wp--preset--font-size--sm);
+	line-height: 1.5;
+	color: var(--c-ink-2);
+}
+
+/* R2-1 fix: scope blockquote so the pullquote's nested <blockquote> doesn't
+   inherit the standalone-quote border. Concept.md §4 single-treatment. */
+blockquote:not(.wp-block-pullquote blockquote):not(figcaption) {
+	margin-inline: 0;
+	padding-inline: var(--space-5);
+	border-inline-start: 3px solid var(--c-border);
+	color: var(--c-ink-2);
+}
+/* R2-2 durability: scope the cite the same way so the pullquote-cite override at
+   the rule below wins cleanly by source order, not by specificity tie. */
+blockquote:not(.wp-block-pullquote blockquote) cite {
+	display: block;
+	margin-top: var(--space-3);
+	font-size: var(--wp--preset--font-size--sm);
+	color: var(--c-ink-3);
+}
+
+.wp-block-pullquote {
+	border-top: 2px solid var(--c-border);
+	border-bottom: 2px solid var(--c-border);
+	padding-block: var(--space-6);
+	margin-block: var(--space-7);
+	text-align: center;
+}
+/* R2-1: reset the nested quote so it has no doubled border, no inner padding,
+   and full ink color (the pullquote band is the only treatment). */
+figure.wp-block-pullquote blockquote {
+	border: 0;
+	margin-inline: 0;
+	padding-inline: 0;
+	color: var(--c-ink);
+}
+.wp-block-pullquote cite,
+.wp-block-pullquote .wp-block-pullquote__citation {
+	display: block;
+	margin-top: var(--space-3);
+	font-size: var(--wp--preset--font-size--sm);
+	color: var(--c-ink-3);
+}
+
+/* Gallery placeholder fallback (DisArnie audit #5): when a gallery has no
+   real media, the tiles should render as deliberate grey 4:3 boxes per §5,
+   not as a zero-height invisible frame. */
+figure.wp-block-image:has(> div[role="img"].image-placeholder) {
+	margin: 0;
+}
+.image-placeholder {
+	background: var(--c-surface-2);
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-md);
+	display: grid;
+	place-items: center;
+	color: var(--c-ink-3);
+}
+.image-placeholder::after {
+	content: "4:3";
+	font-size: var(--wp--preset--font-size--sm);
+	font-weight: 600;
+}
+
+/* Latest-posts excerpt drops one step in hierarchy (DisArnie audit #11 polish). */
+.wp-block-latest-posts__post-excerpt {
+	font-size: var(--wp--preset--font-size--sm);
+	color: var(--c-ink-2);
+	margin-top: var(--space-2);
+}
+
+/* Re-create the gallery grid for the core/html placeholder gallery.
+   (DisArnie round-2 — gallery regression fix; §4 grid spec + §5 placeholder spec.) */
+figure.wp-block-gallery {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: var(--space-4);
+}
+figure.wp-block-gallery > .wp-block-image { margin: 0; }
+@media (max-width: 600px) {
+	figure.wp-block-gallery { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+	figure.wp-block-gallery { grid-template-columns: 1fr; }
+}
+
+/* R2-8: search input onto the grey ramp (one rule, matches §4 search spec). */
+.wp-block-search__input {
+	background: var(--c-bg);
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-md);
+	padding: var(--space-3) var(--space-4);
+}
+.wp-block-search__button {
+	border-radius: var(--r-md);
+}
+
+/* R2-9: real disabled-button state for the reference page. Convention:
+   component-design.md 'rest/hover/focus-visible/active/disabled' — the disabled
+   state must be visible, not just described. */
+.wp-block-button .wp-element-button[aria-disabled="true"],
+.wp-block-button .wp-element-button.is-disabled,
+.wp-block-button .wp-element-button:disabled {
+	color: var(--c-ink-3) !important;
+	background-color: var(--c-surface-2) !important;
+	border-color: var(--c-border) !important;
+	cursor: not-allowed;
+	opacity: .65;
+	text-decoration: none;
+	pointer-events: none;
+}
+
+/* ---- 14b. Mobile header bar (PB-B5 / §10.5) -------------------------------
+   One-row chrome shown below desktop headers on mobile breakpoints only.
+   Layout (left -> right): [LOGO] ............ [balance] [account] [cart] [☰]
+   The right cluster orders icons so when read right-to-left you get
+   hamburger -> cart -> my-account -> balance (UX spec).
+   Progressive enhancement: the bar is server-rendered always; CSS hides it on
+   desktop and hides desktop headers on mobile (so no parity gap with JS off).
+   ------------------------------------------------------------------------ */
+
+/* Default: desktop headers visible, mobile bar hidden. */
+.header-mobile.arneiron-mobile-bar { display: none; }
+
+/* On small screens: swap. Breakpoint matches core's default 782 navigation. */
+@media (max-width: 782px) {
+	/* Hide the desktop header's own chrome (we replace it wholesale). */
+	.site-header:not(.header-mobile) {
+		display: none !important;
+	}
+	/* Show the mobile bar. */
+	.header-mobile.arneiron-mobile-bar {
+		display: block;
+	}
+	/* Keep it sticky at the top. */
+	.header-mobile.arneiron-mobile-bar {
+		position: sticky;
+		top: 0;
+		z-index: 50;
+	}
+	/* Row: space-between so logo sticks left, icons stick right. */
+	.arneiron-mobile-bar__row {
+		width: 100%;
+		align-items: center;
+	}
+	/* Right cluster: reversed flex so the LAST child in DOM (hamburger) sits
+	   rightmost; reading R->L: hamburger, cart, account, balance. The icons
+	   itself wraps each chip; gap keeps them tidy. */
+	.arneiron-mobile-bar__icons {
+		gap: var(--space-2, 8px);
+	}
+	.no-js .arneiron-mobile-bar__icons-inner { display: contents; }
+	/* Hide the WRAPPER too: each header part is a <header> landmark, and one
+	   whose row is hidden still counted as a second, empty banner for screen
+	   readers. Only the part that shows at this width is exposed. */
+	header.wp-block-template-part:has(> .site-header.app-header) {
+		display: none;
+	}
+}
+@media (min-width: 783px) {
+	header.wp-block-template-part:has(> .arneiron-mobile-bar) {
+		display: none;
+	}
+}
+
+/* Component: wallet chip (from [arneiron_balance_seam]). */
+.arneiron-wallet-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 4px 8px;
+	border-radius: var(--r-md);
+	background: var(--c-surface-2);
+	color: var(--c-ink);
+	text-decoration: none;
+	font-size: 0.85em;
+	line-height: 1;
+}
+.arneiron-wallet-chip__label { color: var(--c-ink-2); font-size: 0.85em; }
+.arneiron-wallet-chip__value { font-weight: 600; }
+.arneiron-wallet-chip .woocommerce-Price-amount { font-size: 0.9em; }
+
+/* Component: my-account toggle + dropdown. */
+.arneiron-account-toggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 40px;
+	border-radius: var(--r-md);
+	background: transparent;
+	color: var(--c-ink);
+	text-decoration: none;
+	border: 1px solid transparent;
+	cursor: pointer;
+	font-size: 1.1em;
+}
+.arneiron-account-toggle:hover,
+.arneiron-account-toggle[aria-expanded="true"] {
+	background: var(--c-surface-2);
+	border-color: var(--c-border);
+}
+.arneiron-account-toggle__screen { /* vis: a way to also show the word if needed */ }
+.arneiron-account-menu {
+	position: absolute;
+	right: 0;
+	top: calc(100% + 4px);
+	list-style: none;
+	margin: 0;
+	padding: var(--space-2, 8px);
+	background: var(--c-bg);
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-md);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	min-width: 200px;
+	z-index: 60;
+}
+.arneiron-account-menu[hidden],
+.arneiron-account-menu[aria-hidden="true"] { display: none; }
+.arneiron-account-menu__item { margin: 0; }
+.arneiron-account-menu__link {
+	display: block;
+	padding: 6px 10px;
+	color: var(--c-ink);
+	text-decoration: none;
+	border-radius: var(--r-sm, 4px);
+}
+.arneiron-account-menu__link:hover {
+	background: var(--c-surface-2);
+}
+.arneiron-account-menu__item--logout .arneiron-account-menu__link {
+	color: var(--c-danger, #9a3535);
+}
+/* THE MENU MUST NOT BE `position: relative`, AND THAT ONE WORD BROKE THREE
+   THINGS AT ONCE.
+   
+   Both rules here used to name `.arneiron-account-menu` alongside the toggle,
+   and the second one's own comment says what it meant to do: make a wrapper the
+   containing block "so the ABSOLUTE menu positions against the mobile-bar icons
+   group". `relative` does the opposite — it keeps the element IN FLOW. Measured
+   on arneiron.net at 390px with the menu open:
+   
+       bar height        70.1 -> 173.2   the menu grew the HEADER
+       burger            x 454..498      pushed OUTSIDE a 375px bar: invisible
+       menu.top - bar.bottom  -163.2     i.e. inside the header, not under it
+   
+   Three separate bug reports — "dropdown appears inside the header", "burger is
+   not visible", and a bar that jumps taller on tap — all from the menu taking
+   flow space in a nowrap row. Only the TOGGLE needs to be positioned. */
+.arneiron-mobile-bar__icons .arneiron-account-toggle,
+.arneiron-mobile-bar__icons-inner > .arneiron-account-toggle {
+	position: relative;
+}
+
+/* The row, not the bar, is the containing block. `.arneiron-mobile-bar` may
+   carry `position: sticky` from the header-chrome switches (inc/header-settings
+   .php), and declaring `relative` on it here would silently unstick a header
+   somebody deliberately pinned. The row is a plain wrapper of the same width
+   and its bottom edge IS the bar's, so `top: 100%` means the same thing without
+   touching anything else. */
+.arneiron-mobile-bar__row {
+	position: relative;
+}
+
+.arneiron-mobile-bar .arneiron-account-menu {
+	position: absolute;
+	top: 100%;
+	right: var(--space-4, 12px);
+	left: auto;
+	/* The bar carries a bottom border on some tones; `top: 100%` resolves
+	   against the padding box and would sit on the rule line. Same 1px
+	   correction as the desktop dropdowns in §4c-ii. */
+	margin-top: 1px;
+	z-index: 60;
+}
+
+/* THE MOBILE LOGO'S SIZE IS NOT THE THEME'S TO SET, and a rule here that looks
+   like it works is worse than none. `mu-plugins/arneiron-logo-chrome.php` prints
+   
+       @media (max-width:781px){ .arneiron-mobile-bar__brand .wp-block-site-logo
+         img { width:128px!important; height:auto!important; max-width:none; } }
+   
+   into wp_head, so it beats anything declared here on both `!important` and load
+   order. Its own comment gives the reason — the badge glyph's i-stem collapses
+   into one diagonal below ~30px tall, and 128px wide is 54px tall, 1.8x that
+   floor. Sizing the mark belongs to that file; this stylesheet deliberately does
+   not fight it. */
+
+/* Component: cart chip. */
+.arneiron-cart-chip {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 6px;
+	border-radius: var(--r-md);
+	background: transparent;
+	color: var(--c-ink);
+	text-decoration: none;
+	line-height: 1;
+}
+.arneiron-cart-chip:hover { background: var(--c-surface-2); }
+/* The count is a BADGE ON the glyph, not a pill beside it: absolutely placed
+   against the chip (which is already `position: relative`) so its circle
+   overlaps the cart's upper-right corner. The chip's 6px padding is what the
+   offsets are measured from — `top/right: 1px` lands the circle across the
+   glyph edge rather than floating clear of it. Absolute removes it from the
+   flex row, so the icon no longer shifts left when the count appears and the
+   chip's width stops changing as items are added. */
+.arneiron-cart-chip__count {
+	position: absolute;
+	top: 1px;
+	right: 1px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	min-width: 17px;
+	height: 17px;
+	padding: 0 4px;
+	border-radius: 999px;
+	background: var(--c-accent, var(--c-ink));
+	color: var(--c-on-accent, #fff);
+	font-size: 0.7em;
+	font-weight: 700;
+	line-height: 1;
+	/* The circle sits over the glyph, so the tap target is the whole chip. */
+	pointer-events: none;
+}
+.arneiron-cart-chip__icon,
+.arneiron-wallet-chip__icon { font-size: 1.1em; }
+.arneiron-cart-chip__total { color: var(--c-ink-2); font-size: 0.85em; }
+
+/* When cart/wallet is empty, hide the empty count so the chip stays tidy. */
+.arneiron-cart-chip[data-cart-count="0"] .arneiron-cart-chip__count { display: none; }
+
+/* Hamburger reuse: the theme already styles .nav-toggle; the bar variant uses
+   the same .nav-toggle classes so JS hooks (`bindNavDisclosure` in theme.js)
+   work without modification. */
+
+/* Account dropdown: hide on outside-click/tap (progressive enhancement).
+   Without JS, the menu is still keyboard-reachable via anchor focus. */
+.no-js .arneiron-account-menu[hidden] { display: block; }
+
+
+/* ---- 14c. Mobile drawer (off-canvas) --------------------------------------
+   Slides in from the right when the mobile-bar hamburger is tapped. Driven by
+   the [data-state] attribute set by theme.js bindMobileMenu(). The drawer
+   markup lives in parts/mobile-menu.html.
+   ------------------------------------------------------------------------ */
+
+.arneiron-mobile-drawer {
+	/* Hidden by default. The drawer uses position: fixed so it never affects
+	   desktop layout even when visible — and on desktop it isn't toggled. */
+	position: fixed;
+	inset: 0;
+	z-index: 100;
+	pointer-events: none; /* re-enabled below when open */
+	visibility: hidden;
+}
+
+.arneiron-mobile-drawer[data-state="open"] {
+	pointer-events: auto;
+	visibility: visible;
+}
+
+/* Scrim: click-outside-to-close. */
+.arneiron-mobile-drawer__scrim {
+	position: fixed;
+	inset: 0;
+	z-index: 100;
+	background: rgba( 10, 13, 18, 0.45 );
+	opacity: 0;
+	transition: opacity 0.2s ease;
+	border: 0;
+	padding: 0;
+	cursor: default;
+}
+.arneiron-mobile-drawer[data-state="open"] .arneiron-mobile-drawer__scrim {
+	opacity: 1;
+}
+
+/* Panel: slides in from the right. */
+.arneiron-mobile-drawer__panel {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 110;
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-4, 16px);
+	width: min( 320px, 86vw );
+	max-width: 360px;
+	padding: var(--space-4, 16px);
+	background: var(--c-bg);
+	color: var(--c-ink);
+	border-left: 1px solid var(--c-border);
+	box-shadow: -8px 0 24px rgba( 0, 0, 0, 0.08 );
+	transform: translateX( 100% );
+	transition: transform 0.22s cubic-bezier( 0.22, 0.61, 0.35, 1 ), opacity 0.22s ease;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+}
+
+/* Logged in, the admin bar (z-index 99999) sits over the top of the viewport;
+   start the panel below it so its head and close button stay reachable. */
+body.admin-bar .arneiron-mobile-drawer__panel {
+	top: var(--wp-admin--admin-bar--height, 32px);
+}
+.arneiron-mobile-drawer[data-state="open"] .arneiron-mobile-drawer__panel {
+	transform: translateX( 0 );
+}
+
+/* Panel content ---------------------------------------------------------- */
+.mobile-menu-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: var(--space-2, 8px);
+	padding-bottom: var(--space-3, 12px);
+	border-bottom: 1px solid var(--c-border);
+}
+.mobile-menu-head .arneiron-site-logo img { max-height: 32px; width: auto; }
+.mobile-menu-close {
+	width: 36px;
+	height: 36px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-md);
+	background: transparent;
+	color: var(--c-ink);
+	cursor: pointer;
+	font-size: 1.25em;
+	line-height: 1;
+}
+.mobile-menu-close:hover { background: var(--c-surface-2); }
+
+.arneiron-mobile-drawer__divider {
+	border: 0;
+	border-top: 1px solid var(--c-border);
+	margin: 0;
+}
+
+/* Server-rendered mobile nav (from [arneiron_mobile_nav]). */
+.arneiron-mobile-nav-wrap { display: block; }
+.arneiron-mobile-nav {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+}
+.arneiron-mobile-nav .arneiron-mobile-nav { /* nested submenu */
+	padding-left: var(--space-3, 12px);
+	border-left: 1px solid var(--c-border);
+	margin-left: var(--space-2, 8px);
+	margin-top: 2px;
+}
+.arneiron-mobile-nav__item { margin: 0; }
+.arneiron-mobile-nav__link {
+	display: block;
+	padding: var(--space-2, 8px) 0;
+	color: var(--c-ink);
+	text-decoration: none;
+	font-weight: 500;
+	border-bottom: 1px solid transparent;
+}
+.arneiron-mobile-nav__link:hover,
+.arneiron-mobile-nav__link.is-current {
+	color: var(--c-accent, var(--c-ink));
+	border-bottom-color: currentColor;
+}
+
+/* Social icons inside the drawer. */
+.mobile-menu-social { display: block; }
+.arneiron-social {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	gap: var(--space-2, 8px);
+}
+.arneiron-social__item { margin: 0; }
+.arneiron-social__link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-md);
+	background: transparent;
+	color: var(--c-ink-2);
+	text-decoration: none;
+}
+.arneiron-social__link:hover {
+	background: var(--c-surface-2);
+	color: var(--c-ink);
+}
+.arneiron-social__icon {
+	font-size: 0;
+	width: 16px; height: 16px;
+	background-color: currentColor;
+	mask-size: contain;
+	mask-repeat: no-repeat;
+	mask-position: center;
+	-webkit-mask-size: contain;
+	-webkit-mask-repeat: no-repeat;
+	-webkit-mask-position: center;
+}
+.arneiron-social__link--x .arneiron-social__icon       { -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg>"); mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg>"); }
+.arneiron-social__link--github .arneiron-social__icon  { -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.07.78 2.15 0 1.55-.01 2.8-.01 3.18 0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z'/></svg>"); mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.07.78 2.15 0 1.55-.01 2.8-.01 3.18 0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z'/></svg>"); }
+.arneiron-social__link--linkedin .arneiron-social__icon { -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.04 8h4.92v16H.04V8zm8.06 0h4.71v2.19h.07c.66-1.2 2.27-2.46 4.67-2.46 5 0 5.92 3.29 5.92 7.56V24h-4.92v-7.06c0-1.68-.03-3.85-2.34-3.85-2.34 0-2.7 1.83-2.7 3.72V24H8.1V8z'/></svg>"); mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.04 8h4.92v16H.04V8zm8.06 0h4.71v2.19h.07c.66-1.2 2.27-2.46 4.67-2.46 5 0 5.92 3.29 5.92 7.56V24h-4.92v-7.06c0-1.68-.03-3.85-2.34-3.85-2.34 0-2.7 1.83-2.7 3.72V24H8.1V8z'/></svg>"); }
+
+/* Body-scroll lock when the drawer is open. */
+body.mobile-drawer-open { overflow: hidden; }
+
+/* Reduced motion: drop the slide animation. */
+@media ( prefers-reduced-motion: reduce ) {
+	.arneiron-mobile-drawer,
+	.arneiron-mobile-drawer__scrim,
+	.arneiron-mobile-drawer__panel {
+		transition: none !important;
+	}
+}
+
+/* Desktop: hide the drawer markup entirely (its parent header-mobile is already
+   hidden, but this is a defence-in-depth). */
+@media ( min-width: 783px ) {
+	.arneiron-mobile-drawer { display: none; }
+}
+
+/* ---- 14d. Drawer navigation: drill-down panels ------------------------------
+   The drawer renders the REAL primary navigation (inc/shortcodes.php ->
+   arneiron_mobile_nav_shortcode), so everything here styles core's own
+   navigation markup rather than a hand-built list. That is the point: the menu
+   can no longer drift from the desktop one, and the mega item comes with it.
+
+   WHY DRILL-DOWN AND NOT NESTED LISTS. A mega panel is a whole pattern —
+   columns, headings, images. Nested inside a 320px column it collapses into an
+   unreadable ribbon, and an accordion would push the items below it far off
+   screen. A drill-down keeps every level at full panel width and costs one tap
+   back, which is the interaction a phone user already expects.
+
+   The sub-panel is positioned against `.arneiron-mobile-drawer__panel`, which
+   is `position: fixed` (§14c) and therefore already a containing block — no
+   `position: relative` is added here, because adding one would change nothing
+   and imply it was needed.
+
+   CLOSED IS `visibility: hidden`, NOT ONLY A TRANSFORM. An off-screen panel
+   that is still visible stays in the tab order and is read by screen readers,
+   so a user could tab into a submenu that is not on screen. Visibility is
+   transitioned alongside the transform so it still animates.
+   -------------------------------------------------------------------------- */
+
+/* The list itself: one full-width column, no inline gaps. */
+.arneiron-mobile-drawer .wp-block-navigation__container {
+	flex-direction: column;
+	align-items: stretch;
+	gap: 0;
+}
+
+.arneiron-mobile-drawer .wp-block-navigation-item {
+	display: block;
+	width: 100%;
+}
+
+/* THE CONTAINING BLOCK HAS TO BE THE DRAWER PANEL, NOT THE MENU.
+   -----------------------------------------------------------------------------
+   Core positions the navigation, its container and every `.has-child` item
+   `relative`, because its own submenus hang off the item. A drill-down panel
+   must instead fill the whole drawer, so each of those has to stop being a
+   containing block first. Measured 2026-09-02: with only the <li> reset the
+   panel sized itself to the <ul> (295px at the menu's offset) rather than to
+   the 320px drawer panel — the <ul> was still the offsetParent.
+
+   The selectors carry the `.wp-block-navigation` step purely for WEIGHT. Core's
+   own rules are (0,3,0); anything lighter loses to them and silently does
+   nothing, which is exactly how the first attempt at this failed. */
+.arneiron-mobile-drawer .wp-block-navigation.wp-block-navigation,
+.arneiron-mobile-drawer .wp-block-navigation .wp-block-navigation__container,
+.arneiron-mobile-drawer .wp-block-navigation .wp-block-navigation-item.has-child {
+	position: static;
+}
+
+.arneiron-mobile-drawer .wp-block-navigation-item__content {
+	display: block;
+	width: 100%;
+	padding: var(--space-3, 12px) 0;
+	color: var(--c-ink);
+	text-decoration: none;
+}
+
+/* A parent item is a row: label on the left, the drill-in control on the right. */
+.arneiron-mobile-drawer .wp-block-navigation-item.has-child {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--space-2, 8px);
+	flex-wrap: nowrap;
+}
+
+.arneiron-mobile-drawer .wp-block-navigation-item.has-child > .wp-block-navigation-item__content {
+	flex: 1 1 auto;
+	width: auto;
+}
+
+/* The chevron points the way it now travels: sideways, into the next panel. */
+.arneiron-mobile-drawer .wp-block-navigation__submenu-icon {
+	flex: 0 0 auto;
+	padding: var(--space-3, 12px) var(--space-2, 8px);
+	background: none;
+	border: 0;
+	color: inherit;
+	cursor: pointer;
+	transform: rotate(-90deg);
+}
+
+/* ---- the sub-panel ------------------------------------------------------- */
+
+.arneiron-mobile-drawer .wp-block-navigation .has-child > .wp-block-navigation__submenu-container {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 3;
+	display: block;
+	width: auto;
+	min-width: 0;
+	max-width: none;
+	padding: var(--space-4, 16px);
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	background: var(--c-bg);
+	border: 0;
+	opacity: 1;
+	visibility: hidden;
+	transform: translateX(100%);
+	transition: transform .25s ease, visibility .25s ease;
+}
+
+/* The offsets are written out rather than as `inset: 0` on purpose: core sets
+   `top` and `left` individually at (0,3,0), and a shorthand that loses the
+   cascade loses ALL four sides at once.
+
+   THE OPEN STATE IS A CLASS ON THE PANEL, NOT A COMBINATOR FROM THE ITEM.
+   Keying the open rule off the parent item
+   (`.has-child.is-open > .wp-block-navigation__submenu-container`) matched in
+   `element.matches()` and still lost in the cascade — measured 2026-09-02: the
+   class was present, the selector matched, and the computed visibility stayed
+   `hidden`. Rather than keep bidding specificity up against core's navigation
+   stylesheet, the state now lives on the element the rule styles, which removes
+   the combinator from the contest entirely. */
+.arneiron-mobile-drawer .wp-block-navigation .has-child > .wp-block-navigation__submenu-container.arneiron-drawer-level-open {
+	visibility: visible;
+	transform: translateX(0);
+}
+
+/* ---- the back button ----------------------------------------------------- */
+
+.arneiron-drawer-back {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2, 8px);
+	width: 100%;
+	margin-bottom: var(--space-3, 12px);
+	padding: var(--space-2, 8px) 0;
+	font: inherit;
+	font-weight: 600;
+	color: var(--c-ink);
+	background: none;
+	border: 0;
+	border-bottom: 1px solid var(--c-border);
+	cursor: pointer;
+}
+
+.arneiron-drawer-back__arrow {
+	font-size: 1.1em;
+	line-height: 1;
+}
+
+/* ---- the mega panel, as a responsive block ------------------------------- *
+ * A mega panel is authored for a wide dropdown, so in a 320px column its
+ * columns have to stop being columns. `!important` is used on flex-basis
+ * because core writes the column width as an INLINE style (`flex-basis: 33.33%`)
+ * from the block's own attributes, and an inline style cannot be outranked by a
+ * selector however specific.
+ * -------------------------------------------------------------------------- */
+
+.arneiron-mobile-drawer .arneiron-mega-panel {
+	width: auto;
+	max-width: none;
+}
+
+.arneiron-mobile-drawer .arneiron-mega-panel .wp-block-columns {
+	flex-direction: column;
+	gap: var(--space-4, 16px);
+}
+
+.arneiron-mobile-drawer .arneiron-mega-panel .wp-block-column {
+	flex-basis: auto !important;
+}
+
+.arneiron-mobile-drawer .arneiron-mega-panel img {
+	max-width: 100%;
+	height: auto;
+}
+
+/* ---- chip icons inside the drawer ---------------------------------------- *
+ * The wallet chip emits an inline <svg> with a viewBox and no width/height, and
+ * the ONLY rule that gives it a box is `.arneiron-mobile-bar__icons svg` (§4e) —
+ * scoped to the bar's right-hand cluster. In the drawer the chip sits outside
+ * that cluster, so §2's `svg { max-width: 100%; height: auto }` collapsed it and
+ * the balance rendered as a bare number. Reported 2026-09-02 as "add wallet icon
+ * to the burger balance": the icon was always in the markup, just zero-sized.
+ *
+ * 20px rather than the bar's 30px: the drawer row is text-height, not a chrome
+ * bar, so the glyph is sized to the number beside it.
+ * -------------------------------------------------------------------------- */
+
+.arneiron-mobile-drawer .arneiron-wallet-chip__icon svg,
+.arneiron-mobile-drawer .arneiron-cart-chip__icon svg,
+.arneiron-mobile-drawer .arneiron-account-toggle__icon svg {
+	display: block;
+	width: 20px;
+	height: 20px;
+}
+
+.arneiron-mobile-drawer .arneiron-wallet-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-2, 8px);
+}
+
+/* ---- the account list, flat in the drawer -------------------------------- */
+
+/* THE SELECTOR IS DELIBERATELY HEAVY. The drawer is rendered INSIDE
+   `.arneiron-mobile-bar` (parts/header-mobile.html embeds the mobile-menu
+   part), so `.arneiron-mobile-bar .arneiron-account-menu` (0,2,0) from §4e
+   applies to this list too and absolutely-positions it as if it were the bar's
+   dropdown. Measured 2026-09-02: the list rendered with all eight links and was
+   nowhere on screen. A bare `.arneiron-account-menu--drawer` (0,1,0) loses to
+   it, so the modifier is written with its base class and the drawer ancestor. */
+.arneiron-mobile-drawer .arneiron-account-menu.arneiron-account-menu--drawer {
+	position: static;   /* it is a list here, not the header's floating panel */
+	display: block;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	background: none;
+	border: 0;
+	box-shadow: none;
+}
+
+.arneiron-mobile-drawer .arneiron-account-menu--drawer .arneiron-account-menu__link {
+	display: block;
+	padding: var(--space-2, 8px) 0;
+	color: var(--c-ink);
+	text-decoration: none;
+}
+
+/* ---- 15. Print ----------------------------------------------------------- */
+@media print {
+	.site-header, .site-footer, .sidebar, .skip-link { display: none !important; }
+	body { color: #000; background: #fff; }
+	a::after { content: " (" attr(href) ")"; font-size: .9em; color: #444; }
+}
+
+/* ---- 4c. Desktop header chrome (.app-header) -------------------------------
+   Restored 2026-08-10 (see hub issue for the header regression).
+
+   The header's visual layer used to live in the `arneiron/header` BLOCK
+   stylesheet, `blocks/build/header/style-index.css`, with every selector
+   scoped to the block wrapper `.wp-block-arneiron-header`. Block
+   consolidation removed the header block — correct, a header is theme chrome,
+   not a block — and flattened `parts/header.html` into a core/group that kept
+   the INNER class names (app-header / brand / app-nav / app-header-cta) but
+   not the wrapper. Every rule in that stylesheet stopped matching and the
+   header rendered as an unstyled flex row: no bar, no rule, no gutters.
+
+   These are those rules, re-scoped to the class that survived and re-pointed
+   at the theme tokens (§1). Two things are deliberately NOT restored:
+     - `.menu-toggle` — the flattened part uses core/navigation's own
+       responsive overlay, which ships its own trigger.
+     - the ≤860px `.app-nav { display: none }` block — it would hide core's
+       overlay trigger with it. The desktop header is instead swapped for the
+       mobile bar at ≤782px by §14b, which is what `parts/header-mobile.html`
+       exists for; that swap keys on `.site-header`, which is why the header
+       part carries `site-header app-header`.
+   -------------------------------------------------------------------------- */
+
+/* The container rule is two-class so it wins against core's single-class
+   `.wp-container-core-group-is-layout-*` gap declaration. */
+.wp-block-group.app-header {
+	display: flex;
+	align-items: center;
+	gap: var(--space-3);
+	padding-block: var(--space-3);
+	color: var(--c-ink);
+}
+
+/* The BAND is painted on the wrapper, the CONTENT is constrained by the row.
+   -----------------------------------------------------------------------------
+   `background` and `border-bottom` used to sit on `.app-header` — which is the
+   ROW, and the row is `width: min(100% - 2*pad, wideSize)` (§4). So the bar
+   stopped where the content stopped: a 1300px band floating on a 1425px page,
+   with the page background showing either side of it. A site header reads as a
+   full-bleed band with its contents aligned to the layout column, so the paint
+   belongs on the full-bleed wrapper WordPress already emits around a template
+   part, and only the paint moves — the row keeps its width and its padding.
+
+   `:has(> .app-header)` rather than a bare `header.wp-block-template-part`,
+   because a page renders TWO header parts: this one and the mobile bar, which
+   brings its own `has-surface-background-color`. Painting both would double the
+   band below 782px. The mobile swap in §14b already keys on `:has()` for the
+   same reason.
+
+   Any style variation sets the band with `settings.custom.header.bg` /
+   `settings.custom.footer.bg` (a colour, gradient or image); unset, it is the
+   variation's own --c-bg / --c-surface. Never paint `.app-header` /
+   `.app-footer` themselves: they are capped at the wide size. */
+header.wp-block-template-part:has(> .app-header) {
+	background: var(--wp--custom--header--bg, var(--c-bg));
+	border-bottom: 1px solid var(--c-border);
+}
+
+/* ...and the paint has to leave when the row does.
+   §14b hides the desktop header at ≤782px with `display: none` on the ROW, not
+   on the wrapper. That was invisible while the wrapper was transparent; once it
+   carries the band, an emptied wrapper still renders its 1px border — a hairline
+   across the top of every mobile page. Measured on dev: wrapper height 1px at
+   390px. Neutralising the paint (rather than hiding the box) keeps this rule
+   purely cosmetic, so it cannot hide a header some other part put here. */
+@media (max-width: 782px) {
+	header.wp-block-template-part:has(> .app-header) {
+		background: none;
+		border-bottom: 0;
+	}
+}
+
+/* ---- 4c-i. Dropdowns open at the BOTTOM OF THE HEADER, not the bottom of a link
+   -----------------------------------------------------------------------------
+   Core positions a submenu with `top: 100%` on its `<li>`. The `<li>` is only as
+   tall as its text, so the panel opened part-way up the header band. Measured on
+   dev at 1440px BEFORE this rule:
+
+       header   0 -> 87   (h87)
+       nav row  32 -> 55  (h22)
+       panel top          55      <- 32px inside the header, floating over it
+
+   The fix is not to nudge the panel down by a magic number — that number is
+   wrong the moment the header padding or the logo size changes. It is to give
+   the items the header's own height, so `top: 100%` MEANS the bottom of the
+   header. `align-self: stretch` inside the header's flex row does that without
+   anyone declaring a pixel value, and the link re-centres its own text.
+
+   This is deliberately scoped to `.app-header` so it changes the site header
+   only: a navigation block placed in page content keeps core's behaviour, where
+   a full-height item would be wrong. */
+
+/* The height has to be handed down the WHOLE chain. `align-self: stretch` only
+   stretches an item to ITS OWN flex parent, so stretching the <li> inside a
+   22px-tall <ul> gains nothing — measured exactly that on the first attempt.
+   Header row -> nav -> container -> item, each one stretching, and only then
+   does the item span 0->87. */
+
+.app-header.app-header > .app-nav,
+.app-header.app-header > .wp-block-navigation {
+	align-self: stretch;
+	/* Cancel the header's own vertical padding for THIS child only. `align-self`
+	   stretches to the header's CONTENT box, which stops 8px short of the band —
+	   measured, the submenu landed at 79 against a header bottom of 87. The
+	   negative margin is derived from the same token the padding uses, so the two
+	   cannot drift apart. Only the nav is affected: the brand and the control
+	   cluster keep their padding and their centring. */
+	margin-block: calc( -1 * var(--space-3) );
+}
+
+.app-header .wp-block-navigation.wp-block-navigation {
+	align-items: stretch;
+}
+
+.app-header .wp-block-navigation__container.wp-block-navigation__container {
+	/* BOTH properties, and they are not interchangeable: `align-items` stretches
+	   this element's CHILDREN, `align-self` stretches this element inside its own
+	   flex parent. Setting only the first left the list 22px tall inside a 71px
+	   nav, and the items stretched faithfully to 22. */
+	align-self: stretch;
+	align-items: stretch;
+	/* `align-self` alone did not take: measured align-self:stretch with a used
+	   height of 22.39px inside a 71px nav. The list reaches the nav through three
+	   `display: contents` wrappers, and that chain does not reliably make it a
+	   stretchable flex item. An explicit minimum resolves against the nav's
+	   definite height and does not depend on the chain at all. */
+	min-height: 100%;
+}
+
+.app-header .wp-block-navigation__container > .wp-block-navigation-item {
+	align-self: stretch;
+	display: flex;
+	align-items: stretch;
+}
+
+.app-header .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content {
+	display: flex;
+	align-items: center;
+}
+
+/* THREE WRAPPERS SIT BETWEEN THE NAV AND THE LIST, and they are why the first
+   two attempts at this failed. Measured on dev:
+   
+       nav.app-nav                                    8-79  h71   <- stretched
+       div.wp-block-navigation__responsive-container
+       div.wp-block-navigation__responsive-dialog     8-30  h22   <- offsetParent
+       div.…__responsive-container-content            8-30  h22
+       ul.wp-block-navigation__container              8-30  h22
+       li.arneiron-mega-item                          8-30  h22
+   
+   The height stopped at the first wrapper, and the DIALOG — `position: relative`
+   from core — was the panel's containing block, which is why the panel came out
+   498px wide and opened at the bottom of a 22px box.
+   
+   `display: contents` removes those three boxes entirely, so the list becomes a
+   flex item of the nav and inherits its height, and nothing between the item and
+   the header is positioned any more. It removes the BOX, not the node, so the
+   markup and the accessibility tree are untouched.
+   
+   Desktop only. Below 782px those same elements ARE the mobile overlay — the
+   dialog goes `position: fixed` when the menu opens — and dissolving them there
+   would break it. */
+
+@media (min-width: 782px) {
+	/* Classes doubled: core reaches the container as
+	   `.wp-block-navigation__responsive-container:not(.is-menu-open)`, which is
+	   (0,2,0) — the same as a single-class rule here plus the ancestor, so a tie
+	   decided by load order. Measured: the other two dissolved and this one did
+	   not, leaving it as the panel's containing block at 498px. */
+	.app-header .wp-block-navigation__responsive-container.wp-block-navigation__responsive-container,
+	.app-header .wp-block-navigation__responsive-dialog.wp-block-navigation__responsive-dialog,
+	.app-header .wp-block-navigation__responsive-container-content.wp-block-navigation__responsive-container-content {
+		display: contents;
+		position: static;
+	}
+
+	.app-header .wp-block-navigation.wp-block-navigation,
+	.app-header .wp-block-navigation__container.wp-block-navigation__container {
+		position: static;
+	}
+}
+
+/* The FULL-BLEED WRAPPER is the positioning context every dropdown panel measures
+   against — not the header row.
+   
+   Using the row meant a full-width panel had to reach the page edges with
+   `100vw`, and `100vw` INCLUDES THE SCROLLBAR. Measured at a 1440px window with a
+   1426px document: the panel came out 1440px wide, sitting at -7..1433, i.e.
+   14px wider than the page and shifted 7px left — enough to raise a horizontal
+   scrollbar every time the menu opened.
+   
+   The wrapper already spans the document exactly, so a panel can reach the edges
+   with `left: 0; right: 0` and no viewport unit anywhere. The layout-width case
+   then re-centres itself against the same box with the same expression the header
+   row uses, so the two line up by construction rather than by coincidence. */
+header.wp-block-template-part:has(> .app-header) {
+	position: relative;
+}
+
+/* Every header dropdown clears the band's 1px bottom border.
+   
+   Core positions a submenu at `top: 100%`, which resolves against the containing
+   block's PADDING box and therefore stops INSIDE the wrapper's bottom border —
+   so the panel sits on top of the rule line rather than under it.
+   
+   Specificity is deliberate: core's hover rule is
+   `.wp-block-navigation .has-child:not(.open-on-click):hover > .…__submenu-container`,
+   which is (0,5,0). A rule here written the obvious way ties it and loses on load
+   order, so `.app-header` is doubled to reach (0,6,0). */
+
+.app-header.app-header .wp-block-navigation .has-child > .wp-block-navigation__submenu-container {
+	margin-top: 1px;
+}
+
+/* ...but for a TOP-LEVEL item that 1px was a hole in the hover path.
+   Measured on test.arneiron.net (1440px): item 0..60, submenu from 61, and the
+   pixel row y=60 between them belonged to the header wrapper (its border). Core
+   opens these on `:hover` with no delay, so a cursor moving down crossed that
+   row, the item lost :hover and the submenu closed before it was reached.
+
+   So the item itself takes the full header height INCLUDING the border: 1px of
+   bottom padding, cancelled by a -1px margin so the row does not grow. The
+   submenu's `top: 100%` resolves against that padding box, which now ends
+   below the border, so the margin above is dropped and the panel still opens
+   clear of the rule line. The item is transparent; the border stays visible.
+
+   First-level panels also move left by the inset of their own links
+   (owner, 2026-10-09: "text in menu and submenu should be on one vertical
+   line"). The panel's left edge is at -1px (core), its 1px border plus the
+   link's 15px inline padding put the submenu text exactly under the parent
+   item's text, whose link has no inline padding. The inset is one token, so
+   the shift and the padding cannot drift apart. Nested panels open sideways
+   and keep core's position. Desktop only: below 782px the mobile header runs. */
+@media (min-width: 782px) {
+	.app-header {
+		--arneiron-submenu-inset: 15px;
+	}
+
+	.app-header.app-header .wp-block-navigation .wp-block-navigation__container > .has-child {
+		padding-bottom: 1px;
+		margin-bottom: -1px;
+	}
+
+	.app-header.app-header .wp-block-navigation .wp-block-navigation__container > .has-child > .wp-block-navigation__submenu-container {
+		margin-top: 0;
+	}
+
+	/* The inset shift is for ordinary dropdowns only. A mega panel
+	   (arneiron/mega-item) centres itself on the header with
+	   `left: 50%; transform: translateX(-50%)` at the SAME specificity (0,6,0),
+	   and this sheet loads after the block's, so the shift used to win the tie:
+	   the panel kept its -50% transform but lost `left: 50%` and opened ~650px
+	   off-screen to the left (dev.arneiron.net 1440px: x=-666 instead of 70).
+	   It still takes `margin-top: 0` above — the hover-path fix applies to it too. */
+	.app-header.app-header .wp-block-navigation .wp-block-navigation__container > .has-child:not(.arneiron-mega-item) > .wp-block-navigation__submenu-container {
+		left: calc( -1px - var(--arneiron-submenu-inset) );
+		right: auto;
+	}
+
+	.app-header.app-header .wp-block-navigation .wp-block-navigation__submenu-container .wp-block-navigation-item__content {
+		padding-inline: var(--arneiron-submenu-inset);
+	}
+}
+
+/* Submenu panels in the active palette, not core's white.
+   A navigation block with no colours of its own gets core's fallback panel,
+   `background-color: #fff` with black text, while the header's own link hover
+   colours its items in the palette's ink. Measured on Lite (Old Arnie): the
+   hovered submenu item was #ffd5cd on #fff, i.e. it vanished, the same defect
+   the header CTA had. A navigation block that sets its own background or text
+   colour keeps them (`:not(.has-…)`). */
+.app-header.app-header .wp-block-navigation:not(.has-background) .wp-block-navigation__submenu-container {
+	background-color: var(--c-surface);
+	border-color: var(--c-border);
+}
+.app-header.app-header .wp-block-navigation:not(.has-text-color) .wp-block-navigation__submenu-container {
+	color: var(--c-ink);
+}
+.app-header.app-header .wp-block-navigation:not(.has-text-color) .wp-block-navigation__submenu-container .wp-block-navigation-item__content {
+	color: inherit;
+}
+.app-header.app-header .wp-block-navigation:not(.has-text-color) .wp-block-navigation__submenu-container .wp-block-navigation-item__content:hover,
+.app-header.app-header .wp-block-navigation:not(.has-text-color) .wp-block-navigation__submenu-container .wp-block-navigation-item__content:focus-visible {
+	color: var(--c-link-hover);
+}
+
+/* ---- 4c-ii. ...and the SAME anchor for the control-cluster dropdowns --------
+   §4c-i gave the navigation items the header's own height, so a submenu's
+   `top: 100%` MEANS the bottom of the band; `arneiron/mega-item` positions its
+   panel against the full-bleed wrapper for the same reason. The two remaining
+   header dropdowns — my-account and the language switcher — were still anchored
+   to their own 44px control, which is vertically CENTRED in the band, so they
+   opened part-way up it while every other dropdown opened under it.
+
+   Measured in headless Chrome on a page carrying THIS file plus core's own
+   navigation stylesheet, with the submenu revealed by core's own
+   `[aria-expanded=true] ~ .…__submenu-container` rule rather than by forced
+   CSS (a forced `visibility` never triggers core's hover rule, and measures a
+   panel nobody sees). Distance from each dropdown's top edge to the band's
+   bottom edge — a DELTA, because the band's absolute height depends on the
+   logo and the fonts:
+
+       nav submenu       0.00   <- already correct, from 4c-i
+       account menu     -5.00   <- opens INSIDE the band
+       language menu    -9.00   <- opens INSIDE the band
+
+   The fix is the one 4c-i already argued for, not a second one: stretch the
+   seam to the row's full height and cancel the row's own vertical padding on
+   that child, exactly as `.app-nav` does, and `top: 100%` lands on the band by
+   construction. No offset constant appears here either — the controls stay
+   centred because both seams centre their own children, and the numbers follow
+   the header's padding and the logo automatically.
+
+   Desktop only. Below 782px §14b hides this header and `parts/header-mobile.html`
+   renders instead, where §4e makes the icons group the containing block for the
+   very same menu — stretching anything there would push the dropdown off the
+   bar. Measured at 390px: the whole desktop row is 0x0, as it should be. */
+
+@media (min-width: 782px) {
+	/* `.arneiron-account-seam` is a real box (§4i) and `.arneiron-lang-seam` is
+	   `display: contents` (§4h), so the switcher's own `--dropdown` wrapper is
+	   the flex item there. Each is addressed as the box it actually is. */
+	.app-header > .arneiron-account-seam,
+	.app-header .arneiron-lang--dropdown {
+		align-self: stretch;
+		/* Derived from the token the header's `padding-block` uses, so the two
+		   cannot drift apart — same expression, same reason, as the nav's negative
+		   margin in 4c-i. */
+		margin-block: calc( -1 * var(--space-3) );
+	}
+
+	.app-header .arneiron-account-menu,
+	.app-header .arneiron-lang-menu {
+		/* Against the stretched seam this is the bottom of the band. The account
+		   menu's `calc(100% + 4px)` gap goes with it: a 4px float made sense under
+		   a 44px chip and reads as a misalignment under a full-height band. */
+		top: 100%;
+		/* The wrapper's 1px bottom border, which the padding box these resolve
+		   against stops inside — the same correction the submenus get above. */
+		margin-top: 1px;
+		/* Attached to the band, the way the mega panel is: no second rule line
+		   under the band's own, and square where the two meet. */
+		border-top: 0;
+		border-start-start-radius: 0;
+		border-start-end-radius: 0;
+	}
+}
+
+/* Three zones out of a flat child list: brand left, menu centred, controls
+   right.
+
+   The part's layout is `justify-content: space-between`, which spreads every
+   child evenly across the full width — and the trailing cluster (wallet chip,
+   my-account, cart, CTA) reads as one control group, so it must sit as one.
+   WooCommerce hooks account and mini-cart in as SIBLINGS of the CTA (Block
+   Hooks, appended to the template part), so they cannot be wrapped in a
+   sub-group in the source; the grouping has to happen here.
+
+   Auto margins on BOTH sides of the nav absorb all free space before
+   justify-content distributes any: the menu settles in the middle of the space
+   between brand and controls, and the controls pack at the end with only
+   `gap` between them. Order-independent — it holds however many chips the
+   plugins add, and it stays in normal flow, so nothing overlaps when the menu
+   is long (the row wraps instead).
+
+   ⚠ WHAT THAT CENTRES IS THE GAP, NOT THE HEADER. Auto margins split the FREE
+   SPACE evenly, so the menu lands midway between the brand and the controls —
+   which is the middle of the band only when those two clusters are the same
+   width, and they never are. Measured at 1440px, band and row centre both
+   712.5:
+
+       arneiron.net  brand 153 · controls 244   nav centre 667.0   -45.5
+       dev           brand 153 · controls 392   nav centre 593.2  -119.3
+
+   The owner reads that as "off to the left", and it is. */
+.app-header > .app-nav {
+	margin-inline: auto;
+}
+
+/* --- True centring on the BAND ------------------------------------------------
+   Centre on the header, not on the leftover gap. There is no flow-based way to
+   do this here: the brand and the trailing cluster would have to occupy equal
+   space, and the cluster is N SIBLINGS injected by WooCommerce Block Hooks —
+   it cannot be wrapped in one element to be balanced against the brand, which
+   is the same constraint the comment above records. Two auto margins can only
+   ever split what is left over.
+
+   So the nav is taken out of flow and pinned to the middle of the row, whose
+   centre IS the band's centre (the row is `margin-inline: auto` inside a
+   full-bleed wrapper — measured identical at 712.5 above).
+
+   `inset-block: 0` is LOAD-BEARING, not tidiness: §4c-i gives the nav the
+   header's own height so a submenu's `top: 100%` means the bottom of the band,
+   and an absolutely positioned element does not stretch to a flex line. Without
+   it every dropdown would reopen part-way up the band — the exact defect §4c-i
+   and §4c-ii exist to fix.
+
+   THE COST, STATED. Out of flow means the row no longer reserves the menu's
+   width, so a long enough menu would run under the brand or the controls
+   instead of pushing them apart. That is why the rule is bounded: it applies
+   only from 1200px up, where the widest header measured in this estate still
+   clears both sides (dev at 1440: brand ends 216, centred nav 455.5..969.5,
+   controls begin 971). Below that the auto-margin behaviour above is what
+   runs, unchanged — off-centre, but never overlapping. A header that outgrows
+   this needs the cluster wrapped in one element, at which point a three-column
+   grid does it in flow and this rule can go. */
+
+/* --- True centring on the BAND, gated on a MEASURED fit ----------------------
+   `.has-centred-nav` is put on the row by `bindCentredNav()` in theme.js, which
+   answers the one question CSS cannot: does the menu fit beside both clusters?
+   An out-of-flow menu stops pushing the controls aside, so it clears them only
+   while `menu + 2 * max(brand, controls) <= row`. Measured on dev, that flips
+   between 1438 and 1440px — no media query expresses it, and a wrong guess is
+   an overlap shipped to a customer. Without JavaScript the class never lands
+   and the in-flow auto-margin layout above runs: off-centre, never
+   overlapping, which is the right way to fail.
+   -------------------------------------------------------------------------- */
+
+/* THE SELECTOR IS DOUBLED FOR A MEASURED REASON. §4c-i sets
+   `.app-header .wp-block-navigation.wp-block-navigation { position: static }`
+   — (0,3,0) — and this nav carries `wp-block-navigation app-nav`. Written as
+   `.app-header > .app-nav` (0,2,0) the `position` here LOST while `left` and
+   `transform` still applied, so the nav stayed static, `left` did nothing,
+   and the -50% translate dragged it 256px LEFT of where it started.
+   Measured on dev: nav centre 268.7 against a band centre of 712.5. A
+   half-applied rule is worse than no rule. */
+.app-header.has-centred-nav > .app-nav.wp-block-navigation.wp-block-navigation {
+	position: absolute;
+	/* FULL BAND WIDTH, not a centred box — and that is what keeps the mega
+	   menu working. A positioned nav becomes the containing block for every
+	   absolutely positioned descendant, so `arneiron/mega-item`'s panel would
+	   stop resolving against the full-bleed wrapper and start resolving
+	   against the nav. Spanning the wrapper exactly makes those two the same
+	   rectangle, so `top: 100%` is still the bottom of the band and
+	   `left: 0; right: 0` is still the page. The menu is then centred by
+	   `justify-content` INSIDE this box, which is the band — not inside the
+	   free space left over between the brand and the controls. */
+	inset-inline: 0;
+	/* §4c-i cancels the row's vertical padding with a NEGATIVE margin-block,
+	   because a stretched flex item stops at the content box. Margins still
+	   apply to an absolutely positioned box, so keeping it would resolve as
+	   `top:0; bottom:0` MINUS 8px at each end — a nav 16px taller than the
+	   band, hanging over it. Against the wrapper the insets already land on
+	   the band, so the correction is not merely unnecessary, it is wrong. */
+	inset-block: 0;
+	margin: 0;
+	/* The box now lies over the brand and the control cluster, so it must not
+	   intercept their clicks. The items take pointer events back below. */
+	pointer-events: none;
+}
+
+/* A fresh install has no menu: core falls back to a Page List, a SECOND flex
+   list nested in the container and as wide as the band — left-packed, its
+   items sat on top of the site title. Centre it too. */
+.app-header.has-centred-nav > .app-nav .wp-block-navigation__container.wp-block-navigation__container,
+.app-header.has-centred-nav > .app-nav .wp-block-page-list.wp-block-page-list {
+	justify-content: center;
+}
+
+/* Pointer events come back on the ITEMS, not on the list. Granting them to
+   the list looked equivalent and was not: the list is a flex container
+   filling the nav, so it spans the whole band, and a hit-test at the centre
+   of the logo and at the centre of the CTA both returned
+   `UL.wp-block-navigation__container` — the two most important controls in
+   the header, unclickable. The items are only as wide as their labels, so
+   giving them the events back leaves every gap transparent.
+   `.arneiron-mega-item` is named alongside because its panel hangs off a
+   list item that core does not always class as a navigation item. */
+.app-header.has-centred-nav > .app-nav .wp-block-navigation-item,
+.app-header.has-centred-nav > .app-nav .arneiron-mega-item {
+	pointer-events: auto;
+}
+
+/* THE CONTROLS HAVE TO BE RE-PACKED, and forgetting this put the search,
+   language and account icons ON TOP OF THE MENU TEXT.
+   
+   What kept them right was the nav's own `margin-inline: auto` — the comment
+   in §4h says so: "Auto margins on BOTH sides of the nav absorb all free
+   space BEFORE justify-content distributes any". Take the nav out of flow and
+   that absorber goes with it, so the part's `space-between` gets the free
+   space back and spreads the remaining children evenly across the row —
+   straight through the centred menu.
+   
+   One auto margin on the brand restores it: it absorbs the free space
+   immediately after the brand, so every control packs to the end with only
+   `gap` between them, exactly as before. Order-independent, and it holds
+   however many chips the plugins hook in — which is the property §4h needed
+   in the first place. */
+.app-header.has-centred-nav > .brand {
+	margin-inline-end: auto;
+}
+.app-header.is-sticky {
+	position: sticky;
+	top: 0;
+	z-index: 40;
+}
+
+/* Brand — the site title stands in for the block's <a class="brand">. */
+.app-header .brand {
+	margin-block: 0;
+	font-size: var(--wp--preset--font-size--lg);
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+}
+.app-header .brand a {
+	color: var(--c-ink);
+	text-decoration: none;
+}
+.app-header .brand a:hover,
+.app-header .brand a:focus-visible {
+	color: var(--c-accent-strong);
+}
+
+/* Primary navigation. `app-nav` sits on both the navigation wrapper and its
+   list, so scope link rules through the header, not through `.app-nav` alone. */
+.app-header .app-nav a {
+	color: var(--c-ink-2);
+	font-size: var(--wp--preset--font-size--sm);
+	font-weight: 500;
+	text-decoration: none;
+}
+.app-header .app-nav a:hover,
+.app-header .app-nav a:focus-visible {
+	color: var(--c-ink);
+}
+.app-header .app-nav .current-menu-item > a {
+	color: var(--c-accent-strong);
+	font-weight: 600;
+}
+
+/* Account + cart. WooCommerce hooks `customer-account` and `mini-cart` into
+   the header template part (Block Hooks), so they are part of the default
+   header even though they are not in the part's source. */
+.app-header .wp-block-woocommerce-customer-account,
+.app-header .wc-block-mini-cart {
+	display: inline-flex;
+	align-items: center;
+}
+.app-header .woocommerce-customer-account,
+.app-header .wc-block-mini-cart__button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	/* The vertical target stays 44px; the horizontal one is trimmed to 36px so
+	   the icons read as one cluster rather than three separated controls. Still
+	   comfortably above the 24x24 WCAG 2.5.8 minimum. */
+	min-height: 44px;
+	min-width: 36px;
+	padding-inline: 0;
+	color: var(--c-ink-2);
+	text-decoration: none;
+}
+.app-header .woocommerce-customer-account:hover,
+.app-header .wc-block-mini-cart__button:hover {
+	color: var(--c-ink);
+}
+.app-header .wc-block-mini-cart__button:focus-visible,
+.app-header .woocommerce-customer-account:focus-visible {
+	outline: 2px solid var(--c-accent-strong);
+	outline-offset: 2px;
+	border-radius: var(--r-sm);
+}
+
+/* CTA. The button keeps core's `.wp-element-button` styling (§6); these rules
+   only restore the compact `btn--sm` proportion the header CTA had. */
+.app-header .app-header-cta {
+	margin-block: 0;
+}
+.app-header .btn--sm .wp-element-button {
+	min-height: 40px;
+	padding-block: var(--space-2);
+	padding-inline: var(--space-5);
+	font-size: var(--wp--preset--font-size--sm);
+	font-weight: 600;
+}
+
+/* Narrow desktop / tablet: tighten before the ≤782px swap to the mobile bar. */
+@media (max-width: 1024px) {
+	.wp-block-group.app-header {
+		gap: var(--space-4);
+	}
+	.app-header .app-nav {
+		gap: var(--space-3);
+	}
+}
+
+/* ---- 4d. Mobile bar label (companion to §14b) ------------------------------
+   The desktop header is swapped for `parts/header-mobile.html` at ≤782px, so
+   the mobile bar IS the header on a phone. Its account link ships an icon plus
+   a visible "Log in" label, and `.arneiron-account-toggle__screen` was left as
+   an empty rule ("a way to also show the word if needed"), so the word wrapped
+   onto two lines and broke the one-row layout the bar is specified as. Hide it
+   the accessible way — the link already carries an aria-label.
+   -------------------------------------------------------------------------- */
+.arneiron-mobile-bar .arneiron-account-toggle__screen {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* ---- 4e. Mobile bar: admin bar, bleed, icons, hamburger --------------------
+   Four fixes to the bar that became the phone header when §14b's swap started
+   working again. Each is scoped so nothing above 782px moves.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 782px) {
+	/* (1) The WP admin bar STAYS on phones (0.8.19). Until 0.8.18 this rule hid
+	   it below 782px and zeroed core's `html { margin-top: 46px }`, which took
+	   the toolbar (and its log-out / edit links) away from logged-in users on a
+	   phone — WordPress Theme Check rejects hiding the admin bar. The
+	   header now steps below it instead: see header-chrome.css
+	   (--arneiron-adminbar-offset) and the drawer panel offset in §14c. */
+
+	/* (2) Edge to edge. The bar picks up the `.site-header` width primitive
+	   from §4 — `min(100% - 2 * page-pad, 1280px)` plus `margin-inline: auto` —
+	   which insets and centres it. That is right for content and wrong for
+	   chrome: a header bar runs to the edges of the screen. The block-gap
+	   margin above it goes too, so the bar sits flush at the top. */
+	.header-mobile.arneiron-mobile-bar {
+		width: 100%;
+		max-width: none;
+		margin: 0;
+	}
+	.header-mobile.arneiron-mobile-bar.has-global-padding {
+		padding-inline: 0; /* the row pads itself; this would double it */
+	}
+	.wp-site-blocks > :has(> .header-mobile.arneiron-mobile-bar),
+	.wp-site-blocks > .header-mobile.arneiron-mobile-bar {
+		margin-block-start: 0;
+	}
+}
+
+/* (3) Icons. The chips emit inline SVG now (inc/shortcodes.php) instead of
+   emoji, so they need a box: emoji were sized with `font-size`, which does
+   nothing to an <svg>. 20px matches the optical weight of the desktop
+   header's account and cart glyphs at the bar's smaller row height. */
+.arneiron-mobile-bar__icons svg {
+	display: block;
+	width: 30px;
+	height: 30px;
+}
+.arneiron-account-toggle__icon,
+.arneiron-cart-chip__icon,
+.arneiron-wallet-chip__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--c-ink-2);
+	font-size: inherit; /* supersedes the 1.1em that sized the old emoji */
+}
+.arneiron-mobile-bar__wallet:hover .arneiron-wallet-chip__icon,
+.arneiron-mobile-bar__cart:hover .arneiron-cart-chip__icon,
+.arneiron-mobile-bar__account:hover .arneiron-account-toggle__icon {
+	color: var(--c-ink);
+}
+.arneiron-wallet-chip {
+	gap: 6px;
+}
+
+/* (4) The hamburger. §10.5's note says "the theme already styles .nav-toggle" —
+   it does not: `nav-toggle` appears in no rule in any of the theme's five
+   stylesheets, which is why the button rendered as a small empty box. Drawn
+   here as one bar plus two pseudo-elements.
+
+   The open state keys on `body.mobile-drawer-open`, which is what
+   theme.js bindMobileMenu() actually sets. It does NOT update aria-expanded on
+   the hamburger, so an `[aria-expanded="true"]` selector would look correct and
+   never fire. */
+.nav-toggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	padding: 0;
+	background: none;
+	border: 0;
+	border-radius: var(--r-md);
+	color: var(--c-ink);
+	cursor: pointer;
+}
+.nav-toggle:hover {
+	background: var(--c-surface-2);
+}
+.nav-toggle:focus-visible {
+	outline: 2px solid var(--c-accent-strong);
+	outline-offset: 2px;
+}
+.nav-toggle__box {
+	position: relative;
+	display: block;
+	width: 33px;
+	height: 24px;
+}
+.nav-toggle__bar,
+.nav-toggle__bar::before,
+.nav-toggle__bar::after {
+	position: absolute;
+	left: 0;
+	width: 100%;
+	height: 3px;
+	background: currentColor;
+	border-radius: 2px;
+}
+.nav-toggle__bar {
+	top: 50%;
+	transform: translateY(-50%);
+}
+.nav-toggle__bar::before {
+	content: "";
+	top: -10px;
+}
+.nav-toggle__bar::after {
+	content: "";
+	top: 10px;
+}
+
+/* Open: the middle bar goes, the outer two cross. */
+body.mobile-drawer-open .nav-toggle__bar {
+	background: transparent;
+}
+body.mobile-drawer-open .nav-toggle__bar::before {
+	top: 0;
+	transform: rotate(45deg);
+}
+body.mobile-drawer-open .nav-toggle__bar::after {
+	top: 0;
+	transform: rotate(-45deg);
+}
+
+/* ---- 4f. Mobile bar brand: title as the logo fallback ----------------------
+   The bar's brand slot held `wp:site-logo` alone, and core renders that block
+   to an empty string when no logo is set — so on a site without one the left
+   third of the bar was blank. `parts/header-mobile.html` now carries a
+   site-title next to it as the fallback, and the logo wins whenever it exists:
+   `:has()` matches only when the logo block actually rendered, which is the
+   same condition core uses to decide whether to emit it at all.
+   -------------------------------------------------------------------------- */
+.arneiron-mobile-bar__brand:has(.wp-block-site-logo) .arneiron-mobile-bar__title {
+	display: none;
+}
+.arneiron-mobile-bar__title {
+	margin-block: 0;
+	font-size: var(--wp--preset--font-size--base);
+	font-weight: 700;
+	line-height: 1.2;
+	letter-spacing: -0.01em;
+	/* One line, whatever the site is called. */
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.arneiron-mobile-bar__title a {
+	color: var(--c-ink);
+	text-decoration: none;
+}
+.arneiron-mobile-bar__title a:hover,
+.arneiron-mobile-bar__title a:focus-visible {
+	color: var(--c-accent-strong);
+}
+
+/* The icon cluster must never wrap. `__icons-inner` is a plain <div> from the
+   wp:html block, so its children are inline boxes that break like text — at
+   30px icons plus a wallet amount that happens at ~390px, one phone width
+   below where it was tested. Make it a nowrap flex row and let the brand
+   yield the space instead (a flex item will not shrink below its content
+   without `min-width: 0`). */
+.arneiron-mobile-bar__icons-inner {
+	display: flex;
+	align-items: center;
+	flex-wrap: nowrap;
+	gap: var(--space-2, 4px);
+}
+.arneiron-mobile-bar__icons {
+	flex: 0 0 auto;
+}
+.arneiron-mobile-bar__brand {
+	min-width: 0;
+	flex: 0 1 auto;
+}
+
+/* NARROW PHONES: the wallet AMOUNT yields, nothing else.
+   
+   §4e's rule is "the icon cluster must never wrap, let the brand yield the
+   space instead" — and the brand can no longer yield, because the mark is
+   pinned at 80px by mu-plugins/arneiron-logo-chrome.php and its own note says
+   the glyph collapses below ~30px tall. So on the narrowest phones something
+   in the cluster has to give.
+   
+   Measured on dev, logged in, the widest case (a six-figure-cents balance):
+   
+       390px  page 375  scrollWidth 375   no overflow
+       360px  page 345  scrollWidth 345   no overflow
+       320px  page 305  scrollWidth 314   9px OVERFLOW, and the burger sits at
+                                          270..314 — 9px past the page edge
+   
+   12 gutter + 80 logo + 278 icons = 370 against a 305px page. The amount is the
+   only elastic thing there: the icons are fixed 44px targets and the burger is
+   the one control that must never be unreachable.
+   
+   So below 360px the chip keeps its icon and drops its number. The balance is
+   one tap away on the wallet page the chip already links to, and the
+   alternative — clipping the digits — would show a WRONG number, which on a
+   money surface is worse than showing none. Above 360px nothing changes. */
+@media (max-width: 359.98px) {
+	.arneiron-mobile-bar .arneiron-wallet-chip__value {
+		display: none;
+	}
+
+	.arneiron-mobile-bar .arneiron-wallet-chip {
+		padding-inline: var(--space-2, 4px);
+	}
+
+	.arneiron-mobile-bar__icons-inner {
+		gap: var(--space-1, 2px);
+	}
+}
+
+/* ---- 4g. Footer chrome (.app-footer) ---------------------------------------
+   Restored 2026-08-12 — hub#4317. This is the SAME defect §4c fixed for the
+   header, in the same consolidation commit, left undone on the footer.
+
+   The footer's visual layer used to live in the `arneiron/footer` BLOCK
+   stylesheet, `blocks/build/footer/style.css`, with every selector scoped to
+   the block wrapper `.wp-block-arneiron-footer`. Block consolidation
+   (642e9958fc, "header and footer become template parts, not blocks") removed
+   the block — correct, a footer is theme chrome — and flattened
+   `parts/footer.html` into a core/group that kept the INNER class names
+   (app-footer / status / status--ok) but not the wrapper. Every rule in that
+   stylesheet stopped matching.
+
+   Rules below are RECOVERED from that deleted file at ref 8c80117d96
+   (= 642e9958fc^), path design/theme-build/arneiron/blocks/build/footer/style.css,
+   re-scoped to `.app-footer` and re-pointed at the §1 aliases. They are not
+   invented.
+
+   Measured on dev.arneiron.net BEFORE this block, at 1440/1280/768/390:
+     .app-footer  width = viewport width at every breakpoint (1440/1280/768/390)
+                  background transparent, border-top 0px, padding 0px
+     .app-header  width = 1360 / 1216 / (swapped for the mobile bar at <=782)
+     .app-footer .status  color = ink, font-weight 400, ::before content = none
+   i.e. an unstyled full-bleed row, exactly as the header rendered before §4c.
+
+   Deliberately NOT restored (same reasoning §4c used for `.menu-toggle`):
+     - `.footer-cols` / `.footer-col` — those came from the block's `columns`
+       attribute. The flattened part cannot emit that markup, so restoring the
+       rules would ship CSS that matches nothing and cannot be verified.
+       Re-add them WITH the markup if footer columns come back.
+
+   The `> span` rule from the block is dropped for the same reason: the part
+   emits <p>, and core's `.is-layout-flex > * { margin: 0 }` already does the
+   job that rule did.
+   -------------------------------------------------------------------------- */
+
+/* Two-class, matching §4c: it must win against core's single-class
+   `.wp-container-core-group-is-layout-*` gap declaration. */
+.wp-block-group.app-footer {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--space-5);
+	padding-block: var(--space-6);
+	color: var(--c-ink-2);
+	font-size: var(--wp--preset--font-size--sm);
+}
+
+/* Band on the wrapper, content on the row — the header's counterpart above.
+   `margin-top` moves WITH the paint: left on the row it would push the row down
+   INSIDE an already-painted band, opening a strip of footer colour above the
+   content. On the wrapper it separates the band itself from the page. */
+footer.wp-block-template-part:has(> .app-footer) {
+	margin-top: var(--section-rhythm);
+	background: var(--wp--custom--footer--bg, var(--c-surface));
+	border-top: 1px solid var(--c-border);
+}
+
+/* The block's `padding: <space-6> <page-pad>` is NOT carried over: the part now
+   also carries `site-footer`, and §4's layout primitive already applies the
+   page gutter through `width: min(100% - 2 * page-pad, wide-size)`. Keeping the
+   inline padding as well would gutter the row twice — the same double-spacing
+   trap documented for the account nav in woocommerce.css. */
+
+.app-footer p {
+	margin-block: 0;
+}
+.app-footer a {
+	color: var(--c-ink-2);
+	text-decoration: none;
+}
+.app-footer a:hover,
+.app-footer a:focus-visible {
+	color: var(--c-ink);
+}
+.app-footer a:focus-visible {
+	outline: 2px solid var(--c-accent-strong);
+	outline-offset: 2px;
+	border-radius: var(--r-sm);
+	text-decoration: none;
+}
+
+/* Status line — muted semantic accents. The dot is decorative; the wording
+   carries the meaning, so colour is never the sole signal. */
+.app-footer .status {
+	flex: 0 0 auto;
+	margin-inline-start: auto;
+	font-weight: 600;
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-2);
+}
+.app-footer .status::before {
+	content: "";
+	width: 0.5em;
+	height: 0.5em;
+	border-radius: var(--wp--custom--radius--pill);
+	background: currentColor;
+	flex: 0 0 auto;
+}
+.app-footer .status--ok    { color: var(--c-success); }
+.app-footer .status--warn  { color: var(--c-warning); }
+.app-footer .status--alert { color: var(--c-danger); }
+.app-footer .status--dim   { color: var(--c-ink-3); }
+
+/* Once the row wraps, the footer should read as a CENTRED stack rather than a
+   left column with the badge stranded. Measured wrap onset is 782px, not 600:
+   at 782 the three items sit at left 31 / 572 / 31 — the badge has already
+   dropped to its own line while `margin-inline-start: auto` still pushes the
+   status right, which is the "a wrapped flex line justifies ITSELF" shape.
+   `justify-content` is restated on the two-class selector so it beats core's
+   single-class `.wp-container-core-group-is-layout-*` space-between that the
+   block's `is-content-justification-space-between` emits. */
+@media (max-width: 782px) {
+	.wp-block-group.app-footer {
+		justify-content: center;
+		text-align: center;
+	}
+	.app-footer .status {
+		margin-inline-start: 0;
+	}
+}
+
+/* Phone: tighten the stack. The status auto-margin is already reset above. */
+@media (max-width: 600px) {
+	.wp-block-group.app-footer {
+		gap: var(--space-3);
+	}
+}
+
+/* ---- 4h. Language switcher (Polylang) --------------------------------------
+   Two shapes from one shortcode (inc/shortcodes.php):
+     - `.arneiron-lang--dropdown` in the desktop header, sitting in the control
+       cluster immediately BEFORE my-account.
+     - `.arneiron-lang--list` at the bottom of the mobile drawer, where the page
+       menu lives.
+
+   Both no-op to zero markup when Polylang is inactive or a single language is
+   configured, so `.arneiron-lang-seam` can be an empty div. It is therefore
+   `display: contents` — an empty seam must not eat a flex `gap` in the header
+   row, which is what a plain block-level wrapper would do. `contents` also
+   hoists the switcher itself to be a direct flex child of `.app-header`, so the
+   ordering rules below can address it.
+   -------------------------------------------------------------------------- */
+
+.arneiron-lang-seam {
+	display: contents;
+}
+
+/* Visual order of the header row is pinned here rather than left to DOM order.
+   The account and cart chips arrive in one of two ways depending on the site:
+   authored into a database-stored template part (what dev.arneiron.net has, as
+   of the 0.7.0 header work), or injected by WooCommerce Block Hooks on a site
+   whose part is still the theme file. Those two paths do not guarantee the same
+   sibling order, and the switcher has to land before my-account either way.
+
+   `.app-header > *` seeds a middle value so a block someone adds to the header
+   later lands between the menu and the controls, instead of jumping to the
+   front the way an unset `order: 0` would. */
+.app-header > * { order: 2; }
+.app-header > .brand { order: 0; }
+.app-header > .app-nav { order: 1; }
+.app-header > .app-header-search { order: 2; }
+/* Descendant combinator, deliberately. The seam above is `display: contents`,
+   which removes its BOX but not its NODE — selectors match the DOM tree, so
+   `.app-header > .arneiron-lang` would never match, while `.arneiron-lang` is
+   nevertheless the real flex item. With a child combinator here the switcher
+   falls back to `order: 0` and renders at the far left beside the logo. */
+.app-header .arneiron-lang { order: 3; }
+/* CHILD, not descendant — unlike the language seam this one is a real box.
+   `.arneiron-account-menu` is `position: absolute`, so its seam has to be the
+   positioning context; `display: contents` would delete that box and the
+   dropdown would anchor to the header instead, opening across the whole bar. */
+.app-header > .arneiron-account-seam { order: 4; }
+.app-header > .wp-block-woocommerce-customer-account { order: 4; }
+.app-header > .wp-block-woocommerce-mini-cart,
+.app-header > .wc-block-mini-cart { order: 5; }
+.app-header > .app-header-cta { order: 6; }
+
+/* --- Dropdown (desktop header) --- */
+.arneiron-lang--dropdown {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+}
+
+/* Matches the 44x36 target the account and cart chips use (§4c), so the three
+   controls read as one cluster. */
+.arneiron-lang-toggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--space-1);
+	min-height: 44px;
+	min-width: 36px;
+	padding-inline: var(--space-1);
+	background: none;
+	border: 0;
+	cursor: pointer;
+	color: var(--c-ink-2);
+	font: inherit;
+	font-size: var(--wp--preset--font-size--sm);
+	font-weight: 500;
+	line-height: 1;
+}
+.arneiron-lang-toggle:hover { color: var(--c-ink); }
+.arneiron-lang-toggle:focus-visible {
+	outline: 2px solid var(--c-accent-strong);
+	outline-offset: 2px;
+	border-radius: var(--r-sm);
+}
+.arneiron-lang-toggle__icon {
+	display: inline-flex;
+	width: 1.25em;
+	height: 1.25em;
+}
+.arneiron-lang-toggle__icon svg { width: 100%; height: 100%; }
+
+.arneiron-lang-menu {
+	position: absolute;
+	top: 100%;
+	right: 0;
+	z-index: 50;
+	min-width: 160px;
+	margin: 0;
+	padding: var(--space-1);
+	list-style: none;
+	background: var(--c-bg);
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-sm);
+	box-shadow: 0 2px 8px rgb(0 0 0 / 12%);
+}
+.arneiron-lang-menu[hidden] { display: none; }
+.arneiron-lang-menu__item { margin: 0; }
+.arneiron-lang-menu__link {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+	padding: var(--space-2) var(--space-3);
+	border-radius: var(--r-sm);
+	color: var(--c-ink-2);
+	font-size: var(--wp--preset--font-size--sm);
+	text-decoration: none;
+	white-space: nowrap;
+}
+.arneiron-lang-menu__link:hover,
+.arneiron-lang-menu__link:focus-visible {
+	background: var(--c-surface);
+	color: var(--c-ink);
+}
+.arneiron-lang-menu__item.is-current .arneiron-lang-menu__link {
+	color: var(--c-accent-strong);
+	font-weight: 600;
+}
+.arneiron-lang-menu__code {
+	min-width: 2.25em;
+	font-weight: 600;
+	font-size: var(--wp--preset--font-size--xs, 0.75rem);
+	letter-spacing: 0.04em;
+	color: var(--c-ink-3);
+}
+.arneiron-lang-menu__item.is-current .arneiron-lang-menu__code { color: inherit; }
+
+/* --- List (mobile drawer) --- */
+.arneiron-lang-seam--drawer {
+	display: block;
+	margin-top: var(--space-4);
+	padding-top: var(--space-4);
+	border-top: 1px solid var(--c-border);
+}
+.arneiron-lang--list {
+	display: flex;
+	align-items: center;
+	gap: var(--space-3);
+}
+.arneiron-lang--list .arneiron-lang__icon {
+	display: inline-flex;
+	width: 24px;
+	height: 24px;
+	color: var(--c-ink-3);
+}
+.arneiron-lang--list .arneiron-lang__icon svg { width: 100%; height: 100%; }
+.arneiron-lang-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-2);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.arneiron-lang-list__item { margin: 0; }
+.arneiron-lang-list__link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 44px;
+	min-width: 44px;
+	padding-inline: var(--space-2);
+	border-radius: var(--r-sm);
+	color: var(--c-ink-2);
+	font-size: var(--wp--preset--font-size--sm);
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-decoration: none;
+}
+.arneiron-lang-list__link:hover,
+.arneiron-lang-list__link:focus-visible {
+	background: var(--c-surface);
+	color: var(--c-ink);
+}
+.arneiron-lang-list__item.is-current .arneiron-lang-list__link {
+	background: var(--c-surface);
+	color: var(--c-accent-strong);
+}
+
+/* The drawer is the mobile surface; the desktop dropdown never shows there, and
+   the drawer list never shows in the desktop header. Both are already scoped by
+   where they are placed, so this is belt-and-braces for a site that pastes the
+   shortcode somewhere unexpected. */
+@media (max-width: 782px) {
+	.app-header .arneiron-lang--dropdown { display: none; }
+}
+
+/* =============================================================================
+   ROOT SECTION RHYTHM — no automatic gap between top-level sections
+   =============================================================================
+   WordPress emits, from `styles.spacing.blockGap` in theme.json:
+
+       :where(.wp-site-blocks) > * { margin-block-start: var(--wp--style--block-gap); }
+
+   i.e. a margin above EVERY top-level child — header, main, footer, and any
+   template part between them. Three problems with that as a default:
+
+     - it is INVISIBLE TO THE EDITOR. No block setting on a page exposes it, so a
+       section cannot be edited to remove the space above it. The only lever is a
+       stylesheet, which is why this rule exists rather than a per-site override.
+     - it applies to elements with NO HEIGHT. A template part hidden at a given
+       breakpoint still contributes its margin, so a `display: none` bar pushes a
+       gap of pure nothing into the page. Measured on vania-novikau.me: a 0-height
+       mobile utility bar contributing 24px on desktop.
+     - it double-spaces the FOOTER, which already carries its own top spacing, so
+       the seam between content and footer is a margin nobody chose.
+
+   Sections own their vertical rhythm through their own padding, which IS editable
+   per block. This only removes the automatic margin between them.
+
+   THIS GENERALISES A FIX THE THEME ALREADY HAD: the mobile bar above zeroes the
+   same margin for itself, for the same reason ("the block-gap margin above it
+   goes too, so the bar sits flush at the top"). That narrower rule is now
+   redundant, and is left in place only because it is harmless and removing it
+   would be a change to mobile chrome in a commit about root spacing.
+
+   NOT DONE BY SETTING `blockGap: 0` IN theme.json, deliberately: that value also
+   drives the default gap BETWEEN THE CHILDREN of every group and stack, so
+   zeroing it there collapses container spacing site-wide to fix spacing between
+   sections. Verified after this rule — `--wp--style--block-gap` is untouched and
+   containers still space their children normally.
+
+   ⚠ WRITTEN WITHOUT `:where()`, AND THAT IS THE WHOLE TRICK. Core's rule is
+   `:where(.wp-site-blocks) > *`, and `:where()` contributes ZERO specificity — so
+   an identical `:where()` rule here scores 0 against 0 and the winner is decided
+   purely by which stylesheet happens to print last. That is a coin flip: it held
+   on vania-novikau.me, where the child's chrome is enqueued at priority 100, and
+   silently lost on dev.arneiron.net, where ds.css prints before the global-styles
+   block (measured: main still 24px, footer still 64px, with this rule present and
+   served). Dropping `:where()` takes it to 0-1-0, which beats core's 0-0-0 no
+   matter where either lands.
+
+   A child theme that wants the old behaviour back needs to match or exceed that,
+   e.g. `.wp-site-blocks > * { margin-block-start: var(--wp--style--block-gap); }`.
+   ========================================================================== */
+
+.wp-site-blocks > * {
+	margin-block-start: 0;
+}
+
+/* -----------------------------------------------------------------------------
+   …AND THE SAME FOR FULL-WIDTH SECTIONS INSIDE THE CONTENT FLOW.
+
+   The rule above only reaches the ROOT children — header, main, footer. A page
+   built from sections does not put them there: they are children of
+   `.wp-block-post-content` inside <main>, so they are spaced by the PROSE rhythm
+   at the top of this file:
+
+       .wp-block-post-content > * { margin-block-start: var(--space-6); }
+
+   That rule is right for prose and wrong for sections. It exists so paragraphs
+   and headings in an article breathe, and it cannot simply be set to 0 — doing
+   that would collapse the spacing inside every post on the site to fix the
+   spacing between sections on a landing page.
+
+   So the exception is drawn where the difference actually is: a FULL-WIDTH child
+   is a section, not a line of prose. It supplies its own vertical space through
+   its padding, which is editable per block in the editor, and it should meet its
+   neighbour flush. Anything narrower keeps the prose rhythm untouched.
+
+   0-2-1 against the prose rule's 0-1-1, so it wins wherever it lands.
+   -------------------------------------------------------------------------- */
+
+.wp-block-post-content > .alignfull {
+	margin-block-start: 0;
+}
+
+/* ---- 4i. Header search and the desktop account control ---------------------
+   Two additions to the default header's control cluster, ordered by §4h:
+
+       brand · nav · [search] · language · [account] · cart · CTA
+
+   SEARCH is `core/search` in button-only/icon mode, so it is a single 44px
+   target in the row rather than a field competing with the navigation for
+   width. Core renders its own button and input; only the chrome is restated
+   here, in tokens.
+
+   ACCOUNT reuses `arneiron_account_control()` — the same builder the mobile bar
+   uses — so the dropdown, the logged-out branch and the disclosure JS are one
+   implementation, not two.
+
+   ⚠ The account SEAM is a real box, deliberately. The language seam is
+   `display: contents` because an empty seam must not eat the header's flex gap;
+   the account seam cannot be, because `.arneiron-account-menu` is
+   `position: absolute` and needs its seam as the containing block. `:empty`
+   handles the no-WooCommerce case instead — the shortcode returns an empty
+   string there, and an empty seam is removed rather than left holding a gap.
+   -------------------------------------------------------------------------- */
+
+.arneiron-account-seam {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+}
+.arneiron-account-seam:empty { display: none; }
+
+/* Match the 44x36 target the language switcher and Woo chips use (§4c/§4h). */
+.app-header .arneiron-header__account {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 44px;
+	min-width: 36px;
+	padding-inline: 0;
+	background: none;
+	border: 0;
+	cursor: pointer;
+	color: var(--c-ink-2);
+	text-decoration: none;
+}
+.app-header .arneiron-header__account:hover { color: var(--c-ink); }
+.app-header .arneiron-header__account:focus-visible {
+	outline: 2px solid var(--c-accent-strong);
+	outline-offset: 2px;
+	border-radius: var(--r-sm);
+}
+.app-header .arneiron-header__account .arneiron-account-toggle__icon {
+	display: inline-flex;
+	width: 1.5em;
+	height: 1.5em;
+}
+.app-header .arneiron-header__account .arneiron-account-toggle__icon svg {
+	width: 100%;
+	height: 100%;
+}
+/* The label is carried by aria-label; the icon is the visible control. */
+.app-header .arneiron-header__account .arneiron-account-toggle__screen {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+
+/* --- Search --- */
+
+.app-header .app-header-search {
+	margin: 0;
+}
+.app-header .app-header-search .wp-block-search__button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 44px;
+	min-width: 36px;
+	padding: 0;
+	background: none;
+	border: 0;
+	color: var(--c-ink-2);
+	cursor: pointer;
+}
+.app-header .app-header-search .wp-block-search__button:hover { color: var(--c-ink); }
+.app-header .app-header-search .wp-block-search__button:focus-visible {
+	outline: 2px solid var(--c-accent-strong);
+	outline-offset: 2px;
+	border-radius: var(--r-sm);
+}
+.app-header .app-header-search .wp-block-search__button svg {
+	width: 24px;
+	height: 24px;
+	fill: currentColor;
+}
+/* The expandable variant hides the field until the button is pressed; when core
+   reveals it, give it the §9 form-control treatment instead of its own. */
+.app-header .app-header-search .wp-block-search__input {
+	min-height: 44px;
+	padding: var(--space-2) var(--space-3);
+	background: var(--c-bg);
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-sm);
+	color: var(--c-ink);
+	font: inherit;
+	font-size: var(--wp--preset--font-size--sm);
+}
+.app-header .app-header-search .wp-block-search__input:focus-visible {
+	border-color: var(--c-accent);
+	outline: none;
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-accent) 25%, transparent);
+}
+
+/* ---- 4j. My Account tabs ---------------------------------------------------
+   Account details, billing address and payment methods behind one tablist, each
+   panel rendered by WooCommerce's own function. Chrome only — the forms inside
+   keep the §9 form-control treatment they already inherit.
+   -------------------------------------------------------------------------- */
+
+.arneiron-account-tabs__list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-1);
+	margin-bottom: var(--space-5);
+	border-bottom: 1px solid var(--c-border);
+}
+
+.arneiron-account-tabs__tab {
+	appearance: none;
+	background: none;
+	border: 0;
+	border-bottom: 2px solid transparent;
+	margin-bottom: -1px;              /* sit the active rule ON the list border */
+	padding: var(--space-3) var(--space-4);
+	min-height: 44px;
+	color: var(--c-ink-2);
+	font: inherit;
+	font-weight: 500;
+	cursor: pointer;
+}
+.arneiron-account-tabs__tab:hover { color: var(--c-ink); }
+.arneiron-account-tabs__tab:focus-visible {
+	outline: 2px solid var(--c-accent-strong);
+	outline-offset: -2px;
+	border-radius: var(--r-sm) var(--r-sm) 0 0;
+}
+.arneiron-account-tabs__tab[aria-selected="true"] {
+	color: var(--c-accent-strong);
+	border-bottom-color: var(--c-accent-strong);
+	font-weight: 600;
+}
+
+.arneiron-account-tabs__panel[hidden] { display: none; }
+
+/* The dashboard now leads with the sites panel; give it the same rhythm as the
+   rest of the account content rather than letting the panel's own margins land
+   against WooCommerce's intro paragraph. */
+.woocommerce-account .woocommerce-MyAccount-content .arnpx-panel {
+	margin-top: var(--space-5);
+}
+
+/* ---- 4k. TeraWallet block, in the theme's own language ---------------------
+   The wallet ships its own look — dashicons, its own card treatment, its own
+   nav-tab styling — which lands inside an account area built from §1 tokens and
+   reads as a bolted-on plugin screen.
+
+   Restated here rather than forked: the plugin keeps rendering, and every value
+   below is a token, so a Style Variation repaints the wallet with everything
+   else. Nothing here changes structure or behaviour; if TeraWallet renames a
+   class the rule stops matching and the plugin's own styling returns, which is
+   the correct failure direction for third-party chrome.
+   -------------------------------------------------------------------------- */
+
+.woo-wallet-my-wallet-container {
+	color: var(--c-ink);
+}
+
+.woo-wallet-header h2,
+.woo-wallet-my-wallet-container h2 {
+	margin-block: 0 var(--space-4);
+	font-size: var(--wp--preset--font-size--lg);
+	font-weight: 700;
+	letter-spacing: -0.01em;
+}
+.woo-wallet-my-wallet-container h3 {
+	margin-block: var(--space-5) var(--space-3);
+	font-size: var(--wp--preset--font-size--sm);
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: var(--c-ink-3);
+}
+
+/* --- Balance card --- */
+
+.woo-wallet-balance-card {
+	background: var(--c-surface);
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-md, var(--r-sm));
+	padding: var(--wp--preset--spacing--6);
+}
+.woo-wallet-price,
+.woo-wallet-balance-card .woocommerce-Price-amount {
+	font-size: var(--wp--preset--font-size--xl, 2rem);
+	font-weight: 700;
+	color: var(--c-ink);
+	letter-spacing: -0.02em;
+}
+
+/* --- Stat cards --- */
+
+.woo-wallet-stat-card {
+	background: var(--c-bg);
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-sm);
+	padding: var(--wp--preset--spacing--5);
+}
+.woo-wallet-stat-card__label {
+	color: var(--c-ink-3);
+	font-size: var(--wp--preset--font-size--sm);
+}
+.woo-wallet-stat-card__value {
+	color: var(--c-ink);
+	font-weight: 700;
+}
+.woo-wallet-stat-card__icon {
+	color: var(--c-ink-3);
+}
+
+/* --- The wallet's own nav tabs: match §4j's tablist so the two do not read as
+       two different UIs stacked on each other. --- */
+
+.woo-wallet-nav-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-1);
+	margin-block: var(--space-4);
+	border-bottom: 1px solid var(--c-border);
+}
+.woo-wallet-nav-tab {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-2);
+	min-height: 44px;
+	padding: var(--space-3) var(--space-4);
+	margin-bottom: -1px;
+	border-bottom: 2px solid transparent;
+	color: var(--c-ink-2);
+	font-weight: 500;
+	text-decoration: none;
+}
+.woo-wallet-nav-tab:hover { color: var(--c-ink); }
+.woo-wallet-nav-tab:focus-visible {
+	outline: 2px solid var(--c-accent-strong);
+	outline-offset: -2px;
+}
+.woo-wallet-nav-tab.active,
+.woo-wallet-nav-item-wrapper.active .woo-wallet-nav-tab {
+	color: var(--c-accent-strong);
+	border-bottom-color: var(--c-accent-strong);
+	font-weight: 600;
+}
+/* Dashicons carry their own 20px box and baseline; align them to the label. */
+.woo-wallet-nav-tab .dashicons {
+	width: 20px;
+	height: 20px;
+	font-size: 20px;
+	line-height: 1;
+}
+
+/* --- The portal's usage panel sits directly under the wallet in the same tab;
+       give its heading the same weight as the wallet's, not an h1's. --- */
+
+.woocommerce-MyAccount-content .arnpx-portal__title {
+	margin-block: var(--space-4) var(--space-3);
+	font-size: var(--wp--preset--font-size--lg);
+	font-weight: 700;
+	letter-spacing: -0.01em;
+}
+
+/* ---- 4l. Sticky footer ------------------------------------------------------
+   A page with little content left the footer floating mid-screen with empty
+   space beneath it. Measured on dev at 1440x900: footer bottom at y=372, so
+   528px of nothing below it.
+
+   `.wp-site-blocks` is the wrapper WordPress puts around every template part —
+   header(s), main, footer — and it was `display: block` with `min-height: 0`,
+   so nothing held the page to the viewport.
+
+   Flex column + a growing `main` rather than `margin-top: auto` on the footer:
+   the footer carries its own `--section-rhythm` top margin (§4g), and auto
+   margin would replace that, collapsing the gap to zero on TALL pages where the
+   rhythm is doing real work. Growing main leaves the rhythm intact and only
+   adds space when there is space to add.
+
+   `100dvh` after `100vh`, in that order: mobile browsers shrink the visual
+   viewport as their chrome hides, and `vh` is the large-viewport value, which
+   overshoots and produces a scrollbar on a page that should not have one. A
+   browser without `dvh` keeps the `vh` line.
+   -------------------------------------------------------------------------- */
+
+.wp-site-blocks {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	min-height: 100dvh;
+}
+
+.wp-site-blocks > main,
+.wp-site-blocks > .site-main {
+	flex-grow: 1;
+}
+
+/* The admin bar is a band ABOVE the document, added as a body offset (32px,
+   46px at <=782px). Without subtracting it, 100vh overflows by exactly that much
+   and every admin page gains a scrollbar it does not need. Core publishes the
+   height as --wp-admin--admin-bar--height on <html>, so one rule tracks both. */
+body.admin-bar .wp-site-blocks {
+	min-height: calc(100vh - var(--wp-admin--admin-bar--height, 32px));
+	min-height: calc(100dvh - var(--wp-admin--admin-bar--height, 32px));
+}
+
+/* ---- 16. Core-block chrome (theme 0.9.1) ----------------------------------
+   The header, mobile bar and drawer are built from core blocks only (plus
+   WooCommerce's and Polylang's OWN blocks, which render nothing without their
+   plugin), so the theme renders complete chrome with no ArneIron plugin. The
+   rules below make those core wrappers look exactly like the hand-written
+   markup they replaced (0.8.x shortcodes), so a site does not change on update.
+   -------------------------------------------------------------------------- */
+
+/* core/group wrappers are flow-layout containers; inside the drawer (a flex
+   column with its own gap) a flow margin would add to that gap. */
+.arneiron-mobile-drawer > *,
+.arneiron-mobile-drawer__panel > *:not(.arneiron-lang-seam--drawer),
+.mobile-menu-head > *,
+.arneiron-mobile-nav-wrap > *,
+.mobile-menu-account > *,
+.mobile-menu-social > *,
+.arneiron-mobile-bar__icons-inner > * {
+	margin-block: 0;
+}
+
+/* Drawer head: the logo when one is set, otherwise the site title — what
+   [arneiron_site_logo] printed. */
+.mobile-menu-head:has(.wp-block-site-logo) .wp-block-site-title { display: none; }
+.mobile-menu-head .wp-block-site-logo img,
+.app-header > .brand-logo img { max-height: 32px; width: auto; height: auto; }
+.mobile-menu-head .wp-block-site-title {
+	margin: 0;
+	font: inherit;
+	letter-spacing: inherit;
+	text-transform: none;
+}
+/* blocks.css styles every .wp-block-site-title link as the brand (ink colour);
+   the drawer's 0.8.x text logo was a plain link, so it takes the link colour. */
+.mobile-menu-head .wp-block-site-title a,
+.mobile-menu-head .wp-block-site-title a:visited {
+	color: var(--wp--preset--color--link);
+	font: inherit;
+	letter-spacing: inherit;
+	text-decoration: inherit;
+}
+.mobile-menu-head .wp-block-site-title a:hover { color: var(--wp--preset--color--link-hover); }
+
+/* The divider: core/separator carries its own border + opacity. */
+.arneiron-mobile-drawer hr.wp-block-separator.arneiron-mobile-drawer__divider {
+	border: 0;
+	border-top: 1px solid var(--c-border);
+	margin: 0;
+	opacity: 1;
+	width: auto;
+	max-width: none;
+	background: none;
+}
+
+/* Account: WooCommerce's customer-account block when WooCommerce is active,
+   otherwise core's Log in / Log out link. Never both. */
+.app-header:has(> .wp-block-woocommerce-customer-account) > .wp-block-loginout,
+.mobile-menu-account:has(.wp-block-woocommerce-customer-account) .wp-block-loginout {
+	display: none;
+}
+.app-header > .wp-block-loginout {
+	order: 4;
+	display: inline-flex;
+	align-items: center;
+	min-height: 44px;
+	margin: 0;
+	font-size: var(--wp--preset--font-size--sm, 0.875rem);
+}
+.app-header > .wp-block-loginout a,
+.mobile-menu-account .wp-block-loginout a {
+	color: var(--c-ink-2);
+	text-decoration: none;
+}
+.app-header > .wp-block-loginout a:hover,
+.app-header > .wp-block-loginout a:focus-visible { color: var(--c-ink); }
+.mobile-menu-account .wp-block-loginout,
+.mobile-menu-account .wp-block-woocommerce-customer-account a {
+	display: block;
+	padding: var(--space-2, 8px) 0;
+	margin: 0;
+}
+.mobile-menu-account .wp-block-loginout a { color: var(--c-ink); }
+
+/* Socials: core/social-links in the drawer, drawn like the 0.8.x chips. */
+.arneiron-social.wp-block-social-links { gap: var(--space-2, 8px); }
+.arneiron-social .wp-social-link {
+	margin: 0;
+	background: none !important;
+	color: var(--c-ink-2) !important;
+	border-radius: 0;
+}
+.arneiron-social .wp-social-link a.wp-block-social-link-anchor {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	padding: 0;
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-md);
+	background: transparent;
+	color: inherit;
+}
+.arneiron-social .wp-social-link a.wp-block-social-link-anchor:hover {
+	background: var(--c-surface-2);
+	color: var(--c-ink);
+}
+/* The 0.8.x chips drew their glyphs as CSS masks; keep those exact glyphs
+   rather than core's SVGs so the drawer does not change on update. */
+.arneiron-social .wp-social-link svg { display: none; }
+.arneiron-social .wp-social-link a.wp-block-social-link-anchor::before {
+	content: "";
+	display: block;
+	width: 16px;
+	height: 16px;
+	background-color: currentColor;
+	mask-size: contain;
+	mask-repeat: no-repeat;
+	mask-position: center;
+	-webkit-mask-size: contain;
+	-webkit-mask-repeat: no-repeat;
+	-webkit-mask-position: center;
+}
+.arneiron-social .wp-social-link a.wp-block-social-link-anchor .wp-block-social-link-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.arneiron-social .wp-social-link-x a.wp-block-social-link-anchor::before { -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg>"); mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/></svg>"); }
+.arneiron-social .wp-social-link-github a.wp-block-social-link-anchor::before { -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.07.78 2.15 0 1.55-.01 2.8-.01 3.18 0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z'/></svg>"); mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.07.78 2.15 0 1.55-.01 2.8-.01 3.18 0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z'/></svg>"); }
+.arneiron-social .wp-social-link-linkedin a.wp-block-social-link-anchor::before { -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.04 8h4.92v16H.04V8zm8.06 0h4.71v2.19h.07c.66-1.2 2.27-2.46 4.67-2.46 5 0 5.92 3.29 5.92 7.56V24h-4.92v-7.06c0-1.68-.03-3.85-2.34-3.85-2.34 0-2.7 1.83-2.7 3.72V24H8.1V8z'/></svg>"); mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.04 8h4.92v16H.04V8zm8.06 0h4.71v2.19h.07c.66-1.2 2.27-2.46 4.67-2.46 5 0 5.92 3.29 5.92 7.56V24h-4.92v-7.06c0-1.68-.03-3.85-2.34-3.85-2.34 0-2.7 1.83-2.7 3.72V24H8.1V8z'/></svg>"); }
+
+/* Desktop brand: the site logo (core/site-logo) sits before the title. */
+.app-header > .brand-logo { order: 0; margin: 0; }
+
+/* Polylang's own switcher block inside the seams. */
+.arneiron-lang-seam .wp-block-polylang-language-switcher { order: 3; }
+.arneiron-lang-seam--drawer .wp-block-polylang-language-switcher ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-2, 8px);
+}
+
+/* ---- 18. Log in / Log out as an icon (Pro 0.10.3 / Lite 1.1.2) -----------
+ * The header's core/loginout (class .arneiron-account-icon) draws a person
+ * glyph instead of its text; logged in, the glyph gains an exit arrow. The
+ * text stays in the link (and in aria-label + title, set by
+ * inc/chrome-integrations.php) as the accessible name. Same 24px glyph,
+ * colours, hover and focus ring as the search button and WooCommerce's
+ * account / cart icons beside it, so every style variation (Old Arnie,
+ * ArneIron Light, …) recolours it through --c-ink-2 / --c-ink / --c-accent-strong.
+ * The drawer keeps text, with the same glyph in front: it is a list. */
+.app-header > .wp-block-loginout.arneiron-account-icon a {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 44px;
+	min-width: 40px;
+	padding: 0;
+	font-size: 0;
+	line-height: 0;
+	color: var(--c-ink-2);
+	text-decoration: none;
+}
+.app-header > .wp-block-loginout.arneiron-account-icon a::before,
+.mobile-menu-account .wp-block-loginout a::before {
+	content: "";
+	display: inline-block;
+	flex: 0 0 auto;
+	width: 24px;
+	height: 24px;
+	background-color: currentColor;
+	-webkit-mask: var(--arneiron-icon-login) center / contain no-repeat;
+	mask: var(--arneiron-icon-login) center / contain no-repeat;
+}
+.logged-in.wp-block-loginout {
+	--arneiron-icon-login: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='10' cy='8' r='3.5'/%3E%3Cpath d='M3.5 20c.6-3.6 3.2-5.8 6.5-5.8 1.4 0 2.6.4 3.6 1'/%3E%3Cpath d='M16 13.5h5.5M19 11l2.5 2.5L19 16'/%3E%3C/svg%3E");
+}
+.wp-block-loginout {
+	--arneiron-icon-login: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='3.75'/%3E%3Cpath d='M4.5 20.25c.7-3.9 3.7-6.25 7.5-6.25s6.8 2.35 7.5 6.25'/%3E%3C/svg%3E");
+}
+.app-header > .wp-block-loginout.arneiron-account-icon a:hover { color: var(--c-ink); }
+.app-header > .wp-block-loginout.arneiron-account-icon a:focus-visible {
+	color: var(--c-ink);
+	outline: 2px solid var(--c-accent-strong);
+	outline-offset: 2px;
+	border-radius: var(--r-sm);
+}
+.mobile-menu-account .wp-block-loginout a {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-2, 8px);
+}
+
+/* ===========================================================================
+   Classic content inside posts and comments (WordPress Theme Unit Test)
+   ---------------------------------------------------------------------------
+   Content written before blocks (or pasted HTML) can carry a <pre> with long
+   lines, an [caption] with a fixed inline width, or an embed iframe with fixed
+   pixel attributes. Without these rules each one made the whole page scroll
+   sideways (measured: /markup-html-tags-and-formatting/, /greek/, comments with
+   code, image captions and a YouTube iframe at 390px). :where() keeps the
+   specificity at zero, so any block's own sizing still wins.
+   ========================================================================= */
+:where(.wp-block-post-content, .wp-block-comment-content) pre {
+	max-width: 100%;
+	overflow-x: auto;
+}
+:where(.wp-block-post-content, .wp-block-comment-content) :where(img, video, iframe, embed, object, .wp-caption) {
+	max-width: 100%;
+}
+:where(.wp-block-post-content, .wp-block-comment-content) :where(img, video) {
+	height: auto;
+}
+/* Classic image alignment: core's layout rules float aligned blocks that are
+   DIRECT children of the content; a classic <img class="alignleft"> sits inside
+   a <p>, so it neither floated nor centred (Theme Unit Test "Image Alignment"). */
+:where(.wp-block-post-content, .wp-block-comment-content) :where(img.alignleft, .wp-caption.alignleft) {
+	float: left;
+	margin: 0.25em 1.5em 1em 0;
+}
+:where(.wp-block-post-content, .wp-block-comment-content) :where(img.alignright, .wp-caption.alignright) {
+	float: right;
+	margin: 0.25em 0 1em 1.5em;
+}
+:where(.wp-block-post-content, .wp-block-comment-content) :where(img.aligncenter, .wp-caption.aligncenter) {
+	display: block;
+	margin-inline: auto;
+}
+:where(.wp-block-post-content, .wp-block-comment-content)::after {
+	content: "";
+	display: table;
+	clear: both;
+}
+:where(.wp-block-post-content, .wp-block-comment-content) .wp-caption-text {
+	margin-top: 0.5em;
+	font-size: 0.875em;
+	color: var(--c-ink-3, inherit);
+}
+/* Ordered lists written INSIDE a comment: core's rule for nested replies
+   (`.wp-block-comment-template ol { list-style: none }`) removed their numbers. */
+.wp-block-comment-content ol {
+	list-style: decimal;
+	padding-left: 2rem;
+}
+/* Classic [gallery] shortcode: block themes get no gallery CSS from core, so
+   its items stacked one per line whatever the column count. */
+:where(.wp-block-post-content) .gallery {
+	display: grid;
+	gap: 1rem;
+	grid-template-columns: repeat(var(--arneiron-gallery-columns, 3), minmax(0, 1fr));
+	margin-block: 1.5em;
+}
+:where(.wp-block-post-content) .gallery-columns-1 { --arneiron-gallery-columns: 1; }
+:where(.wp-block-post-content) .gallery-columns-2 { --arneiron-gallery-columns: 2; }
+:where(.wp-block-post-content) .gallery-columns-4 { --arneiron-gallery-columns: 4; }
+:where(.wp-block-post-content) .gallery-columns-5 { --arneiron-gallery-columns: 5; }
+:where(.wp-block-post-content) .gallery-columns-6 { --arneiron-gallery-columns: 6; }
+:where(.wp-block-post-content) .gallery-columns-7 { --arneiron-gallery-columns: 7; }
+:where(.wp-block-post-content) .gallery-columns-8 { --arneiron-gallery-columns: 8; }
+:where(.wp-block-post-content) .gallery-columns-9 { --arneiron-gallery-columns: 9; }
+:where(.wp-block-post-content) .gallery-item { margin: 0; }
+:where(.wp-block-post-content) .gallery-icon img { display: block; width: 100%; height: auto; }
+@media (max-width: 600px) {
+	:where(.wp-block-post-content) .gallery { --arneiron-gallery-columns: 2; }
+}
+/* Links inside running text (post content, comments, excerpts) are underlined,
+   so they never depend on colour alone (WCAG 1.4.1; accessibility-ready
+   "underlined links in text"). The underline goes away on hover/focus (the
+   existing `a:hover { text-decoration: none }` rule), which is the required
+   non-colour change. Buttons and navigation are untouched. */
+:where(.wp-block-post-content, .wp-block-comment-content, .wp-block-post-excerpt__excerpt) :where(p, li, dd, td, th, blockquote, figcaption, cite, address) a:where(:not(.wp-element-button, .wp-block-button__link)) {
+	text-decoration: underline;
+	text-underline-offset: 0.15em;
+}

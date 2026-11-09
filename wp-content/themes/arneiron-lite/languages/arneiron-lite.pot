@@ -1,0 +1,3546 @@
+# Copyright (C) 2026 ArneIron
+# This file is distributed under the GNU General Public License v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: ArneIron Lite 1.1.40\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/arneiron-lite\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-11-04T06:28:44+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: arneiron-lite\n"
+
+#. Theme Name of the theme
+#: style.css
+#: inc/about.php:27
+#: inc/about.php:28
+#: inc/about.php:63
+msgid "ArneIron Lite"
+msgstr ""
+
+#. Theme URI of the theme
+#: style.css
+msgid "https://arneiron.net/lite/"
+msgstr ""
+
+#. Description of the theme
+#: style.css
+msgid "ArneIron Lite is an accessible block theme with a dark \"Old Arnie\" look (near-black canvas, signal-red accent), seven more style variations including a light one, and full-site-editing templates, template parts and block patterns made from core blocks. Header, mobile menu and footer work with no plugin installed; with WooCommerce or Polylang active, their cart, account and language blocks appear in the header. Optional: the free ArneIron Blocks plugin adds design blocks such as hero, pricing, FAQ and carousel."
+msgstr ""
+
+#. Author of the theme
+#: style.css
+#: inc/block-patterns.php:34
+msgid "ArneIron"
+msgstr ""
+
+#. Author URI of the theme
+#: style.css
+msgid "https://arneiron.net/"
+msgstr ""
+
+#: inc/about.php:52
+msgid "Activate ArneIron Blocks"
+msgstr ""
+
+#: inc/about.php:59
+msgid "Find ArneIron Blocks in Plugins > Add New"
+msgstr ""
+
+#: inc/about.php:64
+msgid "Header, footer, menu drawer, templates and patterns are ready to use. Edit them in Appearance > Editor."
+msgstr ""
+
+#: inc/about.php:66
+msgid "Your front page"
+msgstr ""
+
+#: inc/about.php:67
+msgid "While Settings > Reading shows your latest posts, the front page is a starter layout: a hero, three feature cards and your latest posts. Its text is placeholder copy; replace it with your own in the Site Editor. To show one of your pages instead, choose \"A static page\" in Settings > Reading."
+msgstr ""
+
+#: inc/about.php:69
+msgid "Edit the front page"
+msgstr ""
+
+#: inc/about.php:70
+msgid "Reading settings"
+msgstr ""
+
+#: inc/about.php:72
+msgid "When you add a new page, WordPress offers the theme's page layouts (About, Landing, Pricing) to start from."
+msgstr ""
+
+#: inc/about.php:74
+msgid "Recommended plugin: ArneIron Blocks"
+msgstr ""
+
+#: inc/about.php:75
+msgid "Eighteen free design blocks styled for this theme: hero, feature cards, FAQ, price table, carousel, posts grid, WooCommerce showcase and more."
+msgstr ""
+
+#: inc/about.php:76
+msgid "It also has the demo content: in one click it adds the pages, posts, photos and menu of the theme demo, ready to edit, and removes them again in one click."
+msgstr ""
+
+#: inc/about.php:79
+msgid "ArneIron Blocks is active."
+msgstr ""
+
+#: inc/about.php:81
+msgid "Import demo content"
+msgstr ""
+
+#: inc/about.php:88
+msgid "ArneIron Pro"
+msgstr ""
+
+#: inc/about.php:89
+msgid "The commercial edition adds AI editing of your site through ArneIron, an auto-installed child theme, a site icon made from your logo, and WooCommerce account and wallet chrome."
+msgstr ""
+
+#: inc/about.php:90
+msgid "Learn about ArneIron Pro"
+msgstr ""
+
+#: inc/about.php:90
+msgid "(opens in a new tab)"
+msgstr ""
+
+#: inc/about.php:132
+msgid "Thanks for choosing ArneIron Lite."
+msgstr ""
+
+#: inc/about.php:134
+msgid "Getting started"
+msgstr ""
+
+#: inc/block-patterns.php:38
+msgid "ArneIron Blocks"
+msgstr ""
+
+#: inc/block-patterns.php:43
+msgid "ArneIron · Account"
+msgstr ""
+
+#: inc/block-patterns.php:44
+msgid "ArneIron · Banners"
+msgstr ""
+
+#: inc/block-patterns.php:45
+msgid "ArneIron · Blog"
+msgstr ""
+
+#: inc/block-patterns.php:46
+msgid "ArneIron · Cards"
+msgstr ""
+
+#: inc/block-patterns.php:47
+msgid "ArneIron · Commerce"
+msgstr ""
+
+#: inc/block-patterns.php:48
+msgid "ArneIron · Contact"
+msgstr ""
+
+#: inc/block-patterns.php:49
+msgid "ArneIron · Content"
+msgstr ""
+
+#: inc/block-patterns.php:50
+msgid "ArneIron · Call to Action"
+msgstr ""
+
+#: inc/block-patterns.php:51
+msgid "ArneIron · FAQ"
+msgstr ""
+
+#: inc/block-patterns.php:52
+msgid "ArneIron · Features"
+msgstr ""
+
+#: inc/block-patterns.php:53
+msgid "ArneIron · Gallery"
+msgstr ""
+
+#: inc/block-patterns.php:54
+msgid "ArneIron · Hero"
+msgstr ""
+
+#: inc/block-patterns.php:55
+msgid "ArneIron · Page"
+msgstr ""
+
+#: inc/block-patterns.php:56
+msgid "ArneIron · Pricing"
+msgstr ""
+
+#: inc/block-patterns.php:57
+msgid "ArneIron · Stats"
+msgstr ""
+
+#: inc/block-patterns.php:58
+msgid "ArneIron · Team"
+msgstr ""
+
+#: inc/block-patterns.php:59
+msgid "ArneIron · Testimonials"
+msgstr ""
+
+#: inc/block-styles.php:51
+msgid "ArneIron Title"
+msgstr ""
+
+#: inc/block-styles.php:52
+msgid "ArneIron Title + Decor"
+msgstr ""
+
+#: inc/block-styles.php:53
+msgid "ArneIron No Wrap"
+msgstr ""
+
+#: inc/block-styles.php:54
+msgid "ArneIron Shadow"
+msgstr ""
+
+#: inc/block-styles.php:55
+msgid "ArneIron Shadow Lift"
+msgstr ""
+
+#: inc/block-styles.php:58
+#: inc/block-styles.php:137
+msgid "Outline"
+msgstr ""
+
+#: inc/block-styles.php:59
+msgid "Ghost"
+msgstr ""
+
+#: inc/block-styles.php:60
+msgid "Link"
+msgstr ""
+
+#: inc/block-styles.php:61
+#: inc/block-styles.php:140
+#: inc/block-styles.php:152
+msgid "Pill"
+msgstr ""
+
+#: inc/block-styles.php:62
+msgid "Full width"
+msgstr ""
+
+#: inc/block-styles.php:63
+msgid "Icon"
+msgstr ""
+
+#: inc/block-styles.php:66
+#: inc/block-styles.php:105
+msgid "Card"
+msgstr ""
+
+#: inc/block-styles.php:67
+msgid "Panel"
+msgstr ""
+
+#: inc/block-styles.php:68
+#: inc/block-styles.php:104
+#: inc/block-styles.php:127
+msgid "Bordered"
+msgstr ""
+
+#: inc/block-styles.php:69
+msgid "Well"
+msgstr ""
+
+#: inc/block-styles.php:70
+#: inc/block-styles.php:103
+#: inc/block-styles.php:108
+#: inc/block-styles.php:128
+#: inc/block-styles.php:139
+#: inc/block-styles.php:153
+msgid "Plain"
+msgstr ""
+
+#: inc/block-styles.php:73
+msgid "Notice: Info"
+msgstr ""
+
+#: inc/block-styles.php:74
+msgid "Notice: Note"
+msgstr ""
+
+#: inc/block-styles.php:75
+msgid "Notice: Warning"
+msgstr ""
+
+#: inc/block-styles.php:76
+msgid "Notice: Tip"
+msgstr ""
+
+#: inc/block-styles.php:79
+#: inc/block-styles.php:157
+#: inc/block-styles.php:159
+msgid "Cards"
+msgstr ""
+
+#: inc/block-styles.php:80
+msgid "Divided"
+msgstr ""
+
+#: inc/block-styles.php:92
+msgid "News item (images aside)"
+msgstr ""
+
+#: inc/block-styles.php:93
+msgid "News item media column"
+msgstr ""
+
+#: inc/block-styles.php:96
+#: inc/block-styles.php:147
+msgid "Frame"
+msgstr ""
+
+#: inc/block-styles.php:97
+#: inc/block-styles.php:146
+msgid "Rounded"
+msgstr ""
+
+#: inc/block-styles.php:98
+msgid "Circle"
+msgstr ""
+
+#: inc/block-styles.php:99
+msgid "Polaroid"
+msgstr ""
+
+#: inc/block-styles.php:100
+msgid "Duotone Gray"
+msgstr ""
+
+#: inc/block-styles.php:109
+msgid "Bracketed"
+msgstr ""
+
+#: inc/block-styles.php:110
+msgid "Large"
+msgstr ""
+
+#: inc/block-styles.php:113
+msgid "Checklist"
+msgstr ""
+
+#: inc/block-styles.php:114
+msgid "Arrow"
+msgstr ""
+
+#: inc/block-styles.php:115
+msgid "Dash"
+msgstr ""
+
+#: inc/block-styles.php:116
+msgid "Unstyled"
+msgstr ""
+
+#: inc/block-styles.php:117
+msgid "Inline"
+msgstr ""
+
+#: inc/block-styles.php:120
+msgid "Hairline"
+msgstr ""
+
+#: inc/block-styles.php:121
+msgid "Dots"
+msgstr ""
+
+#: inc/block-styles.php:122
+msgid "Wide"
+msgstr ""
+
+#: inc/block-styles.php:123
+msgid "Short Center"
+msgstr ""
+
+#: inc/block-styles.php:126
+msgid "Stripes"
+msgstr ""
+
+#: inc/block-styles.php:129
+msgid "Compact"
+msgstr ""
+
+#: inc/block-styles.php:132
+msgid "Overline"
+msgstr ""
+
+#: inc/block-styles.php:133
+msgid "Eyebrow"
+msgstr ""
+
+#: inc/block-styles.php:134
+msgid "Kicker"
+msgstr ""
+
+#: inc/block-styles.php:138
+msgid "Filled"
+msgstr ""
+
+#: inc/block-styles.php:143
+msgid "Text Card"
+msgstr ""
+
+#: inc/block-styles.php:148
+msgid "Wide Bleed"
+msgstr ""
+
+#: inc/block-styles.php:151
+msgid "Underline"
+msgstr ""
+
+#: inc/block-styles.php:156
+msgid "Divided List"
+msgstr ""
+
+#: inc/block-styles.php:158
+#: inc/block-styles.php:160
+msgid "Minimal"
+msgstr ""
+
+#: inc/chrome-integrations.php:131
+#: inc/chrome-integrations.php:299
+msgid "Log in"
+msgstr ""
+
+#: inc/chrome-integrations.php:147
+#: inc/chrome-integrations.php:299
+msgid "Log out"
+msgstr ""
+
+#: inc/chrome-integrations.php:180
+msgid "Wallet"
+msgstr ""
+
+#: inc/chrome-integrations.php:222
+msgid "Change language"
+msgstr ""
+
+#: inc/comment-box.php:39
+msgid "What are your thoughts?"
+msgstr ""
+
+#: inc/comment-box.php:46
+msgid "Write a comment"
+msgstr ""
+
+#: inc/comment-box.php:52
+msgid "Cancel"
+msgstr ""
+
+#: inc/comment-box.php:56
+msgid "Comment"
+msgstr ""
+
+#: inc/enqueue.php:63
+#: inc/setup.php:47
+msgid "Mobile menu"
+msgstr ""
+
+#: inc/front-landing.php:49
+msgctxt "Template name"
+msgid "Front Page (Latest Posts)"
+msgstr ""
+
+#: inc/front-landing.php:50
+msgid "The front page while Settings > Reading shows your latest posts: a starter hero, feature cards and the latest posts. Replace the placeholder text with your own."
+msgstr ""
+
+#: inc/media-video.php:96
+#: inc/media-video.php:383
+#: patterns/hero-video.php:19
+msgid "Play video"
+msgstr ""
+
+#: inc/media-video.php:97
+msgid "Pause video"
+msgstr ""
+
+#: inc/scroll-story.php:77
+msgid "Link copied"
+msgstr ""
+
+#: inc/scroll-story.php:165
+msgid "Scroll Story section"
+msgstr ""
+
+#: inc/setup.php:46
+msgid "Primary menu"
+msgstr ""
+
+#: inc/setup.php:48
+msgid "Footer menu"
+msgstr ""
+
+#: incemplate-support.php:70
+msgid "Embeded"
+msgstr ""
+
+#: incemplate-support.php:71
+msgid "Reusable sections you can drop anywhere with a Template Part block."
+msgstr ""
+
+#: incemplate-support.php:376
+msgid "Page"
+msgstr ""
+
+#: incemplate-support.php:376
+msgid "Pages:"
+msgstr ""
+
+#: patterns/account-dashboard.php
+msgctxt "Pattern title"
+msgid "Account · Dashboard"
+msgstr ""
+
+#: patterns/account-dashboard.php
+msgctxt "Pattern description"
+msgid "Gray account dashboard surface with summary cards."
+msgstr ""
+
+#: patterns/account-dashboard.php:13
+msgid "Dashboard"
+msgstr ""
+
+#: patterns/account-dashboard.php:16
+msgid "Balance"
+msgstr ""
+
+#: patterns/account-dashboard.php:16
+msgid "4,200"
+msgstr ""
+
+#: patterns/account-dashboard.php:16
+#: patterns/pricing-credit-packs.php:16
+#: patterns/pricing-credit-packs.php:17
+#: patterns/pricing-credit-packs.php:18
+msgid "credits"
+msgstr ""
+
+#: patterns/account-dashboard.php:17
+#: patterns/pricing-compare-table.php:15
+msgid "Projects"
+msgstr ""
+
+#: patterns/account-dashboard.php:17
+msgid "7"
+msgstr ""
+
+#: patterns/account-dashboard.php:17
+msgid "active"
+msgstr ""
+
+#: patterns/account-dashboard.php:18
+msgid "Plan"
+msgstr ""
+
+#: patterns/account-dashboard.php:18
+#: patterns/features-compare.php:15
+#: patterns/pricing-3tier.php:17
+msgid "Pro"
+msgstr ""
+
+#: patterns/account-dashboard.php:18
+msgid "Manage"
+msgstr ""
+
+#: patterns/account-usage-balance.php
+msgctxt "Pattern title"
+msgid "Account · Usage & balance"
+msgstr ""
+
+#: patterns/account-usage-balance.php
+msgctxt "Pattern description"
+msgid "A usage/balance panel with a progress bar."
+msgstr ""
+
+#: patterns/account-usage-balance.php:15
+msgid "Usage this month"
+msgstr ""
+
+#: patterns/account-usage-balance.php:15
+msgid "5,800 / 10,000"
+msgstr ""
+
+#: patterns/account-usage-balance.php:17
+msgid "Buy more credits"
+msgstr ""
+
+#: patterns/banner-alert.php
+msgctxt "Pattern title"
+msgid "Banner · Alert"
+msgstr ""
+
+#: patterns/banner-alert.php
+msgctxt "Pattern description"
+msgid "A status alert banner."
+msgstr ""
+
+#: patterns/banner-alert.php:13
+msgid "Scheduled maintenance:"
+msgstr ""
+
+#: patterns/banner-alert.php:13
+msgid "Some features may be briefly unavailable this weekend."
+msgstr ""
+
+#: patterns/banner-announcement.php
+msgctxt "Pattern title"
+msgid "Banner · Announcement"
+msgstr ""
+
+#: patterns/banner-announcement.php
+msgctxt "Pattern description"
+msgid "A full-width announcement bar."
+msgstr ""
+
+#: patterns/banner-announcement.php:13
+msgid "ArneIron Base 1.0 is here."
+msgstr ""
+
+#: patterns/banner-announcement.php:13
+msgid "Read the notes"
+msgstr ""
+
+#: patterns/banner-cookie.php
+msgctxt "Pattern title"
+msgid "Banner · Cookie notice"
+msgstr ""
+
+#: patterns/banner-cookie.php
+msgctxt "Pattern description"
+msgid "A cookie consent notice."
+msgstr ""
+
+#: patterns/banner-cookie.php:13
+msgid "We use cookies to improve your experience."
+msgstr ""
+
+#: patterns/banner-cookie.php:14
+msgid "Decline"
+msgstr ""
+
+#: patterns/banner-cookie.php:14
+msgid "Accept"
+msgstr ""
+
+#: patterns/banner-promo.php
+msgctxt "Pattern title"
+msgid "Banner · Promo strip"
+msgstr ""
+
+#: patterns/banner-promo.php
+msgctxt "Pattern description"
+msgid "A promotional strip with a CTA."
+msgstr ""
+
+#: patterns/banner-promo.php:13
+msgid "Save 20% on annual plans"
+msgstr ""
+
+#: patterns/banner-promo.php:13
+msgid "Upgrade"
+msgstr ""
+
+#: patterns/blog-author-box.php
+msgctxt "Pattern title"
+msgid "Blog · Author box"
+msgstr ""
+
+#: patterns/blog-author-box.php
+msgctxt "Pattern description"
+msgid "An author bio box for the end of a post."
+msgstr ""
+
+#: patterns/blog-author-box.php:14
+msgid "Written by Jamie Lee"
+msgstr ""
+
+#: patterns/blog-author-box.php:14
+msgid "Founder and lead designer. Writes about calm, accessible interfaces."
+msgstr ""
+
+#: patterns/blog-featured-list.php
+msgctxt "Pattern title"
+msgid "Blog · Featured + list"
+msgstr ""
+
+#: patterns/blog-featured-list.php
+msgctxt "Pattern description"
+msgid "A featured post beside a compact list."
+msgstr ""
+
+#: patterns/blog-featured-list.php:16
+msgid "More posts"
+msgstr ""
+
+#: patterns/blog-list.php
+msgctxt "Pattern title"
+msgid "Blog · Post list"
+msgstr ""
+
+#: patterns/blog-list.php
+msgctxt "Pattern description"
+msgid "A simple divided list of posts."
+msgstr ""
+
+#: patterns/blog-list.php:20
+#: patterns/blog-magazine.php:20
+#: patterns/cards-blog.php:21
+msgid "No posts yet."
+msgstr ""
+
+#: patterns/blog-magazine.php
+msgctxt "Pattern title"
+msgid "Blog · Magazine grid"
+msgstr ""
+
+#: patterns/blog-magazine.php
+msgctxt "Pattern description"
+msgid "A magazine-style post grid."
+msgstr ""
+
+#: patterns/blog-sidebar.php
+msgctxt "Pattern title"
+msgid "Blog sidebar (ArneIron)"
+msgstr ""
+
+#: patterns/blog-sidebar.php
+msgctxt "Pattern description"
+msgid "The sidebar of the blog and archive pages: search, categories with post counts, and a tag cloud, each in a card. parts/blog-sidebar.html shows this pattern; pick it to restore the stock sidebar."
+msgstr ""
+
+#: patterns/blog-sidebar.php:20
+#: patterns/blog-sidebar.php:21
+msgid "Blog sidebar"
+msgstr ""
+
+#: patterns/blog-sidebar.php:23
+#: patterns/blog-sidebar.php:26
+msgid "Search"
+msgstr ""
+
+#: patterns/blog-sidebar.php:26
+msgid "Search the blog"
+msgstr ""
+
+#: patterns/blog-sidebar.php:26
+msgid "Search posts…"
+msgstr ""
+
+#: patterns/blog-sidebar.php:31
+msgid "Categories"
+msgstr ""
+
+#: patterns/blog-sidebar.php:39
+msgid "Tags"
+msgstr ""
+
+#: patterns/cards-blog.php
+msgctxt "Pattern title"
+msgid "Cards · Blog grid"
+msgstr ""
+
+#: patterns/cards-blog.php
+msgctxt "Pattern description"
+msgid "A query-loop of blog cards."
+msgstr ""
+
+#: patterns/cards-blog.php:13
+#: patternsemplate-front-landing.php:37
+msgid "Latest posts"
+msgstr ""
+
+#: patterns/cards-category-tiles.php
+msgctxt "Pattern title"
+msgid "Cards · Category tiles"
+msgstr ""
+
+#: patterns/cards-category-tiles.php
+msgctxt "Pattern description"
+msgid "Category tiles with overlay labels."
+msgstr ""
+
+#: patterns/cards-category-tiles.php:15
+msgid "Guides"
+msgstr ""
+
+#: patterns/cards-category-tiles.php:16
+msgid "News"
+msgstr ""
+
+#: patterns/cards-category-tiles.php:17
+msgid "Releases"
+msgstr ""
+
+#: patterns/cards-downloads.php
+msgctxt "Pattern title"
+msgid "Cards · Downloads"
+msgstr ""
+
+#: patterns/cards-downloads.php
+msgctxt "Pattern description"
+msgid "Download cards using the file block."
+msgstr ""
+
+#: patterns/cards-downloads.php:13
+msgid "Downloads"
+msgstr ""
+
+#: patterns/cards-downloads.php:14
+msgid "Brand guidelines (PDF)"
+msgstr ""
+
+#: patterns/cards-downloads.php:14
+#: patterns/cards-downloads.php:15
+msgid "Download"
+msgstr ""
+
+#: patterns/cards-downloads.php:15
+msgid "Press kit (ZIP)"
+msgstr ""
+
+#: patterns/cards-icon-links.php
+msgctxt "Pattern title"
+msgid "Cards · Icon links"
+msgstr ""
+
+#: patterns/cards-icon-links.php
+msgctxt "Pattern description"
+msgid "A grid of compact icon link cards."
+msgstr ""
+
+#: patterns/cards-icon-links.php:15
+#: patterns/content-toc.php:15
+#: patterns/content-toc.php:16
+msgid "Overview"
+msgstr ""
+
+#: patterns/cards-icon-links.php:16
+msgid "Settings"
+msgstr ""
+
+#: patterns/cards-icon-links.php:17
+#: patterns/faq-categorized.php:13
+msgid "Billing"
+msgstr ""
+
+#: patterns/cards-profiles.php
+msgctxt "Pattern title"
+msgid "Cards · Profiles"
+msgstr ""
+
+#: patterns/cards-profiles.php
+msgctxt "Pattern description"
+msgid "Compact profile cards with avatar placeholders."
+msgstr ""
+
+#: patterns/cards-profiles.php:15
+#: patternseam-founder.php:13
+#: patternseam-grid.php:16
+#: patternseam-list-bios.php:13
+msgid "Jamie Lee"
+msgstr ""
+
+#: patterns/cards-profiles.php:15
+#: patternseam-grid.php:16
+msgid "Founder"
+msgstr ""
+
+#: patterns/cards-profiles.php:16
+#: patternseam-grid.php:17
+#: patternseam-list-bios.php:15
+msgid "Chris Park"
+msgstr ""
+
+#: patterns/cards-profiles.php:16
+#: patternseam-grid.php:17
+msgid "Engineering"
+msgstr ""
+
+#: patterns/cards-resources.php
+msgctxt "Pattern title"
+msgid "Cards · Resources"
+msgstr ""
+
+#: patterns/cards-resources.php
+msgctxt "Pattern description"
+msgid "Resource cards with links."
+msgstr ""
+
+#: patterns/cards-resources.php:15
+msgid "Documentation"
+msgstr ""
+
+#: patterns/cards-resources.php:15
+msgid "Guides and references."
+msgstr ""
+
+#: patterns/cards-resources.php:15
+msgid "Read"
+msgstr ""
+
+#: patterns/cards-resources.php:16
+msgid "Tutorials"
+msgstr ""
+
+#: patterns/cards-resources.php:16
+msgid "Step-by-step walkthroughs."
+msgstr ""
+
+#: patterns/cards-resources.php:16
+msgid "Watch"
+msgstr ""
+
+#: patterns/cards-resources.php:17
+msgid "Community"
+msgstr ""
+
+#: patterns/cards-resources.php:17
+msgid "Ask questions and share."
+msgstr ""
+
+#: patterns/cards-resources.php:17
+msgid "Join"
+msgstr ""
+
+#: patterns/commerce-billing-history.php
+msgctxt "Pattern title"
+msgid "Commerce · Billing history"
+msgstr ""
+
+#: patterns/commerce-billing-history.php
+msgctxt "Pattern description"
+msgid "A billing history table."
+msgstr ""
+
+#: patterns/commerce-billing-history.php:13
+msgid "Billing history"
+msgstr ""
+
+#: patterns/commerce-billing-history.php:14
+msgid "Date"
+msgstr ""
+
+#: patterns/commerce-billing-history.php:14
+msgid "Description"
+msgstr ""
+
+#: patterns/commerce-billing-history.php:14
+msgid "Amount"
+msgstr ""
+
+#: patterns/commerce-billing-history.php:14
+msgid "Invoice"
+msgstr ""
+
+#: patterns/commerce-billing-history.php:14
+msgid "2026-06-01"
+msgstr ""
+
+#: patterns/commerce-billing-history.php:14
+msgid "Pro plan"
+msgstr ""
+
+#: patterns/commerce-billing-history.php:14
+msgid "$19.00"
+msgstr ""
+
+#: patterns/commerce-billing-history.php:14
+msgid "PDF"
+msgstr ""
+
+#: patterns/commerce-billing-history.php:14
+msgid "2026-05-01"
+msgstr ""
+
+#: patterns/commerce-checkout-steps.php
+msgctxt "Pattern title"
+msgid "Commerce · Checkout steps"
+msgstr ""
+
+#: patterns/commerce-checkout-steps.php
+msgctxt "Pattern description"
+msgid "A three-step checkout progress row."
+msgstr ""
+
+#: patterns/commerce-checkout-steps.php:15
+#: patterns/pricing-compare-table.php:15
+msgid "1"
+msgstr ""
+
+#: patterns/commerce-checkout-steps.php:15
+msgid "Cart"
+msgstr ""
+
+#: patterns/commerce-checkout-steps.php:16
+msgid "2"
+msgstr ""
+
+#: patterns/commerce-checkout-steps.php:16
+msgid "Payment"
+msgstr ""
+
+#: patterns/commerce-checkout-steps.php:17
+#: patterns/pricing-compare-table.php:15
+msgid "3"
+msgstr ""
+
+#: patterns/commerce-checkout-steps.php:17
+msgid "Done"
+msgstr ""
+
+#: patterns/commerce-order-summary.php
+msgctxt "Pattern title"
+msgid "Commerce · Order summary"
+msgstr ""
+
+#: patterns/commerce-order-summary.php
+msgctxt "Pattern description"
+msgid "A gray order summary card."
+msgstr ""
+
+#: patterns/commerce-order-summary.php:15
+msgid "Order summary"
+msgstr ""
+
+#: patterns/commerce-order-summary.php:16
+msgid "Pro plan (yearly)"
+msgstr ""
+
+#: patterns/commerce-order-summary.php:16
+msgid "$190.00"
+msgstr ""
+
+#: patterns/commerce-order-summary.php:17
+msgid "Tax"
+msgstr ""
+
+#: patterns/commerce-order-summary.php:17
+msgid "$15.20"
+msgstr ""
+
+#: patterns/commerce-order-summary.php:19
+msgid "Total"
+msgstr ""
+
+#: patterns/commerce-order-summary.php:19
+msgid "$205.20"
+msgstr ""
+
+#: patterns/commerce-order-summary.php:20
+msgid "Pay now"
+msgstr ""
+
+#: patterns/contact-form-info.php
+msgctxt "Pattern title"
+msgid "Contact · Form + info"
+msgstr ""
+
+#: patterns/contact-form-info.php
+msgctxt "Pattern description"
+msgid "Contact details beside a comment-style form placeholder."
+msgstr ""
+
+#: patterns/contact-form-info.php:15
+msgid "Get in touch"
+msgstr ""
+
+#: patterns/contact-form-info.php:15
+msgid "We usually reply within one business day."
+msgstr ""
+
+#: patterns/contact-form-info.php:15
+msgid "hello@example.com"
+msgstr ""
+
+#: patterns/contact-form-info.php:15
+msgid "+1 555 0100"
+msgstr ""
+
+#: patterns/contact-form-info.php:16
+msgid "Add your contact form plugin block here."
+msgstr ""
+
+#: patterns/contact-map-form.php
+msgctxt "Pattern title"
+msgid "Contact · Map + form"
+msgstr ""
+
+#: patterns/contact-map-form.php
+msgctxt "Pattern description"
+msgid "A map placeholder beside a form placeholder."
+msgstr ""
+
+#: patterns/contact-map-form.php:15
+msgid "Map"
+msgstr ""
+
+#: patterns/contact-map-form.php:16
+msgid "Visit us"
+msgstr ""
+
+#: patterns/contact-map-form.php:16
+msgid "123 Gray Street, Suite 100"
+msgstr ""
+
+#: patterns/contact-split.php
+msgctxt "Pattern title"
+msgid "Contact · Split"
+msgstr ""
+
+#: patterns/contact-split.php
+msgctxt "Pattern description"
+msgid "A split contact CTA with heading and details."
+msgstr ""
+
+#: patterns/contact-split.php:13
+msgid "Questions? Talk to us."
+msgstr ""
+
+#: patterns/contact-split.php:13
+msgid "Email us"
+msgstr ""
+
+#: patterns/content-2col.php
+msgctxt "Pattern title"
+msgid "Content · Two-column text"
+msgstr ""
+
+#: patterns/content-2col.php
+msgctxt "Pattern description"
+msgid "Two columns of body text."
+msgstr ""
+
+#: patterns/content-2col.php:15
+msgid "The base theme keeps opinions to a minimum so your content leads. Typography, spacing, and color all come from a small set of tokens."
+msgstr ""
+
+#: patterns/content-2col.php:16
+msgid "Because everything references tokens, a single skin file can transform the whole look without touching a line of markup."
+msgstr ""
+
+#: patterns/content-article-intro.php
+msgctxt "Pattern title"
+msgid "Content · Article intro"
+msgstr ""
+
+#: patterns/content-article-intro.php
+msgctxt "Pattern description"
+msgid "A rich article intro with lead paragraph."
+msgstr ""
+
+#: patterns/content-article-intro.php:13
+msgid "Guide"
+msgstr ""
+
+#: patterns/content-article-intro.php:14
+msgid "Getting started with the base theme"
+msgstr ""
+
+#: patterns/content-article-intro.php:15
+msgid "This guide walks through activating the theme, choosing a skin, and composing your first page from patterns."
+msgstr ""
+
+#: patterns/content-callouts.php
+msgctxt "Pattern title"
+msgid "Content · Callout blocks"
+msgstr ""
+
+#: patterns/content-callouts.php
+msgctxt "Pattern description"
+msgid "Info / note / warning / tip callouts."
+msgstr ""
+
+#: patterns/content-callouts.php:13
+msgid "Info:"
+msgstr ""
+
+#: patterns/content-callouts.php:13
+msgid "Callouts are built from group block styles."
+msgstr ""
+
+#: patterns/content-callouts.php:14
+msgid "Warning:"
+msgstr ""
+
+#: patterns/content-callouts.php:14
+msgid "They stay achromatic until a skin colorizes them."
+msgstr ""
+
+#: patterns/content-callouts.php:15
+msgid "Tip:"
+msgstr ""
+
+#: patterns/content-callouts.php:15
+msgid "Use them to guide the reader."
+msgstr ""
+
+#: patterns/content-code.php
+msgctxt "Pattern title"
+msgid "Content · Code sample"
+msgstr ""
+
+#: patterns/content-code.php
+msgctxt "Pattern description"
+msgid "A code sample block."
+msgstr ""
+
+#: patterns/content-code.php:13
+msgid "Example"
+msgstr ""
+
+#: patterns/content-image-caption.php
+msgctxt "Pattern title"
+msgid "Content · Image with caption"
+msgstr ""
+
+#: patterns/content-image-caption.php
+msgctxt "Pattern description"
+msgid "A wide framed image with a caption."
+msgstr ""
+
+#: patterns/content-image-caption.php:13
+msgid "A wide, framed image with a muted caption."
+msgstr ""
+
+#: patterns/content-quote-break.php
+msgctxt "Pattern title"
+msgid "Content · Quote break"
+msgstr ""
+
+#: patterns/content-quote-break.php
+msgctxt "Pattern description"
+msgid "A large pullquote to break up an article."
+msgstr ""
+
+#: patterns/content-quote-break.php:13
+msgid "Good defaults are invisible; you only notice bad ones."
+msgstr ""
+
+#: patterns/content-table.php
+msgctxt "Pattern title"
+msgid "Content · Table section"
+msgstr ""
+
+#: patterns/content-table.php
+msgctxt "Pattern description"
+msgid "A striped data table in a content section."
+msgstr ""
+
+#: patterns/content-table.php:13
+msgid "Specifications"
+msgstr ""
+
+#: patterns/content-table.php:14
+msgid "Property"
+msgstr ""
+
+#: patterns/content-table.php:14
+msgid "Value"
+msgstr ""
+
+#: patterns/content-table.php:14
+msgid "Content width"
+msgstr ""
+
+#: patterns/content-table.php:14
+msgid "720px"
+msgstr ""
+
+#: patterns/content-table.php:14
+msgid "Wide width"
+msgstr ""
+
+#: patterns/content-table.php:14
+msgid "1200px"
+msgstr ""
+
+#: patterns/content-table.php:14
+#: patterns/stats-4row.php:17
+msgid "Color tokens"
+msgstr ""
+
+#: patterns/content-table.php:14
+#: patterns/stats-4row.php:17
+msgid "14"
+msgstr ""
+
+#: patterns/content-toc.php
+msgctxt "Pattern title"
+msgid "Content · TOC + content"
+msgstr ""
+
+#: patterns/content-toc.php
+msgctxt "Pattern description"
+msgid "A sticky-ish table of contents beside content."
+msgstr ""
+
+#: patterns/content-toc.php:15
+msgid "On this page"
+msgstr ""
+
+#: patterns/content-toc.php:15
+msgid "Setup"
+msgstr ""
+
+#: patterns/content-toc.php:15
+msgid "Skins"
+msgstr ""
+
+#: patterns/content-toc.php:16
+msgid "A short overview of what the theme provides and how to extend it."
+msgstr ""
+
+#: patterns/cta-centered.php
+msgctxt "Pattern title"
+msgid "CTA · Centered band"
+msgstr ""
+
+#: patterns/cta-centered.php
+msgctxt "Pattern description"
+msgid "A centered call-to-action band."
+msgstr ""
+
+#: patterns/cta-centered.php:13
+msgid "Start building today"
+msgstr ""
+
+#: patterns/cta-centered.php:14
+msgid "No credit card required."
+msgstr ""
+
+#: patterns/cta-centered.php:15
+#: patterns/cta-cover.php:16
+#: patterns/header-default.php:30
+#: patterns/hero-cover.php:24
+#: patterns/hero-split.php:30
+#: patterns/hero.php:39
+msgid "Get started"
+msgstr ""
+
+#: patterns/cta-cover.php
+msgctxt "Pattern title"
+msgid "CTA · Full-bleed cover"
+msgstr ""
+
+#: patterns/cta-cover.php
+msgctxt "Pattern description"
+msgid "Full-bleed cover CTA."
+msgstr ""
+
+#: patterns/cta-cover.php:15
+msgid "Build something great"
+msgstr ""
+
+#: patterns/cta-inline-banner.php
+msgctxt "Pattern title"
+msgid "CTA · Inline banner"
+msgstr ""
+
+#: patterns/cta-inline-banner.php
+msgctxt "Pattern description"
+msgid "A slim inline CTA banner."
+msgstr ""
+
+#: patterns/cta-inline-banner.php:13
+msgid "New: pattern library expanded to 80+ sections."
+msgstr ""
+
+#: patterns/cta-inline-banner.php:14
+msgid "See what is new"
+msgstr ""
+
+#: patterns/cta-newsletter.php
+msgctxt "Pattern title"
+msgid "CTA · Newsletter signup"
+msgstr ""
+
+#: patterns/cta-newsletter.php
+msgctxt "Pattern description"
+msgid "Newsletter signup CTA band."
+msgstr ""
+
+#: patterns/cta-newsletter.php:13
+msgid "Stay in the loop"
+msgstr ""
+
+#: patterns/cta-newsletter.php:14
+msgid "Occasional updates. No spam, unsubscribe anytime."
+msgstr ""
+
+#: patterns/cta-split.php
+msgctxt "Pattern title"
+msgid "CTA · Split"
+msgstr ""
+
+#: patterns/cta-split.php
+msgctxt "Pattern description"
+msgid "Text left, button right CTA."
+msgstr ""
+
+#: patterns/cta-split.php:15
+msgid "Have a project in mind?"
+msgstr ""
+
+#: patterns/cta-split.php:16
+msgid "Contact us"
+msgstr ""
+
+#: patterns/cta-sticky-bar.php
+msgctxt "Pattern title"
+msgid "CTA · Sticky bar"
+msgstr ""
+
+#: patterns/cta-sticky-bar.php
+msgctxt "Pattern description"
+msgid "A full-width sticky CTA bar (position sticky)."
+msgstr ""
+
+#: patterns/cta-sticky-bar.php:15
+msgid "Limited-time launch offer"
+msgstr ""
+
+#: patterns/cta-sticky-bar.php:16
+msgid "Claim it"
+msgstr ""
+
+#: patterns/faq-2col.php
+msgctxt "Pattern title"
+msgid "FAQ · Two-column Q&A"
+msgstr ""
+
+#: patterns/faq-2col.php
+msgctxt "Pattern description"
+msgid "Q&A pairs in two columns."
+msgstr ""
+
+#: patterns/faq-2col.php:15
+msgid "How do I install it?"
+msgstr ""
+
+#: patterns/faq-2col.php:15
+msgid "Upload the theme and activate it."
+msgstr ""
+
+#: patterns/faq-2col.php:15
+msgid "Does it support RTL?"
+msgstr ""
+
+#: patterns/faq-2col.php:15
+msgid "Yes, logical properties throughout."
+msgstr ""
+
+#: patterns/faq-2col.php:16
+msgid "Can I use my own fonts?"
+msgstr ""
+
+#: patterns/faq-2col.php:16
+msgid "Swap the font family in a skin file."
+msgstr ""
+
+#: patterns/faq-2col.php:16
+msgid "Is support included?"
+msgstr ""
+
+#: patterns/faq-2col.php:16
+msgid "Priority support on paid plans."
+msgstr ""
+
+#: patterns/faq-accordion.php
+msgctxt "Pattern title"
+msgid "FAQ · Accordion"
+msgstr ""
+
+#: patterns/faq-accordion.php
+msgctxt "Pattern description"
+msgid "Accessible disclosure-based FAQ."
+msgstr ""
+
+#: patterns/faq-accordion.php:13
+msgid "Frequently asked questions"
+msgstr ""
+
+#: patterns/faq-accordion.php:14
+msgid "Is it really all core blocks?"
+msgstr ""
+
+#: patterns/faq-accordion.php:14
+msgid "Yes. No custom blocks, no plugins required."
+msgstr ""
+
+#: patterns/faq-accordion.php:15
+msgid "Can I change the colors?"
+msgstr ""
+
+#: patterns/faq-accordion.php:15
+msgid "Swap one skin file and the whole site recolors."
+msgstr ""
+
+#: patterns/faq-accordion.php:16
+msgid "Is it accessible?"
+msgstr ""
+
+#: patterns/faq-accordion.php:16
+msgid "Built to WCAG 2.2 AA, with an AAA skin available."
+msgstr ""
+
+#: patterns/faq-categorized.php
+msgctxt "Pattern title"
+msgid "FAQ · Categorized"
+msgstr ""
+
+#: patterns/faq-categorized.php
+msgctxt "Pattern description"
+msgid "FAQ grouped by category headings."
+msgstr ""
+
+#: patterns/faq-categorized.php:14
+msgid "How does billing work?"
+msgstr ""
+
+#: patterns/faq-categorized.php:14
+msgid "Monthly or yearly, cancel anytime."
+msgstr ""
+
+#: patterns/faq-categorized.php:15
+msgid "Technical"
+msgstr ""
+
+#: patterns/faq-categorized.php:16
+msgid "Which WordPress version?"
+msgstr ""
+
+#: patterns/faq-categorized.php:16
+msgid "WordPress 6.6 and later."
+msgstr ""
+
+#: patterns/features-2x2.php
+msgctxt "Pattern title"
+msgid "Features · 2x2 grid"
+msgstr ""
+
+#: patterns/features-2x2.php
+msgctxt "Pattern description"
+msgid "Four features in a two-by-two grid."
+msgstr ""
+
+#: patterns/features-2x2.php:13
+msgid "Built to scale"
+msgstr ""
+
+#: patterns/features-2x2.php:16
+msgid "Secure"
+msgstr ""
+
+#: patterns/features-2x2.php:16
+msgid "Guardrails at every layer."
+msgstr ""
+
+#: patterns/features-2x2.php:17
+msgid "Reliable"
+msgstr ""
+
+#: patterns/features-2x2.php:17
+msgid "Tested and predictable."
+msgstr ""
+
+#: patterns/features-2x2.php:18
+msgid "Open"
+msgstr ""
+
+#: patterns/features-2x2.php:18
+msgid "Core blocks only, no lock-in."
+msgstr ""
+
+#: patterns/features-2x2.php:19
+#: patterns/features-icon-3col.php:23
+msgid "Fast"
+msgstr ""
+
+#: patterns/features-2x2.php:19
+msgid "Self-hosted fonts, tiny CSS."
+msgstr ""
+
+#: patterns/features-alt-rows.php
+msgctxt "Pattern title"
+msgid "Features · Alternating rows"
+msgstr ""
+
+#: patterns/features-alt-rows.php
+msgctxt "Pattern description"
+msgid "Alternating media + text rows."
+msgstr ""
+
+#: patterns/features-alt-rows.php:15
+msgid "Automate the busywork"
+msgstr ""
+
+#: patterns/features-alt-rows.php:15
+msgid "Let the system handle the repetitive parts so your team can focus."
+msgstr ""
+
+#: patterns/features-alt-rows.php:22
+msgid "Insights that matter"
+msgstr ""
+
+#: patterns/features-alt-rows.php:22
+msgid "Clear reporting without the clutter."
+msgstr ""
+
+#: patterns/features-bento.php
+msgctxt "Pattern title"
+msgid "Features · Bento grid"
+msgstr ""
+
+#: patterns/features-bento.php
+msgctxt "Pattern description"
+msgid "A bento-style grid of feature tiles."
+msgstr ""
+
+#: patterns/features-bento.php:15
+msgid "Fast by default"
+msgstr ""
+
+#: patterns/features-bento.php:15
+msgid "Tiny footprint."
+msgstr ""
+
+#: patterns/features-bento.php:16
+msgid "Composable"
+msgstr ""
+
+#: patterns/features-bento.php:16
+msgid "Mix any blocks."
+msgstr ""
+
+#: patterns/features-bento.php:17
+msgid "Skinnable"
+msgstr ""
+
+#: patterns/features-bento.php:17
+msgid "One file recolors all."
+msgstr ""
+
+#: patterns/features-bignum.php
+msgctxt "Pattern title"
+msgid "Features · Big numbers"
+msgstr ""
+
+#: patterns/features-bignum.php
+msgctxt "Pattern description"
+msgid "Numbered feature columns."
+msgstr ""
+
+#: patterns/features-bignum.php:15
+msgid "01"
+msgstr ""
+
+#: patterns/features-bignum.php:15
+msgid "Define"
+msgstr ""
+
+#: patterns/features-bignum.php:15
+msgid "Set your tokens once."
+msgstr ""
+
+#: patterns/features-bignum.php:16
+msgid "02"
+msgstr ""
+
+#: patterns/features-bignum.php:16
+msgid "Compose"
+msgstr ""
+
+#: patterns/features-bignum.php:16
+msgid "Assemble pages from patterns."
+msgstr ""
+
+#: patterns/features-bignum.php:17
+msgid "03"
+msgstr ""
+
+#: patterns/features-bignum.php:17
+msgid "Ship"
+msgstr ""
+
+#: patterns/features-bignum.php:17
+msgid "Publish and re-skin anytime."
+msgstr ""
+
+#: patterns/features-checklist.php
+msgctxt "Pattern title"
+msgid "Features · Checklist"
+msgstr ""
+
+#: patterns/features-checklist.php
+msgctxt "Pattern description"
+msgid "A checklist of included features."
+msgstr ""
+
+#: patterns/features-checklist.php:13
+msgid "Everything included"
+msgstr ""
+
+#: patterns/features-checklist.php:16
+msgid "Full FSE template tree"
+msgstr ""
+
+#: patterns/features-checklist.php:16
+msgid "Every core block styled"
+msgstr ""
+
+#: patterns/features-checklist.php:16
+msgid "Rich block-style library"
+msgstr ""
+
+#: patterns/features-checklist.php:17
+msgid "Dozens of patterns"
+msgstr ""
+
+#: patterns/features-checklist.php:17
+msgid "Skinnable with one file"
+msgstr ""
+
+#: patterns/features-checklist.php:17
+msgid "RTL and i18n ready"
+msgstr ""
+
+#: patterns/features-compare.php
+msgctxt "Pattern title"
+msgid "Features · Comparison"
+msgstr ""
+
+#: patterns/features-compare.php
+msgctxt "Pattern description"
+msgid "A comparison table."
+msgstr ""
+
+#: patterns/features-compare.php:13
+msgid "Compare plans"
+msgstr ""
+
+#: patterns/features-compare.php:15
+#: patterns/pricing-compare-table.php:15
+msgid "Feature"
+msgstr ""
+
+#: patterns/features-compare.php:15
+#: patterns/pricing-3tier.php:16
+msgid "Free"
+msgstr ""
+
+#: patterns/features-compare.php:15
+#: patterns/features-tabs.php:15
+msgid "Templates"
+msgstr ""
+
+#: patterns/features-compare.php:15
+#: patterns/features-tabs.php:16
+#: patterns/stats-4row.php:16
+msgid "Patterns"
+msgstr ""
+
+#: patterns/features-compare.php:15
+#: patterns/pricing-3tier.php:17
+#: patterns/pricing-highlight.php:17
+msgid "Priority support"
+msgstr ""
+
+#: patterns/features-icon-3col.php
+msgctxt "Pattern title"
+msgid "Features · 3-column icons"
+msgstr ""
+
+#: patterns/features-icon-3col.php
+msgctxt "Pattern description"
+msgid "Three feature cards in a responsive grid."
+msgstr ""
+
+#: patterns/features-icon-3col.php:14
+msgid "Why teams choose us"
+msgstr ""
+
+#: patterns/features-icon-3col.php:24
+msgid "Ship in minutes with sensible defaults everywhere."
+msgstr ""
+
+#: patterns/features-icon-3col.php:34
+msgid "Flexible"
+msgstr ""
+
+#: patterns/features-icon-3col.php:35
+msgid "Token-driven styling adapts to any brand."
+msgstr ""
+
+#: patterns/features-icon-3col.php:45
+msgid "Accessible"
+msgstr ""
+
+#: patterns/features-icon-3col.php:46
+msgid "AA contrast and keyboard support out of the box."
+msgstr ""
+
+#: patterns/features-logo-cloud.php
+msgctxt "Pattern title"
+msgid "Features · Logo cloud"
+msgstr ""
+
+#: patterns/features-logo-cloud.php
+msgctxt "Pattern description"
+msgid "A row of trusted-by logo placeholders."
+msgstr ""
+
+#: patterns/features-logo-cloud.php:13
+msgid "Trusted by teams everywhere"
+msgstr ""
+
+#: patterns/features-logo-cloud.php:16
+#: patterns/features-logo-cloud.php:17
+#: patterns/features-logo-cloud.php:18
+#: patterns/features-logo-cloud.php:19
+#: patterns/features-logo-cloud.php:20
+#: patternsesti-logo-quote.php:13
+msgid "LOGO"
+msgstr ""
+
+#: patterns/features-steps.php
+msgctxt "Pattern title"
+msgid "Features · How it works steps"
+msgstr ""
+
+#: patterns/features-steps.php
+msgctxt "Pattern description"
+msgid "Three numbered how-it-works steps with a connecting flow."
+msgstr ""
+
+#: patterns/features-steps.php:13
+msgid "How it works"
+msgstr ""
+
+#: patterns/features-steps.php:16
+msgid "Step 1"
+msgstr ""
+
+#: patterns/features-steps.php:16
+msgid "Activate the theme and pick a skin."
+msgstr ""
+
+#: patterns/features-steps.php:17
+msgid "Step 2"
+msgstr ""
+
+#: patterns/features-steps.php:17
+msgid "Compose pages from patterns."
+msgstr ""
+
+#: patterns/features-steps.php:18
+msgid "Step 3"
+msgstr ""
+
+#: patterns/features-steps.php:18
+msgid "Publish and iterate."
+msgstr ""
+
+#: patterns/features-tabs.php
+msgctxt "Pattern title"
+msgid "Features · Tabbed (details)"
+msgstr ""
+
+#: patterns/features-tabs.php
+msgctxt "Pattern description"
+msgid "Disclosure-based feature groups."
+msgstr ""
+
+#: patterns/features-tabs.php:13
+msgid "Explore the details"
+msgstr ""
+
+#: patterns/features-tabs.php:14
+msgid "Design system"
+msgstr ""
+
+#: patterns/features-tabs.php:14
+msgid "Tokens for color, type, spacing, radius and shadow."
+msgstr ""
+
+#: patterns/features-tabs.php:15
+msgid "Every WordPress view, ready to edit."
+msgstr ""
+
+#: patterns/features-tabs.php:16
+msgid "Drop-in sections for any page."
+msgstr ""
+
+#: patterns/features.php
+msgctxt "Pattern title"
+msgid "Features"
+msgstr ""
+
+#: patterns/features.php
+msgctxt "Pattern description"
+msgid "3-up value-proposition grid of cards. Each card has an icon, H3, body, and optional ghost link. Reflows on mobile."
+msgstr ""
+
+#: patterns/features.php:22
+msgid "Why this site"
+msgstr ""
+
+#. translators: %d: number of the feature card (1, 2, 3).
+#: patterns/features.php:33
+#, php-format
+msgid "Feature %d"
+msgstr ""
+
+#: patterns/features.php:37
+msgid "Describe one tangible benefit your visitor gets. Keep it to one sentence — detail belongs on its own page."
+msgstr ""
+
+#: patterns/footer-default.php
+msgctxt "Pattern title"
+msgid "Footer · Default"
+msgstr ""
+
+#: patterns/footer-default.php
+msgctxt "Pattern description"
+msgid "The site title on the left; on the right a \"Designed with WordPress\" line and the theme credit. Pick this to restore the default footer."
+msgstr ""
+
+#. translators: 1: link to WordPress.org, 2: link to the ArneIron Lite page.
+#: patterns/footer-default.php:23
+#, php-format
+msgid "Designed with %1$s. Theme: %2$s."
+msgstr ""
+
+#: patterns/footer-minimal.php
+msgctxt "Pattern title"
+msgid "Footer · Minimal"
+msgstr ""
+
+#: patterns/footer-minimal.php
+msgctxt "Pattern description"
+msgid "One centred line: the site title and the theme credit, for landing and campaign pages."
+msgstr ""
+
+#. translators: %s: link to the ArneIron Lite page.
+#: patterns/footer-minimal.php:18
+#, php-format
+msgid "Theme: %s."
+msgstr ""
+
+#: patterns/gallery-before-after.php
+msgctxt "Pattern title"
+msgid "Gallery · Before / after"
+msgstr ""
+
+#: patterns/gallery-before-after.php
+msgctxt "Pattern description"
+msgid "Two-panel before/after comparison."
+msgstr ""
+
+#: patterns/gallery-before-after.php:15
+msgid "Before"
+msgstr ""
+
+#: patterns/gallery-before-after.php:16
+msgid "After"
+msgstr ""
+
+#: patterns/gallery-carousel.php
+msgctxt "Pattern title"
+msgid "Gallery · Carousel (static)"
+msgstr ""
+
+#: patterns/gallery-carousel.php
+msgctxt "Pattern description"
+msgid "A horizontally scrollable image row."
+msgstr ""
+
+#: patterns/gallery-grid.php
+msgctxt "Pattern title"
+msgid "Gallery · Grid"
+msgstr ""
+
+#: patterns/gallery-grid.php
+msgctxt "Pattern description"
+msgid "A uniform grid gallery."
+msgstr ""
+
+#: patterns/gallery-masonry.php
+msgctxt "Pattern title"
+msgid "Gallery · Masonry"
+msgstr ""
+
+#: patterns/gallery-masonry.php
+msgctxt "Pattern description"
+msgid "A masonry-style gallery."
+msgstr ""
+
+#: patterns/gallery-masonry.php:13
+msgid "Gallery"
+msgstr ""
+
+#: patterns/header-default.php
+msgctxt "Pattern title"
+msgid "Header · Default (ArneIron)"
+msgstr ""
+
+#: patterns/header-default.php
+msgctxt "Pattern description"
+msgid "The default ArneIron header — logo, site title, primary navigation, search, account and a call to action in one row, all core blocks. With WooCommerce active its own account and mini-cart blocks render here (the core Log in / Log out link stands down); with Polylang active its language switcher block renders before them. Pick this to restore the stock header after trying another design."
+msgstr ""
+
+#: patterns/header-minimal-mobile.php
+msgctxt "Pattern title"
+msgid "Header · Minimal (Mobile) (ArneIron)"
+msgstr ""
+
+#: patterns/header-minimal-mobile.php
+msgctxt "Pattern description"
+msgid "The ≤782px half of the minimal header — brand and menu only, no cart, account or balance chips. Paired with Header · Minimal by the <variant>-mobile naming convention."
+msgstr ""
+
+#: patterns/header-minimal-mobile.php:52
+msgid "Open menu"
+msgstr ""
+
+#: patterns/header-minimal.php
+msgctxt "Pattern title"
+msgid "Header · Minimal (ArneIron)"
+msgstr ""
+
+#: patterns/header-minimal.php
+msgctxt "Pattern description"
+msgid "A minimal ArneIron header — the site title alone, centred, with no navigation and no call to action. For landing, campaign and checkout-like pages where the nav is a leak. Pairs automatically with the minimal mobile bar below 782px."
+msgstr ""
+
+#: patterns/hero-app-screenshot.php
+msgctxt "Pattern title"
+msgid "Hero · App Screenshot"
+msgstr ""
+
+#: patterns/hero-app-screenshot.php
+msgctxt "Pattern description"
+msgid "Centered app hero with a large framed screenshot below."
+msgstr ""
+
+#: patterns/hero-app-screenshot.php:16
+msgid "Your workspace, unified."
+msgstr ""
+
+#: patterns/hero-app-screenshot.php:19
+msgid "One place for everything your team ships."
+msgstr ""
+
+#: patterns/hero-app-screenshot.php:22
+msgid "Try it free"
+msgstr ""
+
+#: patterns/hero-app-screenshot.php:29
+msgid "App screenshot"
+msgstr ""
+
+#: patterns/hero-centered.php
+msgctxt "Pattern title"
+msgid "Hero · Centered"
+msgstr ""
+
+#: patterns/hero-centered.php
+msgctxt "Pattern description"
+msgid "Centered headline hero with two CTAs."
+msgstr ""
+
+#: patterns/hero-centered.php:14
+msgid "Introducing ArneIron Base"
+msgstr ""
+
+#: patterns/hero-centered.php:17
+msgid "Everything you need, in gray."
+msgstr ""
+
+#: patterns/hero-centered.php:20
+msgid "A calm, accessible design system that any brand can make its own."
+msgstr ""
+
+#: patterns/hero-centered.php:25
+msgid "Start now"
+msgstr ""
+
+#: patterns/hero-centered.php:28
+msgid "View docs"
+msgstr ""
+
+#: patterns/hero-cover.php
+msgctxt "Pattern title"
+msgid "Hero · Full-bleed Cover"
+msgstr ""
+
+#: patterns/hero-cover.php
+msgctxt "Pattern description"
+msgid "Full-bleed cover hero with overlaid headline card."
+msgstr ""
+
+#: patterns/hero-cover.php:16
+msgid "Build on solid ground."
+msgstr ""
+
+#: patterns/hero-cover.php:19
+msgid "A cover hero that puts your message in a legible card over any image."
+msgstr ""
+
+#: patterns/hero-gradient.php
+msgctxt "Pattern title"
+msgid "Hero · Gradient"
+msgstr ""
+
+#: patterns/hero-gradient.php
+msgctxt "Pattern description"
+msgid "Centered hero on a soft gray gradient."
+msgstr ""
+
+#: patterns/hero-gradient.php:14
+msgid "Subtle by default."
+msgstr ""
+
+#: patterns/hero-gradient.php:17
+msgid "Gradients built from theme tokens — they re-skin with the rest of the site."
+msgstr ""
+
+#: patterns/hero-gradient.php:20
+msgid "Explore"
+msgstr ""
+
+#: patterns/hero-minimal.php
+msgctxt "Pattern title"
+msgid "Hero · Minimal Headline"
+msgstr ""
+
+#: patterns/hero-minimal.php
+msgctxt "Pattern description"
+msgid "A minimal editorial headline block."
+msgstr ""
+
+#: patterns/hero-minimal.php:14
+msgid "Design that gets out of the way."
+msgstr ""
+
+#: patterns/hero-minimal.php:17
+msgid "No color opinions. No noise. Just a precise gray system you can extend."
+msgstr ""
+
+#: patterns/hero-split.php
+msgctxt "Pattern title"
+msgid "Hero · Split"
+msgstr ""
+
+#: patterns/hero-split.php
+msgctxt "Pattern description"
+msgid "Two-column hero — headline and CTAs beside a media placeholder."
+msgstr ""
+
+#: patterns/hero-split.php:19
+msgid "Ship with confidence"
+msgstr ""
+
+#: patterns/hero-split.php:22
+msgid "The neutral base for every build."
+msgstr ""
+
+#: patterns/hero-split.php:25
+msgid "A grayscale foundation of hundreds of working blocks and patterns — recolor everything with a single skin."
+msgstr ""
+
+#: patterns/hero-split.php:33
+msgid "Learn more"
+msgstr ""
+
+#: patterns/hero-split.php:44
+msgid "Product screenshot"
+msgstr ""
+
+#: patterns/hero-two-cta.php
+msgctxt "Pattern title"
+msgid "Hero · Two-column CTA"
+msgstr ""
+
+#: patterns/hero-two-cta.php
+msgctxt "Pattern description"
+msgid "Headline left, action card right."
+msgstr ""
+
+#: patterns/hero-two-cta.php:18
+msgid "Ready when you are."
+msgstr ""
+
+#: patterns/hero-two-cta.php:21
+msgid "Start free, upgrade whenever it makes sense."
+msgstr ""
+
+#: patterns/hero-two-cta.php:30
+msgid "Create account"
+msgstr ""
+
+#: patterns/hero-two-cta.php:33
+msgid "Talk to sales"
+msgstr ""
+
+#: patterns/hero-video.php
+msgctxt "Pattern title"
+msgid "Hero · Video"
+msgstr ""
+
+#: patterns/hero-video.php
+msgctxt "Pattern description"
+msgid "Hero with a video placeholder and headline."
+msgstr ""
+
+#: patterns/hero-video.php:14
+msgid "See it in motion."
+msgstr ""
+
+#: patterns/hero.php
+msgctxt "Pattern title"
+msgid "Hero"
+msgstr ""
+
+#: patterns/hero.php
+msgctxt "Pattern description"
+msgid "Single-column hero: eyebrow, H1, subhead, and one primary CTA. Designed for the landing page top fold."
+msgstr ""
+
+#: patterns/hero.php:28
+msgid "Welcome to your new ArneIron site"
+msgstr ""
+
+#: patterns/hero.php:32
+msgid "Replace this line with a single sentence that explains what your site does and who it’s for."
+msgstr ""
+
+#: patterns/news-digest-item.php
+msgctxt "Pattern title"
+msgid "Blog · News digest item (images beside the text)"
+msgstr ""
+
+#: patterns/news-digest-item.php
+msgctxt "Pattern description"
+msgid "One item of a 24-hour news digest: its text, with its own images in a side column above 1000px and stacked beneath the text below that."
+msgstr ""
+
+#: patterns/news-digest-item.php:37
+msgid "Headline of this news item"
+msgstr ""
+
+#: patterns/news-digest-item.php:40
+msgid "Source · 14:05 UTC"
+msgstr ""
+
+#: patterns/news-digest-item.php:43
+msgid "The body of the item. Keep it to the length a reader will actually finish — the side column is an illustration track, not a second article, and the two should end at roughly the same place."
+msgstr ""
+
+#: patterns/news-digest-item.php:46
+msgid "A second paragraph, so the measure of the text column is visible while editing and the side images have something to sit beside."
+msgstr ""
+
+#: patterns/newsletter-inline.php
+msgctxt "Pattern title"
+msgid "Newsletter · Inline"
+msgstr ""
+
+#: patterns/newsletter-inline.php
+msgctxt "Pattern description"
+msgid "Inline email + subscribe row (used by the footer)."
+msgstr ""
+
+#: patterns/newsletter-inline.php:17
+msgid "you@example.com"
+msgstr ""
+
+#: patterns/newsletter-inline.php:22
+msgid "Subscribe"
+msgstr ""
+
+#: patterns/page-about.php
+msgctxt "Pattern title"
+msgid "Page · About"
+msgstr ""
+
+#: patterns/page-about.php
+msgctxt "Pattern description"
+msgid "A full about-page stack."
+msgstr ""
+
+#: patterns/page-landing-stack.php
+msgctxt "Pattern title"
+msgid "Page · Landing stack"
+msgstr ""
+
+#: patterns/page-landing-stack.php
+msgctxt "Pattern description"
+msgid "A complete landing-page stack."
+msgstr ""
+
+#: patterns/page-pricing.php
+msgctxt "Pattern title"
+msgid "Page · Pricing"
+msgstr ""
+
+#: patterns/page-pricing.php
+msgctxt "Pattern description"
+msgid "A full pricing-page stack."
+msgstr ""
+
+#: patterns/pricing-3tier.php
+msgctxt "Pattern title"
+msgid "Pricing · 3 tiers"
+msgstr ""
+
+#: patterns/pricing-3tier.php
+msgctxt "Pattern description"
+msgid "Three pricing cards, middle highlighted."
+msgstr ""
+
+#: patterns/pricing-3tier.php:13
+msgid "Simple pricing"
+msgstr ""
+
+#: patterns/pricing-3tier.php:16
+msgid "Starter"
+msgstr ""
+
+#: patterns/pricing-3tier.php:16
+#: patterns/stats-desc.php:17
+msgid "Core blocks"
+msgstr ""
+
+#: patterns/pricing-3tier.php:16
+msgid "Community support"
+msgstr ""
+
+#: patterns/pricing-3tier.php:16
+#: patterns/pricing-3tier.php:18
+msgid "Choose"
+msgstr ""
+
+#: patterns/pricing-3tier.php:17
+msgid "$19"
+msgstr ""
+
+#: patterns/pricing-3tier.php:17
+msgid "Everything in Starter"
+msgstr ""
+
+#: patterns/pricing-3tier.php:17
+msgid "Choose Pro"
+msgstr ""
+
+#: patterns/pricing-3tier.php:18
+#: patterns/pricing-compare-table.php:15
+msgid "Team"
+msgstr ""
+
+#: patterns/pricing-3tier.php:18
+msgid "$49"
+msgstr ""
+
+#: patterns/pricing-3tier.php:18
+msgid "Everything in Pro"
+msgstr ""
+
+#: patterns/pricing-3tier.php:18
+msgid "SSO and roles"
+msgstr ""
+
+#: patterns/pricing-compare-table.php
+msgctxt "Pattern title"
+msgid "Pricing · Comparison table"
+msgstr ""
+
+#: patterns/pricing-compare-table.php
+msgctxt "Pattern description"
+msgid "A detailed plan comparison table."
+msgstr ""
+
+#: patterns/pricing-compare-table.php:13
+msgid "Plan comparison"
+msgstr ""
+
+#: patterns/pricing-compare-table.php:15
+#: patterns/pricing-toggle.php:16
+msgid "Basic"
+msgstr ""
+
+#: patterns/pricing-compare-table.php:15
+#: patterns/pricing-toggle.php:17
+msgid "Plus"
+msgstr ""
+
+#: patterns/pricing-compare-table.php:15
+msgid "Unlimited"
+msgstr ""
+
+#: patterns/pricing-compare-table.php:15
+msgid "Seats"
+msgstr ""
+
+#: patterns/pricing-compare-table.php:15
+msgid "5"
+msgstr ""
+
+#: patterns/pricing-compare-table.php:15
+msgid "20"
+msgstr ""
+
+#: patterns/pricing-compare-table.php:15
+msgid "Support"
+msgstr ""
+
+#: patterns/pricing-compare-table.php:15
+msgid "Email"
+msgstr ""
+
+#: patterns/pricing-compare-table.php:15
+msgid "Priority"
+msgstr ""
+
+#: patterns/pricing-compare-table.php:15
+msgid "Dedicated"
+msgstr ""
+
+#: patterns/pricing-credit-packs.php
+msgctxt "Pattern title"
+msgid "Pricing · Credit packs"
+msgstr ""
+
+#: patterns/pricing-credit-packs.php
+msgctxt "Pattern description"
+msgid "Token/credit packs (gray commerce surface)."
+msgstr ""
+
+#: patterns/pricing-credit-packs.php:13
+msgid "Buy credits"
+msgstr ""
+
+#: patterns/pricing-credit-packs.php:16
+msgid "1,000"
+msgstr ""
+
+#: patterns/pricing-credit-packs.php:16
+msgid "$10"
+msgstr ""
+
+#: patterns/pricing-credit-packs.php:16
+#: patterns/pricing-credit-packs.php:17
+#: patterns/pricing-credit-packs.php:18
+msgid "Buy"
+msgstr ""
+
+#: patterns/pricing-credit-packs.php:17
+msgid "5,000"
+msgstr ""
+
+#: patterns/pricing-credit-packs.php:17
+msgid "$45"
+msgstr ""
+
+#: patterns/pricing-credit-packs.php:18
+msgid "20,000"
+msgstr ""
+
+#: patterns/pricing-credit-packs.php:18
+msgid "$160"
+msgstr ""
+
+#: patterns/pricing-highlight.php
+msgctxt "Pattern title"
+msgid "Pricing · Single highlight"
+msgstr ""
+
+#: patterns/pricing-highlight.php
+msgctxt "Pattern description"
+msgid "A single highlighted plan card."
+msgstr ""
+
+#: patterns/pricing-highlight.php:15
+msgid "All access"
+msgstr ""
+
+#: patterns/pricing-highlight.php:16
+#: patterns/pricing-toggle.php:17
+msgid "$29"
+msgstr ""
+
+#: patterns/pricing-highlight.php:16
+msgid "/mo"
+msgstr ""
+
+#: patterns/pricing-highlight.php:17
+msgid "Unlimited projects"
+msgstr ""
+
+#: patterns/pricing-highlight.php:17
+msgid "All patterns and skins"
+msgstr ""
+
+#: patterns/pricing-highlight.php:18
+msgid "Start free trial"
+msgstr ""
+
+#: patterns/pricing-toggle.php
+msgctxt "Pattern title"
+msgid "Pricing · Monthly/Yearly toggle"
+msgstr ""
+
+#: patterns/pricing-toggle.php
+msgctxt "Pattern description"
+msgid "Static monthly/yearly toggle above two plan cards."
+msgstr ""
+
+#: patterns/pricing-toggle.php:13
+msgid "Monthly"
+msgstr ""
+
+#: patterns/pricing-toggle.php:13
+msgid "Yearly"
+msgstr ""
+
+#: patterns/pricing-toggle.php:16
+msgid "$9"
+msgstr ""
+
+#: patterns/query-compact.php
+msgctxt "Pattern title"
+msgid "Query Compact"
+msgstr ""
+
+#: patterns/query-compact.php
+msgctxt "Pattern description"
+msgid "Card list of recent posts. Includes a styled empty state (when no posts exist) and pagination."
+msgstr ""
+
+#: patterns/query-compact.php:49
+msgid "Nothing here yet."
+msgstr ""
+
+#: patterns/query-compact.php:53
+#: patternsemplate-front-landing.php:58
+msgid "When you publish a post, it will appear here automatically."
+msgstr ""
+
+#: patterns/sidebar-default.php
+msgctxt "Pattern title"
+msgid "Sidebar Default"
+msgstr ""
+
+#: patterns/sidebar-default.php
+msgctxt "Pattern description"
+msgid "Default sidebar content: a heading and placeholder text the user replaces with their own blocks."
+msgstr ""
+
+#: patterns/sidebar-default.php:19
+msgid "On this site"
+msgstr ""
+
+#: patterns/sidebar-default.php:23
+msgid "Drop blocks here from the editor — a contact form, recent posts, or a call to action."
+msgstr ""
+
+#: patterns/stats-2x2.php
+msgctxt "Pattern title"
+msgid "Stats · 2x2"
+msgstr ""
+
+#: patterns/stats-2x2.php
+msgctxt "Pattern description"
+msgid "Four metrics in a two-by-two grid."
+msgstr ""
+
+#: patterns/stats-2x2.php:15
+msgid "2M+"
+msgstr ""
+
+#: patterns/stats-2x2.php:15
+msgid "Requests/day"
+msgstr ""
+
+#: patterns/stats-2x2.php:16
+msgid "40ms"
+msgstr ""
+
+#: patterns/stats-2x2.php:16
+msgid "Median latency"
+msgstr ""
+
+#: patterns/stats-2x2.php:17
+msgid "120"
+msgstr ""
+
+#: patterns/stats-2x2.php:17
+msgid "Countries"
+msgstr ""
+
+#: patterns/stats-2x2.php:18
+msgid "4.9"
+msgstr ""
+
+#: patterns/stats-2x2.php:18
+msgid "Avg rating"
+msgstr ""
+
+#: patterns/stats-4row.php
+msgctxt "Pattern title"
+msgid "Stats · 4-metric row"
+msgstr ""
+
+#: patterns/stats-4row.php
+msgctxt "Pattern description"
+msgid "A row of four key metrics."
+msgstr ""
+
+#: patterns/stats-4row.php:15
+msgid "99.9%"
+msgstr ""
+
+#: patterns/stats-4row.php:15
+msgid "Uptime"
+msgstr ""
+
+#: patterns/stats-4row.php:16
+msgid "80+"
+msgstr ""
+
+#: patterns/stats-4row.php:18
+msgid "0"
+msgstr ""
+
+#: patterns/stats-4row.php:18
+msgid "Lock-in"
+msgstr ""
+
+#: patterns/stats-desc.php
+msgctxt "Pattern title"
+msgid "Stats · With descriptions"
+msgstr ""
+
+#: patterns/stats-desc.php
+msgctxt "Pattern description"
+msgid "Metrics paired with short descriptions."
+msgstr ""
+
+#: patterns/stats-desc.php:15
+msgid "3x"
+msgstr ""
+
+#: patterns/stats-desc.php:15
+msgid "Faster launches"
+msgstr ""
+
+#: patterns/stats-desc.php:15
+msgid "Teams ship pages in a fraction of the time."
+msgstr ""
+
+#: patterns/stats-desc.php:16
+msgid "-60%"
+msgstr ""
+
+#: patterns/stats-desc.php:16
+msgid "Less CSS"
+msgstr ""
+
+#: patterns/stats-desc.php:16
+msgid "Token-driven styling keeps the bundle tiny."
+msgstr ""
+
+#: patterns/stats-desc.php:17
+msgid "100%"
+msgstr ""
+
+#: patterns/stats-desc.php:17
+msgid "No proprietary blocks to learn."
+msgstr ""
+
+#: patterns/stats-progress.php
+msgctxt "Pattern title"
+msgid "Stats · Progress bars"
+msgstr ""
+
+#: patterns/stats-progress.php
+msgctxt "Pattern description"
+msgid "Skill/metric progress bars built from group blocks."
+msgstr ""
+
+#: patterns/stats-progress.php:13
+msgid "Accessibility"
+msgstr ""
+
+#: patterns/stats-progress.php:14
+msgid "Performance"
+msgstr ""
+
+#: patternseam-founder.php:13
+msgid "Our founder"
+msgstr ""
+
+#: patternseam-founder.php:13
+msgid "Started this to give every builder a calm, accessible base to work from."
+msgstr ""
+
+#: patternseam-grid.php:13
+msgid "Meet the team"
+msgstr ""
+
+#: patternseam-grid.php:18
+msgid "Robin Diaz"
+msgstr ""
+
+#: patternseam-grid.php:18
+msgid "Design"
+msgstr ""
+
+#: patternseam-list-bios.php:13
+msgid "Founder. Believes tools should disappear."
+msgstr ""
+
+#: patternseam-list-bios.php:15
+msgid "Engineering. Loves fast builds."
+msgstr ""
+
+#: patternsesti-3card.php:13
+msgid "What people say"
+msgstr ""
+
+#: patternsesti-3card.php:16
+msgid "It saved our team weeks of design work."
+msgstr ""
+
+#: patternsesti-3card.php:16
+msgid "Alex, Product Lead"
+msgstr ""
+
+#: patternsesti-3card.php:17
+msgid "The grayscale base makes theming effortless."
+msgstr ""
+
+#: patternsesti-3card.php:17
+msgid "Priya, Designer"
+msgstr ""
+
+#: patternsesti-3card.php:18
+msgid "Accessible, fast, and easy to extend."
+msgstr ""
+
+#: patternsesti-3card.php:18
+msgid "Sam, Engineer"
+msgstr ""
+
+#: patternsesti-avatar-wall.php:13
+msgid "Join thousands of happy builders"
+msgstr ""
+
+#: patternsesti-carousel.php:13
+msgid "Loved by builders"
+msgstr ""
+
+#: patternsesti-carousel.php:16
+msgid "Fast to adopt."
+msgstr ""
+
+#: patternsesti-carousel.php:16
+msgid "Riley"
+msgstr ""
+
+#: patternsesti-carousel.php:17
+msgid "Great defaults."
+msgstr ""
+
+#: patternsesti-carousel.php:17
+msgid "Noor"
+msgstr ""
+
+#: patternsesti-carousel.php:18
+msgid "Just works."
+msgstr ""
+
+#: patternsesti-carousel.php:18
+msgid "Diego"
+msgstr ""
+
+#: patternsesti-logo-quote.php:14
+msgid "We replaced three tools with this one theme."
+msgstr ""
+
+#: patternsesti-logo-quote.php:14
+msgid "Head of Web, Acme"
+msgstr ""
+
+#: patternsesti-single.php:13
+msgid "This is the cleanest foundation we have shipped on."
+msgstr ""
+
+#: patternsesti-single.php:13
+msgid "Jordan, CTO"
+msgstr ""
+
+#: heme.json
+#: styles/amber.json
+#: styles/green-terminal.json
+msgctxt "Shadow name"
+msgid "Small"
+msgstr ""
+
+#: heme.json
+#: styles/amber.json
+#: styles/green-terminal.json
+msgctxt "Shadow name"
+msgid "Medium"
+msgstr ""
+
+#: heme.json
+#: styles/amber.json
+#: styles/green-terminal.json
+msgctxt "Shadow name"
+msgid "Large"
+msgstr ""
+
+#: heme.json
+#: styles/amber.json
+#: styles/green-terminal.json
+msgctxt "Shadow name"
+msgid "Inset"
+msgstr ""
+
+#: heme.json
+#: styles/amber.json
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/green-terminal.json
+msgctxt "Color name"
+msgid "Base"
+msgstr ""
+
+#: heme.json
+msgctxt "Color name"
+msgid "Panel"
+msgstr ""
+
+#: heme.json
+msgctxt "Color name"
+msgid "Panel 2"
+msgstr ""
+
+#: heme.json
+msgctxt "Color name"
+msgid "Grid 2"
+msgstr ""
+
+#: heme.json
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Ink"
+msgstr ""
+
+#: heme.json
+msgctxt "Color name"
+msgid "Ink Dim"
+msgstr ""
+
+#: heme.json
+msgctxt "Color name"
+msgid "Ink Faint"
+msgstr ""
+
+#: heme.json
+msgctxt "Color name"
+msgid "Signal Red"
+msgstr ""
+
+#: heme.json
+msgctxt "Color name"
+msgid "Hot"
+msgstr ""
+
+#: heme.json
+msgctxt "Color name"
+msgid "Base (on red)"
+msgstr ""
+
+#: heme.json
+msgctxt "Color name"
+msgid "Matrix Green"
+msgstr ""
+
+#: heme.json
+msgctxt "Color name"
+msgid "Amber"
+msgstr ""
+
+#: heme.json
+msgctxt "Color name"
+msgid "Error Red"
+msgstr ""
+
+#: heme.json
+#: styles/amber.json
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/green-terminal.json
+msgctxt "Color name"
+msgid "Contrast"
+msgstr ""
+
+#: heme.json
+#: styles/amber.json
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/green-terminal.json
+msgctxt "Color name"
+msgid "Subtle"
+msgstr ""
+
+#: heme.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Accent Contrast"
+msgstr ""
+
+#: heme.json
+#: styles/amber.json
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/green-terminal.json
+msgctxt "Color name"
+msgid "On Surface"
+msgstr ""
+
+#: heme.json
+#: styles/amber.json
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/green-terminal.json
+msgctxt "Color name"
+msgid "Base 2"
+msgstr ""
+
+#: heme.json
+#: styles/amber.json
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/green-terminal.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Surface 3"
+msgstr ""
+
+#: heme.json
+#: styles/amber.json
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/green-terminal.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Border Strong"
+msgstr ""
+
+#: heme.json
+#: styles/amber.json
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/green-terminal.json
+msgctxt "Color name"
+msgid "Muted"
+msgstr ""
+
+#: heme.json
+#: styles/amber.json
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/green-terminal.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Contrast 2"
+msgstr ""
+
+#: heme.json
+#: styles/amber.json
+#: styles/green-terminal.json
+msgctxt "Gradient name"
+msgid "Fade Up"
+msgstr ""
+
+#: heme.json
+#: styles/amber.json
+#: styles/green-terminal.json
+msgctxt "Gradient name"
+msgid "Fade Down"
+msgstr ""
+
+#: heme.json
+#: styles/amber.json
+#: styles/green-terminal.json
+msgctxt "Gradient name"
+msgid "Surface Sheen"
+msgstr ""
+
+#: heme.json
+#: styles/amber.json
+#: styles/green-terminal.json
+msgctxt "Gradient name"
+msgid "Hairline"
+msgstr ""
+
+#: heme.json
+#: styles/amber.json
+#: styles/green-terminal.json
+msgctxt "Duotone name"
+msgid "Gray Duotone"
+msgstr ""
+
+#: heme.json
+msgctxt "Font family name"
+msgid "UI (Rajdhani)"
+msgstr ""
+
+#: heme.json
+msgctxt "Font family name"
+msgid "Mono (Share Tech Mono)"
+msgstr ""
+
+#: heme.json
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Font family name"
+msgid "Sans (Inter, self-hosted)"
+msgstr ""
+
+#: heme.json
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Font family name"
+msgid "Mono (Share Tech Mono, self-hosted)"
+msgstr ""
+
+#: heme.json
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Font family name"
+msgid "Display (Orbitron, self-hosted) — CRT/terminal accents"
+msgstr ""
+
+#: heme.json
+msgctxt "Font size name"
+msgid "Extra Small"
+msgstr ""
+
+#: heme.json
+msgctxt "Font size name"
+msgid "Small"
+msgstr ""
+
+#: heme.json
+msgctxt "Font size name"
+msgid "Base"
+msgstr ""
+
+#: heme.json
+msgctxt "Font size name"
+msgid "Medium"
+msgstr ""
+
+#: heme.json
+msgctxt "Font size name"
+msgid "Large"
+msgstr ""
+
+#: heme.json
+msgctxt "Font size name"
+msgid "X-Large"
+msgstr ""
+
+#: heme.json
+msgctxt "Font size name"
+msgid "2X-Large"
+msgstr ""
+
+#: heme.json
+msgctxt "Font size name"
+msgid "3X-Large"
+msgstr ""
+
+#: heme.json
+msgctxt "Font size name"
+msgid "4X-Large"
+msgstr ""
+
+#: heme.json
+msgctxt "Space size name"
+msgid "2px"
+msgstr ""
+
+#: heme.json
+msgctxt "Space size name"
+msgid "4px"
+msgstr ""
+
+#: heme.json
+msgctxt "Space size name"
+msgid "8px"
+msgstr ""
+
+#: heme.json
+msgctxt "Space size name"
+msgid "12px"
+msgstr ""
+
+#: heme.json
+msgctxt "Space size name"
+msgid "16px"
+msgstr ""
+
+#: heme.json
+msgctxt "Space size name"
+msgid "24px"
+msgstr ""
+
+#: heme.json
+msgctxt "Space size name"
+msgid "32px"
+msgstr ""
+
+#: heme.json
+msgctxt "Space size name"
+msgid "48px"
+msgstr ""
+
+#: heme.json
+msgctxt "Space size name"
+msgid "64px"
+msgstr ""
+
+#: heme.json
+msgctxt "Space size name"
+msgid "96px"
+msgstr ""
+
+#: heme.json
+msgctxt "Space size name"
+msgid "alt 8px"
+msgstr ""
+
+#: heme.json
+msgctxt "Space size name"
+msgid "alt 12px"
+msgstr ""
+
+#: heme.json
+msgctxt "Space size name"
+msgid "alt 20px"
+msgstr ""
+
+#: heme.json
+msgctxt "Space size name"
+msgid "alt 32px"
+msgstr ""
+
+#: heme.json
+msgctxt "Space size name"
+msgid "alt 48px"
+msgstr ""
+
+#: heme.json
+msgctxt "Space size name"
+msgid "alt 80px"
+msgstr ""
+
+#: heme.json
+msgctxt "Space size name"
+msgid "alt 120px"
+msgstr ""
+
+#: heme.json
+msgctxt "Template part name"
+msgid "Header"
+msgstr ""
+
+#: heme.json
+msgctxt "Template part name"
+msgid "Header · Minimal"
+msgstr ""
+
+#: heme.json
+msgctxt "Template part name"
+msgid "Header · Mobile"
+msgstr ""
+
+#: heme.json
+msgctxt "Template part name"
+msgid "Header · Minimal (Mobile)"
+msgstr ""
+
+#: heme.json
+msgctxt "Template part name"
+msgid "Footer"
+msgstr ""
+
+#: heme.json
+msgctxt "Template part name"
+msgid "Footer · Minimal"
+msgstr ""
+
+#: heme.json
+msgctxt "Template part name"
+msgid "Mobile Menu"
+msgstr ""
+
+#: heme.json
+msgctxt "Template part name"
+msgid "Sidebar"
+msgstr ""
+
+#: heme.json
+msgctxt "Template part name"
+msgid "Blog Sidebar"
+msgstr ""
+
+#: heme.json
+msgctxt "Template part name"
+msgid "Post Meta"
+msgstr ""
+
+#: heme.json
+msgctxt "Template part name"
+msgid "Post · Subscribe"
+msgstr ""
+
+#: heme.json
+msgctxt "Custom template name"
+msgid "Page"
+msgstr ""
+
+#: heme.json
+msgctxt "Custom template name"
+msgid "Landing Page"
+msgstr ""
+
+#: heme.json
+msgctxt "Custom template name"
+msgid "Full Width"
+msgstr ""
+
+#: heme.json
+msgctxt "Custom template name"
+msgid "With Sidebar"
+msgstr ""
+
+#: heme.json
+msgctxt "Custom template name"
+msgid "Privacy Policy"
+msgstr ""
+
+#: heme.json
+msgctxt "Custom template name"
+msgid "Single Post"
+msgstr ""
+
+#: heme.json
+msgctxt "Custom template name"
+msgid "Scroll Story"
+msgstr ""
+
+#: heme.json
+msgctxt "Custom template name"
+msgid "Classic Post"
+msgstr ""
+
+#: styles/amber.json
+msgctxt "Style variation name"
+msgid "Amber Terminal"
+msgstr ""
+
+#: styles/amber.json
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/green-terminal.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Surface"
+msgstr ""
+
+#: styles/amber.json
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/green-terminal.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Surface 2"
+msgstr ""
+
+#: styles/amber.json
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/green-terminal.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Border"
+msgstr ""
+
+#: styles/amber.json
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/green-terminal.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Accent"
+msgstr ""
+
+#: styles/amber.json
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/green-terminal.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "On Accent"
+msgstr ""
+
+#: styles/amber.json
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/green-terminal.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Ink 2"
+msgstr ""
+
+#: styles/amber.json
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/green-terminal.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Accent Strong"
+msgstr ""
+
+#: styles/amber.json
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/green-terminal.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Link"
+msgstr ""
+
+#: styles/amber.json
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/green-terminal.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Link Hover"
+msgstr ""
+
+#: styles/amber.json
+#: styles/green-terminal.json
+msgctxt "Shadow name"
+msgid "Background"
+msgstr ""
+
+#: styles/amber.json
+#: styles/green-terminal.json
+msgctxt "Shadow name"
+msgid "Ink"
+msgstr ""
+
+#: styles/amber.json
+#: styles/green-terminal.json
+msgctxt "Shadow name"
+msgid "Ink 3"
+msgstr ""
+
+#: styles/gray-dark.json
+msgctxt "Style variation name"
+msgid "Gray Dark"
+msgstr ""
+
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/light.json
+msgctxt "Color name"
+msgid "Background"
+msgstr ""
+
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Ink 3"
+msgstr ""
+
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Success"
+msgstr ""
+
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Warning"
+msgstr ""
+
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Danger"
+msgstr ""
+
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Font family name"
+msgid "UI (system stack)"
+msgstr ""
+
+#: styles/gray-dark.json
+#: styles/gray-high-contrast.json
+#: styles/gray-soft.json
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Font family name"
+msgid "Prose (Georgia)"
+msgstr ""
+
+#: styles/gray-high-contrast.json
+msgctxt "Style variation name"
+msgid "Gray High Contrast"
+msgstr ""
+
+#: styles/gray-soft.json
+msgctxt "Style variation name"
+msgid "Gray Soft"
+msgstr ""
+
+#: styles/green-terminal.json
+msgctxt "Style variation name"
+msgid "Green Terminal"
+msgstr ""
+
+#: styles/light.json
+msgctxt "Style variation name"
+msgid "ArneIron Light"
+msgstr ""
+
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Base (alias bg)"
+msgstr ""
+
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Base 2 (alias surface-2)"
+msgstr ""
+
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Muted (alias ink-2)"
+msgstr ""
+
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Subtle (alias ink-3)"
+msgstr ""
+
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Contrast (alias ink)"
+msgstr ""
+
+#: styles/light.json
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "On Surface (alias ink)"
+msgstr ""
+
+#: styles/skaryna-folio.json
+msgctxt "Style variation name"
+msgid "Skaryna Folio"
+msgstr ""
+
+#: styles/skaryna-folio.json
+msgctxt "Color name"
+msgid "Bg"
+msgstr ""

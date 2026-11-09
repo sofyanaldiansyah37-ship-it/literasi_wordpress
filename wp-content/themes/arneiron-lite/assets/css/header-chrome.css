@@ -1,0 +1,104 @@
+/* =============================================================================
+ * Header chrome — the Sticky / Full-width / Sticky-on-mobile switches
+ * -----------------------------------------------------------------------------
+ * Every rule here is driven by a class inc/header-settings.php puts on <body>, so
+ * this file changes nothing until one of those switches is on. The switches only
+ * decide POSITION and WIDTH; nothing about how a header looks belongs here.
+ *
+ * WHY `position: sticky` AND NOT `fixed`. A fixed header is removed from flow, so
+ * the moment it pins, everything below it jumps up by the header's height. The
+ * usual patch is a placeholder element of matching height, which then has to be
+ * kept in sync with a header whose height can change. `sticky` keeps the element
+ * in flow and reserves its own space, so there is nothing to jump and nothing to
+ * synchronise. It also needs no scroll listener to pin.
+ *
+ * A child theme that deliberately takes the header OUT of flow — an overlay
+ * masthead, say — will need `fixed` instead, and can override these rules from
+ * its own stylesheet: it loads after this one and the selectors are identical, so
+ * source order settles it without an !important or a specificity contest.
+ *
+ * THE TWO BREAKPOINT HALVES ARE SEPARATE SWITCHES ON PURPOSE. Pinning is a good
+ * default on a wide screen and often a bad one on a phone, where a pinned bar can
+ * eat a large share of a short viewport. So desktop reads `-sticky` and small
+ * screens read `-sticky-mobile`, and neither implies the other.
+ *
+ * 900px is the breakpoint the rest of this theme's chrome already uses.
+ * ========================================================================== */
+
+/* ---- the admin bar, which is chrome ABOVE the document ------------------- *
+ * A logged-in user gets a `position: fixed` admin bar across the top of the
+ * viewport. WordPress reserves room for it with `html { margin-top: 32px }`,
+ * and that is enough for a header that scrolls away with the page — which is
+ * why this never showed at the top of a page and only bit after scrolling.
+ *
+ * A STICKY header is the case the core bump cannot cover. Once it pins, it
+ * parks at `top: 0` — the viewport edge, which is BEHIND the fixed bar — so the
+ * first 32px of the header is hidden for exactly as long as the page is
+ * scrolled. Measured on dev.arneiron.net: `body.admin-bar` and
+ * `body.arneiron-header-sticky` are both present, and `arneiron_header_sticky`
+ * defaults to true, so this is every site on this theme, not an opt-in.
+ *
+ * The offset is published as a variable rather than written into each `top`
+ * because it is not one number. `--wp-admin--admin-bar--height` is core's own
+ * (declared on `html`, 32px, 46px at =<782px), so both cases track core
+ * instead of restating it.
+ *
+ * =<600px IS ZERO: there core switches the bar to `position: absolute`, so it
+ * scrolls away with the page and a pinned header belongs at the viewport edge.
+ * (Until 0.8.19 everything =<782px was zero because ds.css §4e HID the bar on
+ * phones; it no longer does, so 601-782px now steps below the fixed 46px bar.)
+ *
+ * Undefined when logged out — no `.admin-bar` class, so every `top` below
+ * falls back to 0 and nothing moves for a visitor.
+ * ------------------------------------------------------------------------- */
+
+body.admin-bar {
+	--arneiron-adminbar-offset: var(--wp-admin--admin-bar--height, 32px);
+}
+
+@media (max-width: 600px) {
+	body.admin-bar {
+		--arneiron-adminbar-offset: 0px; /* core makes the admin bar position:absolute here */
+	}
+}
+
+/* ---- sticky: desktop and up -------------------------------------------- */
+
+@media (min-width: 900px) {
+	body.arneiron-header-sticky .wp-site-blocks > header.wp-block-template-part {
+		position: sticky;
+		top: var(--arneiron-adminbar-offset, 0px);
+		z-index: 30;
+	}
+}
+
+/* ---- sticky: below the breakpoint, its own switch ----------------------- */
+
+@media (max-width: 899.98px) {
+	body.arneiron-header-sticky-mobile .wp-site-blocks > header.wp-block-template-part {
+		position: sticky;
+		top: var(--arneiron-adminbar-offset, 0px);
+		z-index: 30;
+	}
+}
+
+/* ---- boxed (default) vs full-width -------------------------------------- *
+ * Only the ROW inside the header is constrained — the bar itself keeps whatever
+ * background and full-bleed width it had, which is what makes a boxed header read
+ * as a boxed row on a full-width band rather than as a floating card.
+ *
+ * `--wp--style--global--content-size` is the layout width from theme.json, so this
+ * follows Styles → Layout instead of restating the number. The fallback only
+ * applies if a site somehow has no layout width at all.
+ * ------------------------------------------------------------------------- */
+
+@media (min-width: 900px) {
+	body.arneiron-header-boxed .site-header {
+		max-width: var(--wp--style--global--content-size, 1300px);
+		margin-inline: auto;
+	}
+
+	body.arneiron-header-full .site-header {
+		max-width: none;
+	}
+}

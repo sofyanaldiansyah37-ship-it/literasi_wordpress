@@ -1,0 +1,42 @@
+=== Accessibility Statement ===
+ArneIron Lite is built and tested against WCAG 2.2 level AA. Every release is checked with automated rules and keyboard tests in all of its style variations before it is published, and accessibility problems are treated as bugs.
+
+== Quick Information ==
+Accessibility audit completed: No
+Most recent audit date: 2026-10-13
+Tested to standard and conformance level: WCAG 2.2 AA (supports)
+Audited by: [ArneIron](https://arneiron.net/)
+Accessibility Conformance Report: None yet
+
+== Testing Tools and Methodology ==
+
+No independent third-party audit has been done yet; the theme is tested by its developers before every release:
+
+* axe-core 4.14 with the WCAG 2.0, 2.1 and 2.2 A/AA rules, on the WordPress Theme Unit Test content and on a page showing every block pattern of the theme, at 1440 and 390 pixels wide, in the default style and in each of the seven style variations: no violations.
+* Keyboard tests: the skip link is the first focusable element and moves focus to the main content; every focus stop shows a focus ring of at least 2 pixels with at least 3:1 contrast; navigation submenus open, are entered and close with Enter, Tab and Escape; the mobile menu traps focus while open, closes with Escape and returns focus to its button; the comment box opens on focus and closes with Escape.
+* Reflow: no horizontal scrolling at 320 pixels wide on any Theme Unit Test page.
+* Contrast: text 4.5:1 and large text and controls 3:1 in every style variation, including hover and focus states of buttons.
+
+== Screen Reader Text Class ==
+
+screen-reader-text
+
+== Accessibility Features ==
+
+* Skip link to the main content.
+* Landmarks: one banner (header), navigation with an accessible name, main and contentinfo (footer).
+* One h1 on every page and no skipped heading levels in the theme's templates.
+* Links inside posts, pages and comments are underlined.
+* Visible keyboard focus on every link, button and form field.
+* The mobile menu is a modal dialog: focus moves into it, stays inside it and returns to the menu button when it closes.
+* Content that scrolls sideways (wide tables, code) can be reached and scrolled with the keyboard.
+* Respects "reduce motion": the only animation (the comment box opening) is switched off.
+* Every style variation meets the same contrast requirements as the default style.
+
+== Accessibility Help Contact ==
+
+https://arneiron.net/contacts/
+
+== Where to Report Issues ==
+
+https://arneiron.net/contacts/

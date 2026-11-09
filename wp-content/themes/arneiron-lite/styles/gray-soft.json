@@ -1,0 +1,366 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"title": "Gray Soft",
+	"settings": {
+		"color": {
+			"palette": [
+				{
+					"slug": "bg",
+					"name": "Background",
+					"color": "#fbfbfc"
+				},
+				{
+					"slug": "surface",
+					"name": "Surface",
+					"color": "#ffffff"
+				},
+				{
+					"slug": "surface-2",
+					"name": "Surface 2",
+					"color": "#f6f6f8"
+				},
+				{
+					"slug": "border",
+					"name": "Border",
+					"color": "#e2e2e7"
+				},
+				{
+					"slug": "ink",
+					"name": "Ink",
+					"color": "#26262c"
+				},
+				{
+					"slug": "ink-2",
+					"name": "Ink 2",
+					"color": "#484850"
+				},
+				{
+					"slug": "ink-3",
+					"name": "Ink 3",
+					"color": "#6a6a73"
+				},
+				{
+					"slug": "accent",
+					"name": "Accent",
+					"color": "#4a4a52"
+				},
+				{
+					"slug": "accent-strong",
+					"name": "Accent Strong",
+					"color": "#38383f"
+				},
+				{
+					"slug": "on-accent",
+					"name": "On Accent",
+					"color": "#ffffff"
+				},
+				{
+					"slug": "success",
+					"name": "Success",
+					"color": "#3f7a4a"
+				},
+				{
+					"slug": "warning",
+					"name": "Warning",
+					"color": "#8a5a1f"
+				},
+				{
+					"slug": "danger",
+					"name": "Danger",
+					"color": "#9a3535"
+				},
+				{
+					"slug": "link-text",
+					"name": "Link",
+					"color": "#4a4a52"
+				},
+				{
+					"slug": "link-hover",
+					"name": "Link Hover",
+					"color": "#38383f"
+				},
+				{
+					"slug": "base",
+					"name": "Base",
+					"color": "#fbfbfc"
+				},
+				{
+					"slug": "base-2",
+					"name": "Base 2",
+					"color": "#f3f3f5"
+				},
+				{
+					"slug": "surface-3",
+					"name": "Surface 3",
+					"color": "#ededf0"
+				},
+				{
+					"slug": "border-strong",
+					"name": "Border Strong",
+					"color": "#c8c8d0"
+				},
+				{
+					"slug": "muted",
+					"name": "Muted",
+					"color": "#9a9aa3"
+				},
+				{
+					"slug": "subtle",
+					"name": "Subtle",
+					"color": "#6a6a73"
+				},
+				{
+					"slug": "contrast",
+					"name": "Contrast",
+					"color": "#26262c"
+				},
+				{
+					"slug": "contrast-2",
+					"name": "Contrast 2",
+					"color": "#1c1c20"
+				},
+				{
+					"slug": "accent-contrast",
+					"name": "On Accent",
+					"color": "#ffffff"
+				},
+				{
+					"slug": "on-surface",
+					"name": "On Surface",
+					"color": "#33333a"
+				}
+			]
+		},
+		"typography": {
+			"fontFamilies": [
+				{
+					"slug": "ui",
+					"name": "UI (system stack)",
+					"fontFamily": "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+				},
+				{
+					"slug": "prose",
+					"name": "Prose (Georgia)",
+					"fontFamily": "Georgia, 'Times New Roman', Times, serif"
+				},
+				{
+					"slug": "sans",
+					"name": "Sans (Inter, self-hosted)",
+					"fontFamily": "Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+					"fontFace": [
+						{
+							"fontFamily": "Inter",
+							"fontWeight": "400",
+							"fontStyle": "normal",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/inter-400.woff2"
+							]
+						},
+						{
+							"fontFamily": "Inter",
+							"fontWeight": "500",
+							"fontStyle": "normal",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/inter-500.woff2"
+							]
+						},
+						{
+							"fontFamily": "Inter",
+							"fontWeight": "600",
+							"fontStyle": "normal",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/inter-600.woff2"
+							]
+						},
+						{
+							"fontFamily": "Inter",
+							"fontWeight": "700",
+							"fontStyle": "normal",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/inter-700.woff2"
+							]
+						}
+					]
+				},
+				{
+					"slug": "mono",
+					"name": "Mono (Share Tech Mono, self-hosted)",
+					"fontFamily": "'Share Tech Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace",
+					"fontFace": [
+						{
+							"fontFamily": "Share Tech Mono",
+							"fontWeight": "400",
+							"fontStyle": "normal",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/share-tech-mono-400.woff2"
+							]
+						}
+					]
+				},
+				{
+					"slug": "display",
+					"name": "Display (Orbitron, self-hosted) — CRT/terminal accents",
+					"fontFamily": "'Orbitron', Inter, ui-sans-serif, system-ui, sans-serif",
+					"fontFace": [
+						{
+							"fontFamily": "Orbitron",
+							"fontWeight": "400",
+							"fontStyle": "normal",
+							"fontDisplay": "swap",
+							"src": [
+								"file:./assets/fonts/orbitron-400.woff2"
+							]
+						}
+					]
+				}
+			]
+		},
+		"custom": {
+			"radius": {
+				"0": "0",
+				"sm": "8px",
+				"md": "12px",
+				"lg": "20px",
+				"pill": "999px",
+				"none": "0"
+			},
+			"shadow": {
+				"sm": "0 1px 2px rgba(20, 24, 31, 0.06)",
+				"md": "0 4px 12px rgba(20, 24, 31, 0.08)",
+				"lg": "0 12px 32px rgba(20, 24, 31, 0.12)"
+			},
+			"ui": {
+				"colorScheme": "light"
+			},
+			"canvas": {
+				"bodyFont": "initial",
+				"image": "initial"
+			},
+			"nav": {
+				"border": "initial",
+				"bg": "initial",
+				"font": "initial",
+				"weight": "initial",
+				"tracking": "initial",
+				"transform": "initial",
+				"rail": "initial",
+				"railColor": "initial",
+				"activeBg": "initial"
+			},
+			"button": {
+				"hoverBg": "var(--wp--preset--color--accent-strong)",
+				"hoverInk": "#ffffff"
+			},
+			"color": {
+				"focus-ring": "#5b6cff"
+			}
+		}
+	},
+	"styles": {
+		"color": {
+			"background": "var:preset|color|base",
+			"text": "var:preset|color|contrast"
+		},
+		"typography": {
+			"fontFamily": "var:preset|font-family|ui",
+			"fontSize": "var:preset|font-size|base",
+			"lineHeight": "1.6",
+			"letterSpacing": "normal"
+		},
+		"elements": {
+			"heading": {
+				"typography": {
+					"fontFamily": "var:preset|font-family|ui",
+					"fontWeight": "700",
+					"letterSpacing": "normal",
+					"lineHeight": "1.15"
+				}
+			},
+			"h1": {
+				"typography": {
+					"fontFamily": "var:preset|font-family|ui",
+					"fontWeight": "700",
+					"letterSpacing": "normal",
+					"lineHeight": "1.1"
+				}
+			},
+			"h2": {
+				"typography": {
+					"fontFamily": "var:preset|font-family|ui",
+					"fontWeight": "700",
+					"letterSpacing": "normal",
+					"lineHeight": "1.15"
+				}
+			},
+			"link": {
+				"color": {
+					"text": "var:preset|color|link-text"
+				},
+				":hover": {
+					"color": {
+						"text": "var:preset|color|link-hover"
+					}
+				},
+				":focus-visible": {
+					"outline": {
+						"color": "var:preset|color|accent-strong",
+						"width": "2px",
+						"style": "solid",
+						"offset": "2px"
+					}
+				}
+			},
+			"button": {
+				"color": {
+					"background": "var:preset|color|accent",
+					"text": "var:preset|color|on-accent"
+				},
+				"typography": {
+					"fontFamily": "var:preset|font-family|ui",
+					"fontWeight": "600",
+					"letterSpacing": "normal",
+					"textTransform": "none"
+				},
+				"border": {
+					"radius": "var(--wp--custom--radius--md)",
+					"width": "0",
+					"style": "none",
+					"color": "transparent"
+				},
+				"spacing": {
+					"padding": {
+						"top": "0.6em",
+						"right": "1.2em",
+						"bottom": "0.6em",
+						"left": "1.2em"
+					}
+				},
+				"shadow": "none",
+				":hover": {
+					"color": {
+						"background": "var(--wp--custom--button--hover-bg)",
+						"text": "var(--wp--custom--button--hover-ink)"
+					}
+				},
+				":focus-visible": {
+					"color": {
+						"background": "var(--wp--custom--button--hover-bg)",
+						"text": "var(--wp--custom--button--hover-ink)"
+					},
+					"outline": {
+						"color": "var:preset|color|accent-strong",
+						"width": "2px",
+						"style": "solid",
+						"offset": "2px"
+					}
+				}
+			}
+		}
+	}
+}

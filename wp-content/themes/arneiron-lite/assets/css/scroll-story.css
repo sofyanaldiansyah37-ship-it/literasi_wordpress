@@ -1,0 +1,324 @@
+/* =============================================================================
+   ArneIron — "Scroll Story" post template (templates/single-scroll-story.html).
+   Loaded only on posts that use it (inc/scroll-story.php). Theme tokens only,
+   so every style variation (Old Arnie, ArneIron Light, …) restyles it.
+   ========================================================================== */
+
+/* Head: category pill, title, short description, meta row — one reading column. */
+.scroll-story__head {
+	max-width: 860px;
+	margin-inline: auto;
+	padding-block: var(--space-6, 24px) var(--space-5, 16px);
+}
+.scroll-story__head > * + * { margin-block-start: var(--space-4, 12px); }
+.scroll-story__cat {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-2, 8px);
+	font-size: var(--wp--preset--font-size--xs, .75rem);
+}
+.scroll-story__cat .wp-block-post-terms__separator { display: none; }
+.scroll-story__cat a {
+	display: inline-block;
+	padding: .3em .9em;
+	border-radius: var(--wp--custom--radius--pill, 999px);
+	background: var(--c-accent);
+	color: var(--c-on-accent);
+	font-weight: 600;
+	text-decoration: none;
+}
+.scroll-story__cat a:hover,
+.scroll-story__cat a:focus-visible { background: var(--c-accent-strong); color: #fff; }
+.scroll-story__title.wp-block-post-title {
+	margin-block: var(--space-4, 12px) 0;
+	font-size: clamp(1.9rem, 1.2rem + 2.6vw, 3rem);
+	line-height: 1.12;
+	overflow-wrap: break-word;
+}
+.scroll-story__desc {
+	color: var(--c-ink-2);
+	font-size: var(--wp--preset--font-size--lg, 1.125rem);
+	line-height: 1.6;
+}
+.scroll-story__desc p { margin: 0; }
+.scroll-story__desc .wp-block-post-excerpt__more-text { display: none; }
+.scroll-story__meta {
+	gap: var(--space-4, 12px);
+	color: var(--c-ink-3);
+	font-size: var(--wp--preset--font-size--sm, .875rem);
+}
+.scroll-story__meta a { color: inherit; }
+.scroll-story__author::after { content: "·"; margin-inline-start: var(--space-4, 12px); }
+
+/* Share: outline circles in the main colour, filled + white on hover/focus. */
+.scroll-story__meta .arneiron-share.wp-block-social-links {
+	gap: var(--space-2, 8px);
+	margin: 0;
+}
+.scroll-story__meta .arneiron-share .wp-social-link {
+	margin: 0;
+	background: none;
+	color: var(--c-accent);
+	border: 1px solid var(--c-border);
+	border-radius: 50%;
+}
+.scroll-story__meta .arneiron-share .wp-social-link a {
+	display: grid;
+	place-items: center;
+	width: 34px;
+	height: 34px;
+	padding: 0;
+	color: inherit;
+}
+.scroll-story__meta .arneiron-share .wp-social-link svg { width: 16px; height: 16px; }
+.scroll-story__meta .arneiron-share .wp-social-link:hover,
+.scroll-story__meta .arneiron-share .wp-social-link:focus-within {
+	background: var(--c-accent);
+	border-color: var(--c-accent);
+	color: #fff;
+}
+.scroll-story__meta .arneiron-share .is-copied { outline: 2px solid var(--c-accent); border-radius: 50%; }
+
+/* Featured image: the layout's WIDE size.
+   It used to be forced into a cinematic strip — height: clamp(220px, 28vw,
+   420px) with object-fit: cover — which cut the top and bottom off every
+   portrait or square picture the post was given. The strip is gone: the
+   picture is shown at its own aspect ratio, never upscaled past its natural
+   width, and capped at 80svh so a very tall one still leaves the headline and
+   the first lines on screen. A video in this slot (inc/media-video.php) gets
+   the same treatment through .arneiron-feat-video__media. */
+.scroll-story__feat.wp-block-post-featured-image {
+	margin-block: var(--space-6, 24px);
+	text-align: center;
+}
+/* Three class names, and core's own two-class rule is the reason: the block
+   library ships `.wp-block-post-featured-image.alignwide img { width: 100% }`,
+   which outranks a one-class theme rule — measured on dev, where `width: auto`
+   lost and a 720x520 picture was stretched into a 1216x720 box. A
+   same-specificity rule would be decided by stylesheet order, which core
+   controls. So the selector is deliberately more specific than core's, and the
+   align variants are named rather than assumed. */
+.wp-block-post-featured-image.scroll-story__feat img,
+.wp-block-post-featured-image.scroll-story__feat.alignwide img,
+.wp-block-post-featured-image.scroll-story__feat.alignfull img {
+	display: block;
+	/* width/height auto with BOTH maxima is how a replaced element scales down
+	   while keeping its ratio. An explicit width would defeat that. */
+	width: auto;
+	max-width: 100%;
+	height: auto;
+	max-height: 80svh;
+	margin-inline: auto;
+	object-fit: contain;
+	border-radius: var(--wp--custom--radius--md, 6px);
+}
+
+/* Body: one reading column until the script lays out the sticky panel. */
+.scroll-story__body {
+	margin-block-start: var(--space-6, 24px);
+}
+.scroll-story__content {
+	max-width: 760px;
+	margin-inline: auto;
+}
+.scroll-story__content > * { max-width: 100%; }
+.scroll-story__content img { max-width: 100%; height: auto; }
+
+.scroll-story__body.is-scroll-story-ready {
+	display: grid;
+	grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+	gap: clamp(24px, 4vw, 48px);
+	align-items: stretch;
+}
+.is-scroll-story-ready .scroll-story__content {
+	max-width: none;
+	margin: 0;
+	align-self: start;
+}
+.is-scroll-story-ready .scroll-story__src {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+	border: 0;
+}
+/* The rail is the whole height of the text column; the stage inside it is
+   sticky at --scroll-story-stick, which the script sets so the stage sits in
+   the middle of the visible window below the sticky header and admin bar. It
+   starts below the featured image, stays centred while the text scrolls, and
+   is released at the end of the text, before the section below. Images are
+   capped to the visible height, so a tall one is scaled down, never cut. */
+.scroll-story__rail {
+	position: relative;
+	min-width: 0;
+}
+.scroll-story__stage {
+	position: sticky;
+	top: var(--scroll-story-stick, var(--scroll-story-top, 0px));
+	display: grid;
+}
+.scroll-story__frame {
+	grid-area: 1 / 1;
+	margin: 0;
+	opacity: 0;
+	transition: opacity .45s ease;
+}
+.scroll-story__frame.is-active { opacity: 1; }
+.scroll-story__frame img,
+.scroll-story__frame video {
+	display: block;
+	width: 100%;
+	height: auto;
+	max-height: calc(100svh - var(--scroll-story-top, 0px) - 96px);
+	object-fit: contain;
+	object-position: center;
+	border-radius: var(--wp--custom--radius--md, 6px);
+}
+.scroll-story__frame figcaption {
+	margin-top: var(--space-2, 8px);
+	color: var(--c-ink-3);
+	font-size: var(--wp--preset--font-size--xs, .75rem);
+	line-height: 1.5;
+	text-align: center;
+}
+@media (prefers-reduced-motion: reduce) {
+	.scroll-story__frame { transition: none; }
+}
+
+/* Bottom: two columns like the vania-novikau.me post, on the same 2fr / 1fr grid
+   as the scroll part. Left: previous / next, "Leave a Reply", the comments.
+   Right: the "Post · Subscribe" part, then related posts. Stacks below 900px:
+   left first, then subscribe, then related. */
+.scroll-story__bottom {
+	margin-block: var(--space-8, 48px) var(--space-6, 24px);
+	padding-block-start: var(--space-6, 24px);
+	border-top: 1px solid var(--c-border);
+}
+@media (min-width: 900px) {
+	.scroll-story__bottom.scroll-story__bottom {
+		display: grid;
+		grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+		gap: clamp(24px, 4vw, 48px);
+		align-items: start;
+	}
+}
+.scroll-story__bottom > * { margin-block: 0; min-width: 0; }
+@media (max-width: 899.98px) {
+	.scroll-story__bottom-rail { margin-block-start: var(--space-8, 48px); }
+}
+
+/* Previous / next: two cells, small label over the title, arrow at the edge. */
+.scroll-story__nav {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: var(--space-5, 16px);
+	margin-block-end: var(--space-6, 24px);
+}
+.scroll-story__nav > * { margin: 0; }
+/* Each cell is one non-wrapping row: arrow + link, aligned on the first
+   baseline so the arrow sits beside the small label. In plain inline flow a
+   long title made the link (inline-flex) wider than the room left beside the
+   arrow, so it dropped under it: "←" / "previous" / title on three lines, the
+   title no longer indented (next: its "→" fell to a line of its own). */
+.scroll-story__nav-prev,
+.scroll-story__nav-next {
+	display: flex;
+	align-items: baseline;
+	gap: 0 .5em;
+}
+.scroll-story__nav-next { grid-column: 2; justify-content: flex-end; text-align: end; }
+.scroll-story__nav a {
+	flex: 0 1 auto;
+	min-width: 0;
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 0 .5em;
+	color: var(--c-ink);
+	font-weight: 600;
+	text-decoration: none;
+}
+.scroll-story__nav-next a { justify-content: flex-end; }
+.scroll-story__nav a:hover { color: var(--c-accent-strong); }
+.scroll-story__nav .post-navigation-link__label {
+	flex-basis: 100%;
+	color: var(--c-ink-3);
+	font-size: var(--wp--preset--font-size--xs, .75rem);
+	font-weight: 400;
+	text-transform: lowercase;
+}
+.scroll-story__nav .wp-block-post-navigation-link__arrow-previous,
+.scroll-story__nav .wp-block-post-navigation-link__arrow-next { color: var(--c-accent); }
+@media (max-width: 599.98px) {
+	.scroll-story__nav { grid-template-columns: 1fr; }
+	.scroll-story__nav-next { grid-column: 1; }
+}
+
+/* Leave a Reply, then the comments. */
+.scroll-story__comments.wp-block-comments { margin: 0; }
+.scroll-story__comments .comment-reply-title {
+	margin-block: 0 var(--space-3, 10px);
+	font-size: var(--wp--preset--font-size--lg, 1.125rem);
+}
+.scroll-story__comments .wp-block-comments-title {
+	margin-block: var(--space-7, 32px) var(--space-4, 12px);
+	font-size: var(--wp--preset--font-size--lg, 1.125rem);
+}
+.scroll-story__comment {
+	gap: var(--space-5, 12px);
+	padding-block: var(--space-5, 12px);
+}
+.scroll-story__comment-body { flex: 1 1 auto; min-width: 0; }
+.scroll-story__comment-head { gap: var(--space-2, 8px) var(--space-4, 12px); }
+.scroll-story__comment-head .wp-block-comment-author-name { font-weight: 600; }
+.scroll-story__comment-when {
+	gap: var(--space-3, 10px);
+	color: var(--c-ink-3);
+	font-size: var(--wp--preset--font-size--xs, .75rem);
+}
+.scroll-story__comment-when > * { margin: 0; }
+.scroll-story__comment .wp-block-comment-content p { margin-block: var(--space-2, 8px) 0; }
+.scroll-story__comments .wp-block-comment-template ol { padding-inline-start: var(--space-7, 32px); }
+
+/* Right column: subscribe box, then related posts as a list. */
+.arneiron-subscribe {
+	margin-block-end: var(--space-7, 32px);
+}
+.arneiron-subscribe__title.wp-block-heading {
+	margin-block: 0 var(--space-2, 8px);
+	font-size: var(--wp--preset--font-size--lg, 1.125rem);
+}
+.arneiron-subscribe__text {
+	margin-block: 0 var(--space-4, 12px);
+	color: var(--c-ink-2);
+}
+.arneiron-subscribe__actions .wp-block-button,
+.arneiron-subscribe__actions .wp-block-button__link { width: 100%; }
+.scroll-story__related-title.wp-block-heading {
+	margin-block: 0 var(--space-4, 12px);
+	font-size: var(--wp--preset--font-size--lg, 1.125rem);
+}
+.arneiron-related-posts .wp-block-post-template {
+	display: grid;
+	gap: var(--space-5, 16px);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.arneiron-related-posts .wp-block-post { display: grid; gap: var(--space-2, 8px); }
+.arneiron-related-posts .wp-block-post-featured-image { margin: 0; }
+.arneiron-related-posts .wp-block-post-featured-image img { border-radius: var(--wp--custom--radius--md, 6px); }
+.arneiron-related-posts .wp-block-post-title { margin: 0; font-size: var(--wp--preset--font-size--md, 1rem); }
+.arneiron-related-posts .wp-block-post-title a { color: var(--c-ink); text-decoration: none; }
+.arneiron-related-posts .wp-block-post-title a:hover { color: var(--c-accent-strong); }
+.arneiron-related-posts .wp-block-post-date {
+	color: var(--c-ink-3);
+	font-size: var(--wp--preset--font-size--xs, .75rem);
+}
+@media (min-width: 600px) and (max-width: 899.98px) {
+	.arneiron-related-posts .wp-block-post-template { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}

@@ -1,0 +1,378 @@
+/*
+ * ArneIron — woocommerce.css (ported from arneiron-base Lane D, P1-2).
+ * -----------------------------------------------------------------------------
+ * Gray, token-only WooCommerce surface support. Neutralises Woo's default
+ * chrome onto the base tokens so every skin recolors shop/cart/checkout/account
+ * surfaces automatically. Loaded only when WooCommerce is active (see
+ * inc/woocommerce.php). Spacing slugs remapped from arneiron-base's 10-80 scale
+ * to arneiron's 0-10 scale during the P0/P1 consolidation (hub#1230).
+ *
+ * Hex-grep gate:
+ *   ! grep -nE '#[0-9a-fA-F]{3,8}' woocommerce.css | grep -v '/*'
+ * -----------------------------------------------------------------------------
+ */
+
+/* `on-surface` is RETIRED from component CSS — use the --c-ink alias.
+
+   It is a real slug in theme.json (#14181f, identical to `contrast` there), and
+   that is exactly the trap: a style VARIATION that repaints the theme dark
+   overrides `contrast` and leaves `on-surface` at the light literal, because
+   nothing forces a variation to enumerate every slug. The result is ink the
+   colour of the light theme printed on a dark panel — measured on
+   dev.arneiron.net, the my-account navigation at rgb(20,24,31) on rgb(16,6,8),
+   a contrast ratio of 1.12:1.
+
+   The alias layer exists to stop precisely this (§1): a component that resolves
+   through `--c-ink` follows whatever the active variation says `contrast` is,
+   and cannot be left behind by a variation that did not think about it. */
+
+/* -----------------------------------------------------------------------------
+ * LAYOUT WIDTH: account / cart / checkout are capped at 1000px by WooCommerce.
+ *
+ * WooCommerce's block-theme compat sheet hardcodes a width that predates any
+ * theme's layout:
+ *
+ *   wp-content/plugins/woocommerce/assets/css/woocommerce-blocktheme.css (min., line 1)
+ *   .woocommerce-account .wp-block-post-title,
+ *   .woocommerce-account main .woocommerce,
+ *   .woocommerce-cart .wp-block-post-title,
+ *   .woocommerce-cart main .woocommerce,
+ *   .woocommerce-checkout .wp-block-post-title,
+ *   .woocommerce-checkout main .woocommerce { max-width: 1000px }
+ *
+ * Measured on dev.arneiron.net/my-account/ at a 1440px viewport BEFORE this
+ * rule: `.woocommerce` 1000px and `.wp-block-post-title` 1000px, while
+ * `.site-main` was 1360px and `.wp-block-post-content` 1296px. So the account
+ * surface sat ~300px narrower than every other page on the site, for no reason
+ * this theme asked for.
+ *
+ * Two notes on scope, because the symptom is usually reported as "the
+ * my-account page":
+ *   - the same rule caps the PAGE TITLE, not only the `.woocommerce` div;
+ *   - it covers account, cart and checkout ONLY. Shop and single-product are
+ *     NOT in that selector list and must not be "fixed" here.
+ *
+ * Cascade: Woo's selectors are (0,2,1). This file is enqueued with a declared
+ * dependency on `woocommerce-blocktheme` (see inc/woocommerce.php), so ordering
+ * is resolved by WP's dependency graph rather than hook-order luck, and an
+ * equal-specificity declaration wins with no `!important`.
+ *
+ * Value: the theme's own content column, so these surfaces follow the layout
+ * primitive in ds.css section 4 instead of a plugin constant. Under 0.6.6 that is
+ * 1300px; it tracks theme.json, so a future width change reaches Woo for free.
+ * -------------------------------------------------------------------------- */
+.woocommerce-account .wp-block-post-title,
+.woocommerce-account main .woocommerce,
+.woocommerce-cart .wp-block-post-title,
+.woocommerce-cart main .woocommerce,
+.woocommerce-checkout .wp-block-post-title,
+.woocommerce-checkout main .woocommerce {
+	max-width: var(--wp--style--global--content-size, 1300px);
+}
+
+/*
+ * ...but hand ALIGNED elements straight back to the block layout system.
+ *
+ * Caught by the inner-page audit on this same issue: the cart and checkout
+ * templates mark the page title `alignwide`, and the rule above (0,2,0) ties
+ * with core's `.is-layout-constrained > .alignwide` (0,2,0) and wins on load
+ * order — so un-capping the title from Woo's 1000px silently RE-capped it at
+ * 1300px, overriding an explicit alignment the template had asked for.
+ *
+ * Restricting the rule above with `:not(.alignwide)` would not work: Woo's
+ * 1000px rule would simply match again on the aligned element. The override has
+ * to stay, and state the layout-correct value per alignment instead.
+ */
+.woocommerce-account .wp-block-post-title.alignwide,
+.woocommerce-account main .woocommerce.alignwide,
+.woocommerce-cart .wp-block-post-title.alignwide,
+.woocommerce-cart main .woocommerce.alignwide,
+.woocommerce-checkout .wp-block-post-title.alignwide,
+.woocommerce-checkout main .woocommerce.alignwide {
+	max-width: var(--wp--style--global--wide-size, 1360px);
+}
+.woocommerce-account .wp-block-post-title.alignfull,
+.woocommerce-account main .woocommerce.alignfull,
+.woocommerce-cart .wp-block-post-title.alignfull,
+.woocommerce-cart main .woocommerce.alignfull,
+.woocommerce-checkout .wp-block-post-title.alignfull,
+.woocommerce-checkout main .woocommerce.alignfull {
+	max-width: none;
+}
+
+/* --- Buttons: adopt the theme accent/token button styling --- */
+.woocommerce a.button,
+.woocommerce button.button,
+.woocommerce input.button,
+.woocommerce #respond input#submit,
+.woocommerce a.button.alt,
+.woocommerce button.button.alt {
+	background-color: var(--wp--preset--color--accent);
+	color: var(--wp--preset--color--accent-contrast);
+	border: 1px solid var(--wp--preset--color--accent);
+	border-radius: var(--wp--custom--radius--md);
+	font-weight: 600;
+}
+.woocommerce a.button:hover,
+.woocommerce button.button:hover,
+.woocommerce input.button:hover,
+.woocommerce #respond input#submit:hover,
+.woocommerce a.button.alt:hover,
+.woocommerce button.button.alt:hover {
+	background-color: var(--wp--preset--color--contrast);
+	border-color: var(--wp--preset--color--contrast);
+}
+
+/* --- Product cards / panels --- */
+.woocommerce ul.products li.product,
+.woocommerce div.product .woocommerce-tabs,
+.woocommerce .cart-collaterals .cart_totals,
+.woocommerce-checkout #payment,
+.woocommerce-account .woocommerce-MyAccount-navigation,
+.woocommerce-account .woocommerce-MyAccount-content {
+	background-color: var(--wp--preset--color--surface);
+	border: 1px solid var(--wp--preset--color--border);
+	border-radius: var(--wp--custom--radius--md);
+	color: var(--c-ink);
+}
+
+/* The account menu CONTAINER draws no frame (owner, 2026-10-15: "too many
+   borders" on /my-account/). The menu panel inside it (`ul`, ds.css "Account
+   sidebar") keeps its own border/fill from the active variation, so the frame
+   around the frame is what goes. Same specificity as the list above, later. */
+.woocommerce-account .woocommerce-MyAccount-navigation {
+	border: 0;
+}
+
+/* ...and the inset those panels never had.
+   -----------------------------------------------------------------------------
+   The rule above draws a border, a fill and a radius, and declares NO padding —
+   so every one of these panels put its text hard against its own border.
+   Measured on dev 2026-08-20, product tabs: `.woocommerce-tabs` painted a
+   1px border at x=63 with the panel starting at x=64. One pixel.
+
+   Padding is applied to the CONTENT panels, not to the panel list:
+   `.woocommerce-MyAccount-navigation` is excluded deliberately because its rows
+   already carry `padding-inline` on the `<a>` (see the block below), and adding
+   a container inset on top would double the gutter on the one panel that
+   already had one.
+
+   `.woocommerce-Tabs-panel` is padded rather than `.woocommerce-tabs`, so the
+   tab STRIP keeps sitting flush at the top of the panel and only the body text
+   is inset — padding the wrapper would push the tabs inward and detach them
+   from the panel edge they read as being attached to. */
+.woocommerce .cart-collaterals .cart_totals,
+.woocommerce-checkout #payment,
+.woocommerce-account .woocommerce-MyAccount-content {
+	padding: var(--wp--preset--spacing--5);
+}
+
+/* The tabs panel needs its own selector, and a deliberately heavier one.
+   -----------------------------------------------------------------------------
+   WooCommerce ships
+       .woocommerce div.product .woocommerce-tabs .panel { padding: 0 }
+   which is (0,4,1). The obvious theme rule,
+       .woocommerce div.product .woocommerce-Tabs-panel
+   is (0,3,1) and LOSES — measured on dev 2026-08-20, the panel stayed at
+   padding:0 with the rule matching and the file loading later. Load order never
+   entered into it.
+
+   The panel carries BOTH classes (`panel woocommerce-Tabs-panel`), so naming the
+   two together gives (0,5,1) and beats Woo's rule on specificity alone,
+   independent of load order and with no `!important` — the same approach this
+   file already takes for the account navigation rows below. */
+.woocommerce div.product .woocommerce-tabs .panel.woocommerce-Tabs-panel {
+	padding: var(--wp--preset--spacing--6);
+}
+
+/* Now take the DOUBLE spacing back out.
+   -----------------------------------------------------------------------------
+   Once the panel has padding, every margin that used to do the separating is
+   additive, and the stack measured on dev 2026-08-20 was:
+
+     ul.tabs      margin-bottom 1.618em  = 29.1px   -> tabs sit 29px off the panel
+     .panel       margin-bottom 2em      = 36px     -> below a bordered box that
+                                                       already ends the section
+     h2 (first)   margin-top    0.83em   = 33.2px   -> ON TOP of the panel's 24px
+                                                       padding: 57px above the
+                                                       first line of copy
+     last child   margin-bottom 18px     -> 42px of slack under the last line
+
+   ~98px of accumulated air inside one panel, none of it deliberate — each layer
+   was reasonable alone and nothing owned the total.
+
+   The h2's 33.2px comes from NO stylesheet: it is the browser default
+   (0.83em on a 40px heading), which is why grepping the theme for it finds
+   nothing. Any authored rule beats it.
+
+   The principle applied here: THE PANEL'S PADDING OWNS THE INSET, and children
+   do not add to it. First/last-child trimming is what makes the padding mean
+   what it says, and it is safer than zeroing every heading — a mid-content h2
+   keeps its separation because the PRECEDING element's margin-bottom still
+   collapses through.
+
+   Specificity, again: Woo's own rules are (0,4,1)
+       .woocommerce div.product .woocommerce-tabs ul.tabs   { margin: 0 0 1.618em }
+       .woocommerce div.product .woocommerce-tabs .panel    { margin: 0 0 2em }
+   so each selector below names one extra class to reach (0,5,1) and win on
+   specificity alone, independent of load order. */
+.woocommerce div.product .woocommerce-tabs ul.tabs.wc-tabs {
+	margin-bottom: 0;
+}
+
+.woocommerce div.product .woocommerce-tabs .panel.woocommerce-Tabs-panel {
+	margin-bottom: 0;
+}
+
+/* Trim the ends of every panel in the family, so `padding` is the whole inset. */
+.woocommerce div.product .woocommerce-tabs .panel.woocommerce-Tabs-panel > :first-child,
+.woocommerce .cart-collaterals .cart_totals > :first-child,
+.woocommerce-checkout #payment > :first-child,
+.woocommerce-account .woocommerce-MyAccount-content > :first-child {
+	margin-top: 0;
+}
+
+.woocommerce div.product .woocommerce-tabs .panel.woocommerce-Tabs-panel > :last-child,
+.woocommerce .cart-collaterals .cart_totals > :last-child,
+.woocommerce-checkout #payment > :last-child,
+.woocommerce-account .woocommerce-MyAccount-content > :last-child {
+	margin-bottom: 0;
+}
+
+/* Headings inside these panels lead a section rather than float in one, so they
+   never need the browser's leading margin. Scoped to the panels: this must not
+   reach headings in ordinary page content. */
+.woocommerce div.product .woocommerce-tabs .panel.woocommerce-Tabs-panel h2,
+.woocommerce .cart-collaterals .cart_totals h2,
+.woocommerce-checkout #payment h2,
+.woocommerce-account .woocommerce-MyAccount-content h2 {
+	margin-top: 0;
+}
+
+/* The TAB STRIP is deliberately left flush.
+   WooCommerce's product-details block ships an `is-style-minimal` variation
+   whose
+       html body .wp-block-woocommerce-product-details.is-style-minimal ul.tabs.wc-tabs
+   zeroes the strip's padding at (0,4,3). Insetting the strip to match the body
+   would mean out-specifying a BLOCK STYLE VARIATION from theme CSS — an
+   escalation this file avoids on principle, and the flush strip is that
+   variation's intended look. The body text is what was unreadable against the
+   border; the tabs sit on their own row and read fine. */
+
+/* --- Prices + sale flashes --- */
+.woocommerce ul.products li.product .price,
+.woocommerce div.product p.price,
+.woocommerce div.product span.price {
+	color: var(--wp--preset--color--contrast);
+	font-family: var(--wp--preset--font-family--mono);
+}
+.woocommerce span.onsale {
+	background-color: var(--wp--preset--color--accent);
+	color: var(--wp--preset--color--accent-contrast);
+	border-radius: var(--wp--custom--radius--pill);
+}
+
+/* --- Tables (cart, order, account) --- */
+.woocommerce table.shop_table,
+.woocommerce table.shop_table th,
+.woocommerce table.shop_table td {
+	border-color: var(--wp--preset--color--border);
+	color: var(--c-ink);
+}
+.woocommerce table.shop_table thead th {
+	background-color: var(--wp--preset--color--surface-2);
+	color: var(--wp--preset--color--contrast);
+	font-family: var(--wp--preset--font-family--mono);
+}
+
+/* --- Form fields --- */
+.woocommerce form .form-row input.input-text,
+.woocommerce form .form-row textarea,
+.woocommerce form .form-row select,
+.woocommerce .select2-container--default .select2-selection--single {
+	background-color: var(--wp--preset--color--surface-3);
+	border: 1px solid var(--wp--preset--color--border);
+	color: var(--c-ink);
+	border-radius: var(--wp--custom--radius--sm);
+}
+.woocommerce form .form-row input.input-text:focus,
+.woocommerce form .form-row textarea:focus,
+.woocommerce form .form-row select:focus {
+	outline: 2px solid var(--wp--custom--color--focus-ring);
+	outline-offset: 2px;
+}
+
+/* --- Notices --- */
+.woocommerce-message,
+.woocommerce-info,
+.woocommerce-error {
+	background-color: var(--wp--preset--color--surface-2);
+	color: var(--c-ink);
+	border-top: 3px solid var(--wp--preset--color--accent);
+	border-radius: var(--wp--custom--radius--sm);
+}
+
+/* --- Account balance seam echo (mini): the wallet plugin owns the real chip --- */
+.arneiron-balance-seam .balance-chip {
+	font-family: var(--wp--preset--font-family--mono);
+	color: var(--wp--preset--color--subtle);
+	border: 1px solid var(--wp--preset--color--border);
+	border-radius: var(--wp--custom--radius--pill);
+	padding-block: var(--wp--preset--spacing--1);
+	padding-inline: var(--wp--preset--spacing--3);
+}
+
+/* -----------------------------------------------------------------------------
+ * SPACING OWNERSHIP: the account nav (hub — Woo/ArneIron double-padding).
+ *
+ * ArneIron's account-nav design makes the <a> a display:block row that owns the
+ * row's spacing, and leaves the <li> a bare bordered separator. The portal
+ * layer says so explicitly — it sets `margin: 0` on the li and puts
+ * `padding: .7rem .9rem` on the anchor.
+ *
+ * WooCommerce's block-theme compat sheet independently pads the SAME row on the
+ * OUTER box:
+ *     woocommerce/assets/css/woocommerce-blocktheme.css (minified, line 1)
+ *     .woocommerce-account .woocommerce-MyAccount-navigation li { padding: 1em 0 }
+ *   + @media (max-width: 768px) { ... li { padding: .35em 0 } }
+ *
+ * That rule only ships for BLOCK themes, so it never appeared while the portal
+ * CSS was written against a classic theme. Under ArneIron 0.5.0 (FSE) both
+ * layers now apply to two nested boxes, and the row is padded twice:
+ * 17.92 + 17.92 (Woo, on the li) + 11.2 + 11.2 (ArneIron, on the a)
+ * = 58.24px around a ~20px line, an ~80px tall row.
+ *
+ * Woo does not "win" here — it is simply UNOPPOSED: ArneIron already sorts after
+ * woocommerce-blocktheme.css and already matches this selector at equal
+ * specificity, it just never declared `padding`. So the fix is a declaration,
+ * not a cascade fight.
+ *
+ * `ul li` is (0,2,2) — one element more specific than Woo's (0,2,1) — so it
+ * beats BOTH the base rule and the max-width:768px variant on specificity
+ * alone, independent of load order, with no `!important`.
+ * -------------------------------------------------------------------------- */
+/* The vendored WooCommerce sheet colours the ROWS, not just the panel, and it
+   does it with a literal: `.woocommerce-MyAccount-navigation ul li, … ul a
+   { color: #333 }` (pix-theme-g's copy, measured on arneiron.net). Setting the
+   panel's colour therefore fixed nothing there — the rows out-specify it —
+   which is why dev went clean on the alias change and prod stayed at 1.58:1.
+   Deeper selector, theme token, and the LINK colour is deliberately left alone:
+   portal.css already owns it and resolves it through `--arnpx-ink-dim`. */
+.woocommerce-account .woocommerce-MyAccount-navigation ul li,
+.woocommerce-account .woocommerce-MyAccount-navigation ul li:not(.is-active) {
+	color: var(--c-ink);
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation ul li {
+	padding: 0;
+}
+
+/* Standalone fallback so the theme still owns real row spacing when the
+ * arneiron-portal plugin is not active. Deliberately (0,1,2) — LOWER than
+ * portal's (0,2,2) — so portal keeps ownership (including its <=768px
+ * compaction) wherever it is present. */
+.woocommerce-MyAccount-navigation li a {
+	display: block;
+	padding-block: var(--wp--preset--spacing--4);
+	padding-inline: var(--wp--preset--spacing--5);
+}

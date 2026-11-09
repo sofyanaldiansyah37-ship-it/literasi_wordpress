@@ -1,0 +1,22 @@
+<?php
+/**
+ * Title: Pricing · Credit packs
+ * Slug: arneiron/pricing-credit-packs
+ * Categories: arneiron-pricing
+ * Keywords: credits, tokens, packs, commerce
+ * Viewport Width: 1100
+ * Description: Token/credit packs (gray commerce surface).
+ */
+?>
+<!-- wp:group {"tagName":"section","align":"full","backgroundColor":"surface-2","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70"},"blockGap":"var:preset|spacing|50"}},"layout":{"type":"constrained"}} -->
+<section class="wp-block-group alignfull has-surface-2-background-color has-background" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70)">
+	<!-- wp:heading {"textAlign":"center","level":2} --><h2 class="wp-block-heading has-text-align-center"><?php esc_html_e( 'Buy credits', 'arneiron-lite' ); ?></h2><!-- /wp:heading -->
+	<!-- wp:columns {"align":"wide"} -->
+	<div class="wp-block-columns alignwide">
+		<!-- wp:column --><div class="wp-block-column"><!-- wp:group {"className":"is-style-card","layout":{"type":"constrained"}} --><div class="wp-block-group is-style-card"><!-- wp:heading {"level":3,"fontSize":"xl","style":{"typography":{"fontFamily":"var:preset|font-family|mono"}}} --><h3 class="wp-block-heading has-xl-font-size" style="font-family:var(--wp--preset--font-family--mono)"><?php esc_html_e( '1,000', 'arneiron-lite' ); ?></h3><!-- /wp:heading --><!-- wp:paragraph {"textColor":"subtle","fontSize":"sm"} --><p class="has-subtle-color has-text-color has-sm-font-size"><?php esc_html_e( 'credits', 'arneiron-lite' ); ?></p><!-- /wp:paragraph --><!-- wp:paragraph --><p><?php esc_html_e( '$10', 'arneiron-lite' ); ?></p><!-- /wp:paragraph --><!-- wp:buttons --><div class="wp-block-buttons"><!-- wp:button {"width":100,"className":"is-style-outline"} --><div class="wp-block-button has-custom-width wp-block-button__width-100 is-style-outline"><a class="wp-block-button__link wp-element-button" href="#"><?php esc_html_e( 'Buy', 'arneiron-lite' ); ?></a></div><!-- /wp:button --></div><!-- /wp:buttons --></div><!-- /wp:group --></div><!-- /wp:column -->
+		<!-- wp:column --><div class="wp-block-column"><!-- wp:group {"className":"is-style-card","layout":{"type":"constrained"}} --><div class="wp-block-group is-style-card"><!-- wp:heading {"level":3,"fontSize":"xl","style":{"typography":{"fontFamily":"var:preset|font-family|mono"}}} --><h3 class="wp-block-heading has-xl-font-size" style="font-family:var(--wp--preset--font-family--mono)"><?php esc_html_e( '5,000', 'arneiron-lite' ); ?></h3><!-- /wp:heading --><!-- wp:paragraph {"textColor":"subtle","fontSize":"sm"} --><p class="has-subtle-color has-text-color has-sm-font-size"><?php esc_html_e( 'credits', 'arneiron-lite' ); ?></p><!-- /wp:paragraph --><!-- wp:paragraph --><p><?php esc_html_e( '$45', 'arneiron-lite' ); ?></p><!-- /wp:paragraph --><!-- wp:buttons --><div class="wp-block-buttons"><!-- wp:button {"width":100} --><div class="wp-block-button has-custom-width wp-block-button__width-100"><a class="wp-block-button__link wp-element-button" href="#"><?php esc_html_e( 'Buy', 'arneiron-lite' ); ?></a></div><!-- /wp:button --></div><!-- /wp:buttons --></div><!-- /wp:group --></div><!-- /wp:column -->
+		<!-- wp:column --><div class="wp-block-column"><!-- wp:group {"className":"is-style-card","layout":{"type":"constrained"}} --><div class="wp-block-group is-style-card"><!-- wp:heading {"level":3,"fontSize":"xl","style":{"typography":{"fontFamily":"var:preset|font-family|mono"}}} --><h3 class="wp-block-heading has-xl-font-size" style="font-family:var(--wp--preset--font-family--mono)"><?php esc_html_e( '20,000', 'arneiron-lite' ); ?></h3><!-- /wp:heading --><!-- wp:paragraph {"textColor":"subtle","fontSize":"sm"} --><p class="has-subtle-color has-text-color has-sm-font-size"><?php esc_html_e( 'credits', 'arneiron-lite' ); ?></p><!-- /wp:paragraph --><!-- wp:paragraph --><p><?php esc_html_e( '$160', 'arneiron-lite' ); ?></p><!-- /wp:paragraph --><!-- wp:buttons --><div class="wp-block-buttons"><!-- wp:button {"width":100,"className":"is-style-outline"} --><div class="wp-block-button has-custom-width wp-block-button__width-100 is-style-outline"><a class="wp-block-button__link wp-element-button" href="#"><?php esc_html_e( 'Buy', 'arneiron-lite' ); ?></a></div><!-- /wp:button --></div><!-- /wp:buttons --></div><!-- /wp:group --></div><!-- /wp:column -->
+	</div>
+	<!-- /wp:columns -->
+</section>
+<!-- /wp:group -->

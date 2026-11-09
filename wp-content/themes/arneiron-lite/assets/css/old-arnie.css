@@ -1,0 +1,423 @@
+/* =============================================================================
+   ArneIron — "Old Arnie" CRT overlay (assets/css/old-arnie.css)
+   =============================================================================
+   The full arneiron-g CRT aesthetic, ported as a layered decoration stylesheet.
+   It is ACTIVATED ONLY while the "Old Arnie" look is showing: the Old Arnie
+   style variation in ArneIron Pro, the default look in ArneIron Lite. WordPress
+   core puts no class for the active style variation on <body>; the theme adds
+   `wp-style-old-arnie` itself (inc/old-arnie-default.php, hub#5401), and every
+   rule here is scoped to it, so every other variation is untouched.
+
+   `body[data-wp-style="old-arnie"]` is kept as a second, manual seam: nothing
+   in the theme sets it; a child theme or a cached page may.
+
+   WHAT THIS FILE DOES:
+     - Re-points a handful of CSS custom properties that Style Variations cannot
+       express (gradients, glow rgba, halftone textures) — these are the CRT
+       "feel" layer.
+     - Adds the fixed full-viewport scanline + aperture grille + vignette overlay.
+     - Frames ported blocks with the HUD L-corner brackets and the marquee
+       scanline sweep.
+     - Buttons pick up the oxblood hard-shadow + white-hot top highlight.
+
+   WHAT IT DOES NOT DO:
+     - Touch block markup. Every rule reads token values the blocks already emit.
+     - Override the --c-* / --wp--preset--color|spacing palette — those are set by
+       styles/old-arnie.json. This file supplies the decoration tokens ON TOP.
+
+   Sourced 1:1 from arneiron-g/assets/css/ds.css sections 1, 3, 4, 5. Reduced to
+   the rules needed for the marketing/app-shell blocks (no chat/commerce chrome).
+   ========================================================================== */
+
+/* ---------------------------------------------------------------------------
+   0. Scope marker
+   ------------------------------------------------------------------------ */
+body.wp-style-old-arnie,
+body[data-wp-style="old-arnie"] {
+
+	/* decoration tokens arneiron-g uses but theme.json can't express */
+	--glow-red:      rgba(255, 42, 42, .55);
+	--glow-red-soft: rgba(255, 42, 42, .22);
+	--glow-green:    rgba(0, 255, 65, .45);
+	--glow-amber:    rgba(255, 179, 0, .45);
+
+	--grad-primary:        linear-gradient(180deg, #ff6030 0%, #ff2a2a 38%, #ee2222 100%);
+	--grad-primary-hover:  linear-gradient(180deg, #ff8a4a 0%, #ff3a3a 40%, #f42c2c 100%);
+
+	/* halftone + grid textures */
+	--tex-halftone:      radial-gradient(circle at 1px 1px, rgba(255, 42, 42, .16) 1px, transparent 1.4px);
+	--tex-halftone-size: 6px 6px;
+	--grid-hair:         #1d0c0d;
+
+	/* brand is hard pixel corners */
+	--wp--custom--radius--sm:   0;
+	--wp--custom--radius--md:   0;
+	--wp--custom--radius--lg:   0;
+	--wp--custom--radius--pill: 0;
+
+	/* header / footer band (ds.css paints it on the full-width part wrapper) */
+	--wp--custom--header--bg: linear-gradient(180deg, #18090b 0%, #0c0608 100%);
+	--wp--custom--footer--bg: linear-gradient(180deg, #18090b 0%, #0c0608 100%);
+
+	/* hard block shadows (oxblood) */
+	--wp--custom--shadow--sm: 0 0 0 1px #3c1618;
+	--wp--custom--shadow--md: 4px 4px 0 0 #1a0306;
+	--wp--custom--shadow--lg: 6px 6px 0 0 #1a0306;
+
+	/* font stacks (self-hosted via theme.json fontFace — see §7) */
+	--font-display: "Orbitron", "Rajdhani", system-ui, sans-serif;
+	--font-ui:      "Rajdhani", "Segoe UI", system-ui, sans-serif;
+	--font-mono:    "Share Tech Mono", "Courier New", monospace;
+}
+
+/* ---------------------------------------------------------------------------
+   1. Body backdrop — dual radial glows + faint grid (the "analog rows")
+   ------------------------------------------------------------------------ */
+body.wp-style-old-arnie,
+body[data-wp-style="old-arnie"] {
+	background-color: var(--c-bg, #050203);
+	background-image:
+		radial-gradient(700px 500px at 0% 0%, rgba(255, 42, 42, .10), transparent 60%),
+		radial-gradient(700px 500px at 100% 100%, rgba(0, 255, 65, .05), transparent 60%),
+		linear-gradient(transparent 47px, var(--grid-hair, #1d0c0d) 47px),
+		linear-gradient(90deg, transparent 47px, var(--grid-hair, #1d0c0d) 47px);
+	background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+	background-attachment: fixed;
+	color: var(--c-ink, #ffd5cd);
+	letter-spacing: .2px;
+}
+
+/* ---------------------------------------------------------------------------
+   2. CRT overlay — fixed scanlines + aperture grille + vignette
+   Injected as a pseudo-element on body so no markup/JS is needed.
+   ------------------------------------------------------------------------ */
+body.wp-style-old-arnie::before,
+body[data-wp-style="old-arnie"]::before {
+	content: "";
+	position: fixed;
+	inset: 0;
+	z-index: 900;
+	pointer-events: none;
+	background:
+		repeating-linear-gradient(0deg, rgba(0, 0, 0, .28) 0 1px, transparent 1px 3px),
+		repeating-linear-gradient(90deg, rgba(255, 42, 42, .03) 0 1px, transparent 1px 3px);
+	opacity: .9;
+}
+
+body.wp-style-old-arnie::after,
+body[data-wp-style="old-arnie"]::after {
+	content: "";
+	position: fixed;
+	inset: 0;
+	z-index: 900;
+	pointer-events: none;
+	background:
+		radial-gradient(120% 120% at 50% 50%, transparent 55%, rgba(0, 0, 0, .55) 100%),
+		radial-gradient(60% 50% at 50% 0%, rgba(255, 42, 42, .05), transparent 70%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	body.wp-style-old-arnie::before,
+	body[data-wp-style="old-arnie"]::before { opacity: .85; }
+}
+
+/* the overlay must not cover interactive UI like nav drawers */
+body.wp-style-old-arnie .app-nav.is-open,
+body[data-wp-style="old-arnie"] .app-nav.is-open { z-index: 1001; }
+
+/* ---------------------------------------------------------------------------
+   3. Headings + utilities — display weight, glow, signal-red emphasis
+   ------------------------------------------------------------------------ */
+body.wp-style-old-arnie h1,
+body[data-wp-style="old-arnie"] h1 {
+	font-family: var(--font-display, "Orbitron", sans-serif);
+	font-weight: 900;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	text-shadow: 0 0 8px var(--glow-red, rgba(255, 42, 42, .55));
+}
+body.wp-style-old-arnie h2,
+body[data-wp-style="old-arnie"] h2 {
+	font-family: var(--font-ui, "Rajdhani", sans-serif);
+	font-weight: 700;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+}
+/* the eyebrow micro-label, reused across many blocks */
+body.wp-style-old-arnie .eyebrow,
+body[data-wp-style="old-arnie"] .eyebrow {
+	font-family: var(--font-mono, "Share Tech Mono", monospace);
+	font-size: 0.6875rem;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	color: var(--c-ink-3, #ad6a63);
+}
+
+/* chromatic-aberration flourish on the H1 — subtle RGB split */
+body.wp-style-old-arnie h1.wp-block-heading,
+body[data-wp-style="old-arnie"] h1.wp-block-heading {
+	text-shadow:
+		-.6px 0 rgba(255, 0, 0, .4),
+		.6px 0 rgba(0, 180, 255, .25),
+		0 0 8px var(--glow-red, rgba(255, 42, 42, .55));
+}
+
+/* selection colour survives the dark theme */
+body.wp-style-old-arnie ::selection,
+body[data-wp-style="old-arnie"] ::selection {
+	background: var(--c-accent, #ff2a2a);
+	color: var(--c-bg, #050203);
+}
+
+/* ---------------------------------------------------------------------------
+   4. Framed panels — HUD L-corner brackets + halftone texture
+   Applied to the card/panel classes the ported blocks emit.
+   ------------------------------------------------------------------------ */
+body.wp-style-old-arnie .card,
+body.wp-style-old-arnie .gallery-frame,
+body.wp-style-old-arnie .landing-step,
+body.wp-style-old-arnie .testimonial,
+body.wp-style-old-arnie .stat,
+body.wp-style-old-arnie details,
+body[data-wp-style="old-arnie"] .card,
+body[data-wp-style="old-arnie"] .gallery-frame,
+body[data-wp-style="old-arnie"] .landing-step,
+body[data-wp-style="old-arnie"] .testimonial,
+body[data-wp-style="old-arnie"] .stat,
+body[data-wp-style="old-arnie"] details {
+	position: relative;
+	border-width: 1px;
+	border-style: solid;
+}
+
+/* HUD corner brackets on a single bracketed element class (used by hero/cta) */
+body.wp-style-old-arnie .landing-cta-inner,
+body.wp-style-old-arnie .landing-hero-inner,
+body[data-wp-style="old-arnie"] .landing-cta-inner,
+body[data-wp-style="old-arnie"] .landing-hero-inner {
+	position: relative;
+}
+body.wp-style-old-arnie .landing-cta-inner::before,
+body.wp-style-old-arnie .landing-cta-inner::after,
+body[data-wp-style="old-arnie"] .landing-cta-inner::before,
+body[data-wp-style="old-arnie"] .landing-cta-inner::after {
+	content: "";
+	position: absolute;
+	width: 18px;
+	height: 18px;
+	pointer-events: none;
+	border: 2px solid var(--c-accent, #ff2a2a);
+}
+body.wp-style-old-arnie .landing-cta-inner::before,
+body.wp-style-old-arnie .landing-hero-inner::before,
+body[data-wp-style="old-arnie"] .landing-cta-inner::before,
+body[data-wp-style="old-arnie"] .landing-hero-inner::before {
+	top: 4px;
+	left: 4px;
+	border-right: 0;
+	border-bottom: 0;
+}
+body.wp-style-old-arnie .landing-cta-inner::after,
+body.wp-style-old-arnie .landing-hero-inner::after,
+body[data-wp-style="old-arnie"] .landing-cta-inner::after,
+body[data-wp-style="old-arnie"] .landing-hero-inner::after {
+	bottom: 4px;
+	right: 4px;
+	border-left: 0;
+	border-top: 0;
+}
+
+/* halftone grain on cards */
+body.wp-style-old-arnie .card,
+body[data-wp-style="old-arnie"] .card {
+	background-image: var(--tex-halftone, none);
+	background-size: var(--tex-halftone-size, 6px 6px);
+}
+
+/* stat-strip value gets the glow */
+body.wp-style-old-arnie .stat-value,
+body[data-wp-style="old-arnie"] .stat-value {
+	color: var(--c-accent, #ff2a2a);
+	text-shadow: 0 0 6px var(--glow-red-soft, rgba(255, 42, 42, .22));
+}
+
+/* card titles read as signal red */
+body.wp-style-old-arnie .card-title,
+body.wp-style-old-arnie .landing-step-title,
+body[data-wp-style="old-arnie"] .card-title,
+body[data-wp-style="old-arnie"] .landing-step-title {
+	color: var(--c-accent, #ff2a2a);
+}
+
+/* card bodies dim to the warm ink-dim ramp */
+body.wp-style-old-arnie .card-body,
+body.wp-style-old-arnie .landing-step-body,
+body.wp-style-old-arnie .testimonial-quote,
+body[data-wp-style="old-arnie"] .card-body,
+body[data-wp-style="old-arnie"] .landing-step-body,
+body[data-wp-style="old-arnie"] .testimonial-quote {
+	color: var(--c-ink-2, #c4847e);
+}
+
+/* aspect-ratio gallery placeholders read as dark wells */
+body.wp-style-old-arnie .gallery-placeholder,
+body[data-wp-style="old-arnie"] .gallery-placeholder {
+	background:
+		repeating-linear-gradient(135deg, var(--c-surface-2, #18090b) 0, var(--c-surface-2, #18090b) 12px, var(--c-surface, #100608) 12px, var(--c-surface, #100608) 24px);
+}
+
+/* ---------------------------------------------------------------------------
+   5. Buttons — primary gradient + white-hot top highlight + oxblood hard shadow
+   ------------------------------------------------------------------------ */
+body.wp-style-old-arnie .btn,
+body[data-wp-style="old-arnie"] .btn {
+	position: relative;
+	font-family: var(--font-ui, "Rajdhani", sans-serif);
+	font-weight: 700;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	border-radius: 0;
+	border: 2px solid var(--c-surface-2, #18090b);
+	transition: transform 90ms steps(4, end), box-shadow 90ms steps(4, end), background 160ms steps(4, end);
+}
+
+body.wp-style-old-arnie .btn--primary,
+body[data-wp-style="old-arnie"] .btn--primary {
+	background: var(--grad-primary, linear-gradient(180deg, #ff6030 0%, #ff2a2a 38%, #ee2222 100%));
+	color: var(--c-bg, #050203);
+	border-color: #ffe1d2;
+	box-shadow: 4px 4px 0 0 #1a0306;
+}
+body.wp-style-old-arnie .btn--primary::before,
+body[data-wp-style="old-arnie"] .btn--primary::before {
+	content: "";
+	position: absolute;
+	left: 3px;
+	right: 3px;
+	top: 3px;
+	height: 1px;
+	background: #ffe1d2;
+	opacity: .9;
+}
+body.wp-style-old-arnie .btn--primary:hover,
+body[data-wp-style="old-arnie"] .btn--primary:hover {
+	background: var(--grad-primary-hover, linear-gradient(180deg, #ff8a4a 0%, #ff3a3a 40%, #f42c2c 100%));
+	transform: translate(-1px, -1px);
+	box-shadow: 5px 5px 0 0 #1a0306;
+}
+body.wp-style-old-arnie .btn--primary:active,
+body[data-wp-style="old-arnie"] .btn--primary:active {
+	transform: translate(4px, 4px);
+	box-shadow: 0 0 0 0 #1a0306;
+}
+
+body.wp-style-old-arnie .btn--secondary,
+body[data-wp-style="old-arnie"] .btn--secondary {
+	background: linear-gradient(180deg, #280a0c, #0c0608);
+	color: var(--c-accent, #ff2a2a);
+	border-color: var(--c-accent, #ff2a2a);
+}
+body.wp-style-old-arnie .btn--secondary:hover,
+body[data-wp-style="old-arnie"] .btn--secondary:hover {
+	color: var(--c-accent-strong, #ff6030);
+	border-color: var(--c-accent-strong, #ff6030);
+}
+
+/* link buttons inside the editor still show the focus ring clearly */
+body.wp-style-old-arnie .btn:focus-visible,
+body[data-wp-style="old-arnie"] .btn:focus-visible {
+	outline: 2px solid #ffe1d2;
+	outline-offset: 3px;
+}
+
+/* ---------------------------------------------------------------------------
+   6. Header / nav / footer — CRT chrome
+   ------------------------------------------------------------------------ */
+body.wp-style-old-arnie .app-header,
+body[data-wp-style="old-arnie"] .app-header {
+	border-bottom-width: 2px;
+}
+body.wp-style-old-arnie .app-nav a.is-active,
+body[data-wp-style="old-arnie"] .app-nav a.is-active {
+	color: var(--c-accent, #ff2a2a);
+	border-bottom-color: var(--c-accent, #ff2a2a);
+	text-shadow: 0 0 8px var(--glow-red-soft, rgba(255, 42, 42, .22));
+}
+
+body.wp-style-old-arnie .app-footer,
+body[data-wp-style="old-arnie"] .app-footer {
+	border-top-width: 2px;
+	font-family: var(--font-mono, "Share Tech Mono", monospace);
+}
+
+/* sidebar nav active row */
+body.wp-style-old-arnie .nav-item.is-active,
+body[data-wp-style="old-arnie"] .nav-item.is-active {
+	color: var(--c-accent, #ff2a2a);
+	background: var(--c-surface-2, #18090b);
+	box-shadow: inset 3px 0 0 var(--c-accent, #ff2a2a), 0 0 8px var(--glow-red-soft, rgba(255, 42, 42, .22));
+}
+
+/* breadcrumb current = signal red */
+body.wp-style-old-arnie .breadcrumb .current,
+body[data-wp-style="old-arnie"] .breadcrumb .current {
+	color: var(--c-accent, #ff2a2a);
+	text-shadow: 0 0 8px var(--glow-red-soft, rgba(255, 42, 42, .22));
+}
+
+/* alert variants get the CRT tint (kept muted; the kind word reinforces colour) */
+body.wp-style-old-arnie .alert--success,
+body[data-wp-style="old-arnie"] .alert--success { background: linear-gradient(180deg, rgba(0, 255, 65, .08), rgba(0, 255, 65, .02)); }
+body.wp-style-old-arnie .alert--warning,
+body[data-wp-style="old-arnie"] .alert--warning { background: linear-gradient(180deg, rgba(255, 179, 0, .08), rgba(255, 179, 0, .02)); }
+body.wp-style-old-arnie .alert--error,
+body[data-wp-style="old-arnie"] .alert--error   { background: linear-gradient(180deg, rgba(255, 50, 40, .10), rgba(255, 50, 40, .03)); }
+
+/* FAQ open item surfaces up */
+body.wp-style-old-arnie details[open],
+body[data-wp-style="old-arnie"] details[open] {
+	background: linear-gradient(180deg, #210d10 0%, #120709 100%);
+}
+
+/* ---------------------------------------------------------------------------
+   7. Web fonts — SELF-HOSTED. Orbitron, Rajdhani and Share Tech Mono ship in
+   assets/fonts/ and are declared as fontFace in theme.json and
+   styles/old-arnie.json, so WordPress prints their @font-face rules itself.
+   (Until 0.8.19 this section carried a Google Fonts `@import`. It never loaded:
+   an @import after any other rule is ignored by every browser. It was removed
+   because Theme Check flags remote @import, and because a working one would
+   have sent every visitor's IP to Google.)
+   ------------------------------------------------------------------------ */
+
+/* ---------------------------------------------------------------------------
+   Phones (hub#5401). (1) The uppercase, letter-spaced, 900-weight H1/H2 is
+   wider than a 360px screen for one long word ("DOCUMENTATION" on /docs/ ran
+   59px past it): let a word break, hyphenated where the language allows.
+   (2) Dark text on the red buttons must stay >= 4.5:1. The gradient no longer
+   ends in oxblood (#8c1014 gave 2.2:1 at the letter bottoms; #ee2222 is
+   4.8:1, the hover's #f42c2c 5.2:1), and on a phone — where every control sits
+   near the edge — the vignette and scanlines that darken whatever is under
+   them are lighter.
+   ------------------------------------------------------------------------ */
+@media (max-width: 600px) {
+	body.wp-style-old-arnie :is(h1, h2),
+	body[data-wp-style="old-arnie"] :is(h1, h2) {
+		overflow-wrap: break-word;
+		word-break: break-word;
+		-webkit-hyphens: auto;
+		hyphens: auto;
+		letter-spacing: 1px;
+	}
+	body.wp-style-old-arnie::before,
+	body[data-wp-style="old-arnie"]::before {
+		background:
+			repeating-linear-gradient(0deg, rgba(0, 0, 0, .14) 0 1px, transparent 1px 3px),
+			repeating-linear-gradient(90deg, rgba(255, 42, 42, .03) 0 1px, transparent 1px 3px);
+	}
+	body.wp-style-old-arnie::after,
+	body[data-wp-style="old-arnie"]::after {
+		background:
+			radial-gradient(140% 120% at 50% 50%, transparent 65%, rgba(0, 0, 0, .3) 100%),
+			radial-gradient(60% 50% at 50% 0%, rgba(255, 42, 42, .05), transparent 70%);
+	}
+}

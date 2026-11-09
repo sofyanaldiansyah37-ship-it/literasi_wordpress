@@ -1,0 +1,69 @@
+/*
+ * ArneIron buttons: the two-class system (hub#5402).
+ *
+ *   .arneiron-btn            shared marker
+ *   .arneiron-btn--filled    painted with the accent colour
+ *   .arneiron-btn--ghost     transparent at rest (outline / ghost / link)
+ *
+ * ONE RULE: a button that shows a coloured background on :hover or
+ * :focus-visible shows its label in --wp--custom--button--hover-ink on it.
+ *   - filled: the background darkens to --wp--custom--button--hover-bg;
+ *   - ghost:  the background fills with the same colour.
+ * Both tokens come from theme.json settings.custom.button {hoverBg, hoverInk}
+ * and every style variation sets them. hoverInk is white (#fff) wherever
+ * hoverBg is dark, at >= 4.5:1 (Old Arnie darkens its hover red to #c8201c
+ * for that: white on its own #ff6030 is 3.0:1). Amber, Green Terminal and Gray
+ * Dark have LIGHT accents; there hoverInk is the variation's dark base colour.
+ *
+ * Where the classes come from: inc/buttons.php adds them at render time to
+ * core/button (from its block style), core/search, the comment form and the
+ * WooCommerce loop button; ArneIron Blocks prints them in its render.php
+ * files. The second selector of each group maps what cannot carry a class at
+ * render time: the block-editor canvas (is-style-*), WooCommerce's React
+ * buttons, and markup saved before the classes existed (.btn--primary, ...).
+ *
+ * !important is used for the state properties only, on purpose: the hover
+ * colours must beat core's colour-utility classes (.has-*-color and
+ * .has-*-background-color are !important) and the per-component hover rules
+ * that predate this file. Rest-state styling stays with each component.
+ */
+
+/* ---- Filled -------------------------------------------------------------- */
+:is(
+	.arneiron-btn--filled,
+	.wp-block-button:not(.is-style-outline):not(.is-style-ghost):not(.is-style-link) > .wp-block-button__link,
+	a.btn--primary,
+	button.btn--primary,
+	.wp-block-arneiron-token-calculator .btn,
+	.wc-block-components-button:not(.is-link):not(.outlined),
+	.woocommerce :is(a, button, input).button,
+	.woo-wallet-my-wallet-container :is(input[type="submit"], button[type="submit"])
+):is(:hover, :focus-visible) {
+	background: var(--arneiron-btn-hover-paint, var(--wp--custom--button--hover-bg, var(--wp--preset--color--accent-strong, #2a2f3a))) !important;
+	color: var(--wp--custom--button--hover-ink, #fff) !important;
+}
+
+/* ---- Ghost: fills on hover ----------------------------------------------- */
+:is(
+	.arneiron-btn--ghost,
+	.wp-block-button:is(.is-style-outline, .is-style-ghost, .is-style-link) > .wp-block-button__link,
+	a.btn--secondary,
+	button.btn--secondary,
+	.wc-block-components-button.outlined
+):is(:hover, :focus-visible) {
+	background: var(--wp--custom--button--hover-bg, var(--wp--preset--color--accent-strong, #2a2f3a)) !important;
+	border-color: var(--wp--custom--button--hover-bg, var(--wp--preset--color--accent-strong, #2a2f3a)) !important;
+	color: var(--wp--custom--button--hover-ink, #fff) !important;
+}
+
+/* Labels and icons inside a hovered button follow the button's ink. */
+:is(.arneiron-btn--filled, .arneiron-btn--ghost):is(:hover, :focus-visible) :is(span, svg, i):not([class*="__tip"]) {
+	color: inherit !important;
+}
+
+/* Old Arnie keeps its CRT gradient on the primary .btn, darkened so white
+   holds >= 4.5:1 on its lightest stop (#d0341a: 5.01:1). */
+body.wp-style-old-arnie :is(a, button).btn--primary,
+body[data-wp-style="old-arnie"] :is(a, button).btn--primary {
+	--arneiron-btn-hover-paint: linear-gradient(180deg, #d0341a 0%, #c8201c 40%, #8a0f12 100%);
+}

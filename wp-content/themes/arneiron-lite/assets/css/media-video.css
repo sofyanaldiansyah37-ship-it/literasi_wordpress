@@ -1,0 +1,160 @@
+/*
+ * media-video.css — video in a post, and the rule that nothing gets cropped.
+ *
+ * Loaded on every front-end view by inc/media-video.php. It carries two
+ * separate jobs that happen to share a module:
+ *
+ *   1. the player chrome for a featured image that is really a video;
+ *   2. the never-crop contract: a picture or a video keeps the aspect ratio it
+ *      was made with. Where a layout needs an even box (the blog cards), the
+ *      box stays and the picture is fitted INSIDE it — `contain`, never
+ *      `cover`. inc/media-video.php rewrites core's inline `object-fit:cover`
+ *      to `contain` for the same reason; these rules cover the cases core
+ *      leaves to CSS.
+ */
+
+/* --- 1. In-content video: its own shape, and the whole of it on screen. --- */
+/*
+ * The box is the LARGEST box of the video's own ratio that fits both the
+ * column and the screen. A box that only fits the column is taller than a
+ * phone held sideways (measured 2026-11-02: a 16:9 explainer in a 780x332
+ * box, a 9:16 Short 640px tall on a 390px screen). A box that is capped in
+ * height while its width stays 100% is no longer the video's shape, so the
+ * picture is cut (with a poster, see below) or barred.
+ *
+ *   --arneiron-video-room  the height a video may take: the screen minus the
+ *                          sticky header (assets/js/media-video.js measures
+ *                          it into --arneiron-header-h) and a little air.
+ *   --arneiron-video-ar    width / height of THIS video. inc/media-video.php
+ *                          stamps it from the attachment, media-video.js from
+ *                          the file once its metadata loads, and the embed
+ *                          rules below from core's wp-embed-aspect-* class.
+ */
+:root {
+	--arneiron-video-room: calc(100svh - var(--arneiron-header-h, 4rem) - 1.5rem);
+}
+.wp-block-video {
+	margin-block: var(--wp--preset--spacing--4, 24px);
+}
+/* `figure.` and `[poster]` raise the weight on purpose: core ships
+   `.wp-block-video [poster] { object-fit: cover }` (0,2,0), which beat the
+   old one-class rule and cropped every video that has a poster. */
+figure.wp-block-video video,
+figure.wp-block-video video[poster] {
+	display: block;
+	width: min(100%, calc(var(--arneiron-video-room) * var(--arneiron-video-ar, 16 / 9)));
+	height: auto;
+	max-width: 100%;
+	/* The backstop for a ratio we could not know: bars, never a cut. */
+	max-height: var(--arneiron-video-room);
+	margin-inline: auto;
+	object-fit: contain;
+	border-radius: var(--wp--custom--radius--md, 6px);
+	background: var(--wp--preset--color--surface, #f6f6f4);
+}
+
+/* A video embed (YouTube and friends) keeps the provider's ratio — core's
+   wp-embed-aspect-* classes do that with a padding box — and gets the same
+   "whole of it on screen" width. A vertical Short in a 360px group was 640px
+   tall on every screen; now it is never taller than the room. */
+.wp-block-embed.is-type-video .wp-block-embed__wrapper iframe {
+	max-width: 100%;
+}
+.wp-block-embed.wp-embed-aspect-21-9 { --arneiron-video-ar: 21 / 9; }
+.wp-block-embed.wp-embed-aspect-18-9 { --arneiron-video-ar: 18 / 9; }
+.wp-block-embed.wp-embed-aspect-16-9 { --arneiron-video-ar: 16 / 9; }
+.wp-block-embed.wp-embed-aspect-4-3 { --arneiron-video-ar: 4 / 3; }
+.wp-block-embed.wp-embed-aspect-1-1 { --arneiron-video-ar: 1; }
+.wp-block-embed.wp-embed-aspect-9-16 { --arneiron-video-ar: 9 / 16; }
+.wp-block-embed.wp-embed-aspect-1-2 { --arneiron-video-ar: 1 / 2; }
+.wp-block-embed.is-type-video.wp-has-aspect-ratio:not(.alignleft):not(.alignright) {
+	width: min(100%, calc(var(--arneiron-video-room) * var(--arneiron-video-ar, 16 / 9)));
+	margin-inline: auto;
+}
+
+/* --- 2. Featured image that is a video. --------------------------------- */
+.arneiron-feat-video {
+	position: relative;
+	display: block;
+	line-height: 0;
+}
+.arneiron-feat-video__media {
+	display: block;
+	width: auto;
+	max-width: 100%;
+	height: auto;
+	max-height: 80svh;
+	margin-inline: auto;
+	object-fit: contain;
+	border-radius: var(--wp--custom--radius--md, 6px);
+	background: var(--wp--preset--color--surface, #f6f6f4);
+}
+.arneiron-feat-video__btn {
+	position: absolute;
+	/* TOP right, not bottom: the element keeps its native `controls`, whose bar
+	   sits along the bottom edge — measured overlapping this button on dev. */
+	inset-block-start: 12px;
+	inset-inline-end: 12px;
+	display: grid;
+	place-items: center;
+	width: 44px;
+	height: 44px;
+	padding: 0;
+	border: 1px solid rgba(255, 255, 255, .55);
+	border-radius: 50%;
+	background: rgba(0, 0, 0, .55);
+	color: #fff;
+	cursor: pointer;
+	transition: background .2s ease, transform .2s ease;
+}
+.arneiron-feat-video__btn:hover,
+.arneiron-feat-video__btn:focus-visible {
+	background: rgba(0, 0, 0, .78);
+	transform: scale(1.06);
+}
+/* While it plays the button becomes "pause": two bars drawn over the
+   triangle, so one SVG serves both states and nothing is swapped in JS. */
+.arneiron-feat-video.is-playing .arneiron-feat-video__icon {
+	visibility: hidden;
+}
+.arneiron-feat-video.is-playing .arneiron-feat-video__btn::before {
+	content: "";
+	position: absolute;
+	width: 4px;
+	height: 14px;
+	background: currentColor;
+	box-shadow: 8px 0 0 currentColor;
+	transform: translateX(-4px);
+}
+@media (prefers-reduced-motion: reduce) {
+	.arneiron-feat-video__btn {
+		transition: none;
+	}
+	.arneiron-feat-video__btn:hover,
+	.arneiron-feat-video__btn:focus-visible {
+		transform: none;
+	}
+}
+
+/* --- 3. Never crop. ----------------------------------------------------- */
+/* The listing cards keep their even 16/9 box — a ragged grid is a different
+   bug — but the picture is fitted whole inside it, on the surface colour, so
+   nothing is cut off. inc/media-video.php has already turned core's inline
+   `cover` into `contain`; this is the backstop for any card whose ratio comes
+   from CSS instead. */
+.wp-block-post-featured-image img {
+	object-fit: contain;
+	background: var(--wp--preset--color--surface, #f6f6f4);
+}
+/* Content images keep their own ratio. */
+.wp-block-post-content .wp-block-image img,
+.entry-content .wp-block-image img {
+	height: auto;
+	object-fit: contain;
+}
+/* The one deliberate crop left in the theme is the opt-in circle style: a
+   circle is the point of it, so it is excluded by name rather than by
+   accident. */
+.wp-block-image.is-style-circle img {
+	object-fit: cover;
+}
